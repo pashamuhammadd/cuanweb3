@@ -1,0 +1,11 @@
+# Prompt utama untuk Claude Code
+
+Kamu bertindak sebagai lead engineer, product designer, dan QA engineer untuk CuanWeb3.com, platform peluang penghasilan Web3 berbahasa Indonesia. Bangun aplikasi secara benar-benar fungsional, dengan fondasi yang mudah berkembang. Baca CLAUDE.md dan semua dokumen di docs/ sebelum melakukan perubahan. Baca references/ui-desktop-mobile.png dan references/cua-official.png sebagai acuan visual utama. Gunakan aset PNG yang sudah tersedia di public/assets/cua/, jangan mengganti maskot dengan karakter baru.
+
+Inisialisasi proyek bila belum ada, atau audit proyek yang sudah ada sebelum mengubahnya. Gunakan Next.js App Router, TypeScript strict, Tailwind CSS, Supabase/Postgres dan Google OAuth. Gunakan versi stabil yang kompatibel saat instalasi, pnpm, dan deployment Vercel. Buat komponen reusable yang ringan, responsif dan elegan. Implementasikan tiap fase pada docs/ROADMAP.md, verifikasi build, lint, typecheck, serta alur utama sebelum menyatakan fase selesai.
+
+Prioritaskan tampilan website yang dinamis: animasi lembut saat masuk viewport, transisi filter dan kartu, hover lift, hero dengan gerakan paralaks halus, ticker harga yang tidak mengganggu, skeleton, serta feedback interaksi. Pakai CSS transforms dan opacity, atau library motion bila perlu. Hormati prefers-reduced-motion dan performa mobile. Jangan gunakan screenshot sebagai seluruh UI. Bangun UI nyata dengan teks, tombol, kartu, navigasi, dan gambar terpisah.
+
+Fokus 70% pada peluang cuan dan 30% pada edukasi praktis. Informasi publik dapat diindeks SEO; login Google wajib untuk menyimpan, mengikuti campaign internal, membuka alur pendaftaran dari platform, dan menggunakan fitur akun. Jangan mengklaim bahwa data simulasi, pembayaran atau peluang dummy merupakan data nyata. Jika kredensial belum tersedia, buat konfigurasi, mode pengembangan yang jelas, migrasi dan instruksi setup; lanjutkan semua bagian yang dapat diuji tanpa kredensial. Jangan membuat pembayaran atau deployment produksi tanpa otorisasi pemilik.
+
+Mulai sekarang: baca file, inventaris aset, buat rencana ringkas, implementasikan MVP dan jalankan verifikasi lokal. Catat progres dan blocker aktual di docs/PROGRESS.md. Lanjutkan tahap berikutnya sesuai roadmap dan prioritas pemilik.

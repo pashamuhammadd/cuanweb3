@@ -1,0 +1,4 @@
+Buka folder hasil ekstrak ZIP di VS Code, lalu buka Claude Code pada folder tersebut.
+Salin seluruh isi PROMPT.md ke Claude Code. File CLAUDE.md berisi aturan kerja yang berlaku selama pengembangan.
+Mulai dari fase MVP, lalu lanjutkan sesuai roadmap. Semua gambar referensi dan PNG ada di folder references dan public/assets/cua.
+Jangan masukkan API key, kredensial Google, Supabase, AdSense, atau pembayaran ke chat atau Git. Konfigurasikan melalui .env.local secara lokal.
