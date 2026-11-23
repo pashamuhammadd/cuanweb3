@@ -102,6 +102,10 @@
   keyboard-only end-to-end.
 - **AdSense, payment provider, draw/undian produksi**: belum diimplementasikan
   sama sekali — sesuai instruksi, menunggu kredensial dan otorisasi pemilik.
+- **Status deploy production belum terkonfirmasi** — kode sudah di-push ke
+  GitHub, tapi import ke Vercel dan pengarahan DNS `cuanweb3.com` dilakukan
+  mandiri oleh pemilik di luar sesi ini; belum ada laporan balik apakah build
+  Vercel sukses atau domain sudah live (lihat bagian Deployment di bawah).
 
 ### Keputusan teknis yang perlu diketahui pemilik
 
@@ -126,9 +130,61 @@
 4. Opsional: `MARKET_PROVIDER=coingecko` untuk harga live.
 5. Jadikan akun pertama admin lewat SQL (lihat README.md).
 
-### Langkah berikutnya (usulan, menunggu arahan pemilik)
+## 2026-11-23 — Deployment: push GitHub + persiapan Vercel/domain
 
-- Review visual mobile langsung (360–430px) sebelum lanjut ke Fase 2.
-- Setup Supabase project nyata dan uji ulang auth + RLS dengan data asli.
-- Mulai Fase 2 (Campaign sponsor): tabel sponsors/campaigns/tasks/entries/
+### Yang sudah dilakukan
+
+- Repo Git diinisialisasi di root proyek (sebelumnya belum ada `.git`).
+  Diverifikasi tidak ada file `.env*` atau secret lain yang ikut ter-stage
+  sebelum commit pertama (`.gitignore` sudah menolak `.env*`, `node_modules`,
+  `.next`).
+- Commit awal (135 file) dan push berhasil ke repo **publik**
+  `https://github.com/pashamuhammadd/cuanweb3` (branch `main`).
+- Instruksi langkah-demi-langkah diberikan ke pemilik untuk:
+  1. Import repo ke Vercel lewat dashboard (bukan CLI — Vercel CLI tidak
+     dipasang di environment kerja ini, dan proses ini butuh login akun
+     Vercel pemilik sendiri).
+  2. Menambahkan domain `cuanweb3.com` (+ `www`) di **Settings → Domains**
+     project Vercel, lalu menyalin persis nilai DNS (A record apex /
+     CNAME `www` / atau opsi nameserver) yang ditampilkan dashboard untuk
+     project tersebut — nilai ini spesifik per akun/project sehingga sengaja
+     **tidak** dihardcode di sini atau di README.
+  3. Menambahkan `NEXT_PUBLIC_SITE_URL=https://cuanweb3.com` di environment
+     variables Vercel.
+
+### Status (belum terverifikasi dari sisi kami)
+
+- **Belum dikonfirmasi**: apakah import project di Vercel sudah dilakukan,
+  apakah build pertama di Vercel sukses, dan apakah DNS `cuanweb3.com` sudah
+  diarahkan. Semua langkah ini memerlukan login akun Vercel/registrar milik
+  pemilik dan dilakukan di luar sesi ini — belum ada konfirmasi hasil balik.
+  Next session harus menanyakan status ini dan membantu debug log build
+  Vercel bila ada error.
+- Setelah domain aktif, **redirect URI Google OAuth** di Supabase/Google
+  Cloud Console juga perlu ditambah `https://cuanweb3.com/auth/callback`
+  (selain `localhost:3000` untuk dev) — baru relevan setelah Supabase project
+  dibuat (lihat bagian konfigurasi manual di atas).
+- Commit pertama (push GitHub) sudah bersih tanpa file ini. Pembaruan
+  `docs/PROGRESS.md` ini sendiri dibuat setelah push tersebut dan **belum
+  di-commit/push** — menunggu konfirmasi pemilik di sesi berikutnya.
+
+## Pekerjaan dihentikan sementara (2026-11-23)
+
+Pemilik menghentikan pekerjaan sementara setelah tahap push GitHub ini.
+Tidak ada pekerjaan kode yang menggantung/belum di-commit.
+
+### Langkah berikutnya saat melanjutkan (urutan yang disarankan)
+
+1. Cek status deploy Vercel pemilik (sudah diimport? build sukses? domain
+   `cuanweb3.com` sudah terverifikasi?) — bantu debug bila ada error log.
+2. Setup project Supabase nyata: jalankan `supabase/migrations/0001_init.sql`,
+   aktifkan Google OAuth provider, isi env vars di Vercel (lihat README.md),
+   lalu **uji ulang end-to-end dengan kredensial asli**: login Google,
+   auto-provision profil, jadikan admin lewat SQL, CRUD opportunities/articles
+   di `/admin`, bookmark, RLS (pastikan user biasa tidak bisa akses data user
+   lain atau menulis ke tabel yang dibatasi admin).
+   Ini masih jadi blocker utama Fase 1 yang belum tervalidasi secara nyata.
+3. Audit aksesibilitas keyboard-only end-to-end (belum dilakukan).
+4. Setelah 1–3 beres dan pemilik puas dengan Fase 1 di production, mulai
+   Fase 2 (Campaign sponsor): tabel sponsors/campaigns/tasks/entries/
   draws/winners/payouts, alur funding, eligibility, draw CSPRNG teraudit.
