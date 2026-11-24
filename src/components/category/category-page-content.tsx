@@ -4,7 +4,7 @@ import { OpportunityFilterBar } from "@/components/opportunities/opportunity-fil
 import { listOpportunitiesByCategory } from "@/lib/data/opportunities";
 
 export async function CategoryPageContent({ category }: { category: Category }) {
-  const { items, isDemoData } = await listOpportunitiesByCategory(category.slug);
+  const { items, isDemoData, hasError } = await listOpportunitiesByCategory(category.includes ?? category.slug);
 
   return (
     <div className="mx-auto max-w-[1440px] px-4 py-8 md:px-6">
@@ -22,6 +22,12 @@ export async function CategoryPageContent({ category }: { category: Category }) 
         <p className="mt-4 rounded-xl border border-dashed border-border-subtle px-4 py-3 text-xs text-muted-foreground">
           Menampilkan data contoh karena Supabase belum dikonfigurasi atau belum ada
           listing published. Lihat README untuk instruksi setup.
+        </p>
+      )}
+
+      {hasError && (
+        <p role="alert" className="mt-4 rounded-xl border border-rose-400/40 bg-rose-400/10 px-4 py-3 text-sm text-rose-200">
+          Daftar peluang sedang tidak dapat dimuat. Coba muat ulang halaman beberapa saat lagi.
         </p>
       )}
 

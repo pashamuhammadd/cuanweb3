@@ -62,6 +62,26 @@ menampilkan pesan konfigurasi alih-alih error.
    ```
 8. Akses `/admin` untuk mengelola peluang dan artikel.
 
+## Opportunity Engine (otomatisasi peluang)
+
+Detail lengkap: `docs/OPPORTUNITY-ENGINE.md`. Langkah aktivasi produksi:
+
+1. Supabase SQL Editor: jalankan `supabase/migrations/0002_opportunity_engine.sql`.
+2. Vercel → Settings → Environment Variables (Production), lalu redeploy:
+   - `SUPABASE_SERVICE_ROLE_KEY` = secret key `sb_secret_…` (Project Settings → API Keys).
+     **Server-only**: jangan beri awalan `NEXT_PUBLIC_`.
+   - `CRON_SECRET` = string acak ≥32 karakter, mis. hasil
+     `node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"`.
+   - Opsional: `WEB3_CAREER_API_TOKEN` (token gratis dari web3.career).
+3. Supabase SQL Editor: simpan secret yang sama ke Vault (sekali, jangan commit nilainya):
+   ```sql
+   select vault.create_secret('<CRON_SECRET>', 'cuanweb3_cron_secret');
+   ```
+   lalu jalankan `supabase/cron.sql` (mengaktifkan pg_cron + pg_net dan membuat 2 jadwal).
+4. `/admin/automation` → Jalankan sinkronisasi sekarang → periksa Review Queue.
+
+Uji: `pnpm test` (unit) dan `pnpm test:live` (ambil feed asli, tanpa database).
+
 ## Market data (opsional)
 
 Default: data demo berlabel "Market • Demo". Untuk mengaktifkan harga live
@@ -80,7 +100,8 @@ Jika fetch gagal, UI otomatis fallback ke data terakhir yang valid (ditandai
 
 ```bash
 pnpm lint        # ESLint (flat config, eslint-config-next)
-pnpm exec tsc --noEmit   # typecheck (strict)
+pnpm typecheck   # tsc --noEmit (strict)
+pnpm test        # unit test (Vitest)
 pnpm build       # production build, Turbopack
 ```
 

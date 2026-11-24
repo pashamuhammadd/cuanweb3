@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { Gift, Clock } from "lucide-react";
 import type { Opportunity } from "@/types/opportunity";
-import { CATEGORIES } from "@/lib/nav";
+import { getCategory } from "@/lib/nav";
+import { ecosystemLabel } from "@/lib/categories";
 import { formatRelativeDeadline } from "@/lib/format";
 import { cn } from "@/lib/cn";
 
@@ -12,8 +13,9 @@ export function OpportunityCard({
   opportunity: Opportunity;
   className?: string;
 }) {
-  const category = CATEGORIES.find((c) => c.slug === opportunity.category);
-  const Icon = category?.icon ?? Gift;
+  const category = getCategory(opportunity.category);
+  const Icon = category.icon;
+  const ecosystems = opportunity.ecosystems ?? [];
 
   return (
     <Link
@@ -32,14 +34,22 @@ export function OpportunityCard({
           )}
           <span className="inline-flex items-center gap-1 rounded-full bg-teal/15 px-2 py-0.5 text-[11px] font-medium text-teal">
             <Icon className="h-3 w-3" aria-hidden />
-            {category?.label ?? opportunity.category}
+            {category.label}
           </span>
+          {ecosystems.length > 0 && (
+            <span className="truncate text-[11px] text-muted-foreground">
+              {ecosystems.slice(0, 2).map(ecosystemLabel).join(" · ")}
+            </span>
+          )}
         </div>
       </div>
 
       <h3 className="font-heading text-base font-semibold leading-snug text-offwhite group-hover:text-gold">
         {opportunity.title}
       </h3>
+      {opportunity.organizer && (
+        <p className="mt-1 truncate text-xs text-muted-foreground">oleh {opportunity.organizer}</p>
+      )}
       <p className="mt-1.5 line-clamp-2 text-sm text-muted-foreground">
         {opportunity.summary}
       </p>
@@ -48,7 +58,7 @@ export function OpportunityCard({
         <div className="flex items-center gap-1.5 text-offwhite/90">
           <Gift className="h-3.5 w-3.5 shrink-0 text-gold" aria-hidden />
           <span className="truncate">
-            Reward: {opportunity.rewardDescription ?? "Belum diumumkan"}
+            {opportunity.category === "jobs" ? "Kompensasi" : "Reward"}: {opportunity.rewardDescription ?? "Belum diketahui"}
           </span>
         </div>
         <div className="flex items-center gap-1.5 text-muted-foreground">

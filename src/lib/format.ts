@@ -24,7 +24,7 @@ export function formatPercent(value: number, options?: { withSign?: boolean }) {
 }
 
 export function formatRelativeDeadline(iso: string | null) {
-  if (!iso) return "Tanpa batas waktu";
+  if (!iso) return "Belum diketahui";
   const target = new Date(iso);
   const diffMs = target.getTime() - Date.now();
   const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
@@ -46,4 +46,20 @@ export function formatDate(iso: string) {
     month: "long",
     year: "numeric",
   }).format(new Date(iso));
+}
+
+/** Tanggal + jam dalam WIB (Asia/Jakarta) untuk dashboard admin. */
+export function formatDateTime(iso: string) {
+  return new Intl.DateTimeFormat("id-ID", {
+    day: "numeric",
+    month: "short",
+    hour: "2-digit",
+    minute: "2-digit",
+    timeZone: "Asia/Jakarta",
+    timeZoneName: "short",
+  }).format(new Date(iso));
+}
+
+export function isFutureDate(iso: string | null | undefined): boolean {
+  return Boolean(iso) && Date.parse(iso!) > Date.now();
 }

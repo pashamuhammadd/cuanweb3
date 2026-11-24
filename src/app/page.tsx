@@ -6,6 +6,9 @@ import { PlusPanel } from "@/components/home/plus-panel";
 import { MissionGuideBanners } from "@/components/home/mission-guide-banners";
 import { listOpportunities } from "@/lib/data/opportunities";
 
+// ISR: listing diperbarui otomatis tiap 5 menit (hasil cron Opportunity Engine).
+export const revalidate = 300;
+
 export const metadata: Metadata = {
   alternates: { canonical: "/" },
 };

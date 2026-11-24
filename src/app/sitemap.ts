@@ -1,16 +1,14 @@
 import type { MetadataRoute } from "next";
-import { listOpportunities } from "@/lib/data/opportunities";
+import { listIndexableOpportunities } from "@/lib/data/opportunities";
+import { CATEGORIES } from "@/lib/nav";
 import { listPublishedArticles } from "@/lib/data/articles";
+
+export const revalidate = 3600;
 
 const STATIC_ROUTES = [
   "",
   "/peluang",
-  "/airdrop",
-  "/giveaway",
-  "/bounty",
-  "/jobs",
-  "/hackathon",
-  "/grants",
+  ...CATEGORIES.map((c) => c.href),
   "/misi",
   "/market",
   "/belajar",
@@ -25,8 +23,8 @@ const STATIC_ROUTES = [
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 
-  const [{ items: opportunities }, { items: articles }] = await Promise.all([
-    listOpportunities(),
+  const [opportunities, { items: articles }] = await Promise.all([
+    listIndexableOpportunities(),
     listPublishedArticles(),
   ]);
 
@@ -38,6 +36,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const opportunityEntries: MetadataRoute.Sitemap = opportunities.map((o) => ({
     url: `${siteUrl}/peluang/${o.slug}`,
+    ...(o.updatedAt ? { lastModified: o.updatedAt } : {}),
     changeFrequency: "daily",
     priority: 0.7,
   }));

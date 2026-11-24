@@ -2,7 +2,9 @@
 
 import { useActionState } from "react";
 import { saveOpportunity, type SaveOpportunityState } from "@/lib/actions/admin-opportunities";
-import { CATEGORIES } from "@/lib/nav";
+import { CATEGORY_LABELS, REWARD_CERTAINTY_LABELS } from "@/lib/categories";
+import { OPPORTUNITY_CATEGORIES } from "@/lib/supabase/database.types";
+import { RISK_FLAG_LABELS } from "@/lib/engine/risk";
 import type { OpportunityRow } from "@/lib/supabase/database.types";
 
 const initialState: SaveOpportunityState = { status: "idle" };
@@ -13,6 +15,32 @@ export function OpportunityForm({ opportunity }: { opportunity?: OpportunityRow 
   return (
     <form action={formAction} className="space-y-5">
       {opportunity && <input type="hidden" name="id" value={opportunity.id} />}
+      {opportunity?.published_at && (
+        <input type="hidden" name="previousPublishedAt" value={opportunity.published_at} />
+      )}
+
+      {opportunity && opportunity.import_method !== "manual" && (
+        <section
+          aria-label="Info import otomatis"
+          className="rounded-xl border border-teal/30 bg-teal/5 p-4 text-sm text-offwhite/90"
+        >
+          <p>
+            <strong>Hasil import otomatis</strong> dari {opportunity.source_name ?? opportunity.source_provider} ·
+            ditemukan {opportunity.discovered_at?.slice(0, 10) ?? "-"} · status review: {opportunity.review_state}
+          </p>
+          {opportunity.review_note && <p className="mt-1 text-muted-foreground">Catatan: {opportunity.review_note}</p>}
+          {opportunity.risk_flags.length > 0 && (
+            <p className="mt-1 text-rose-300">
+              Risiko {opportunity.risk_level}: {opportunity.risk_flags.map((f) => RISK_FLAG_LABELS[f] ?? f).join(", ")}
+            </p>
+          )}
+          {opportunity.source_excerpt && (
+            <p className="mt-2 text-xs text-muted-foreground">
+              Kutipan sumber (hanya untuk referensi admin, jangan disalin utuh): “{opportunity.source_excerpt}”
+            </p>
+          )}
+        </section>
+      )}
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <Field label="Judul" name="title" defaultValue={opportunity?.title} required />
@@ -28,9 +56,9 @@ export function OpportunityForm({ opportunity }: { opportunity?: OpportunityRow 
             defaultValue={opportunity?.category ?? "airdrop"}
             className="mt-1.5 w-full rounded-lg border border-border-subtle bg-surface-raised px-3 py-2 text-sm text-offwhite focus:border-teal"
           >
-            {CATEGORIES.map((c) => (
-              <option key={c.slug} value={c.slug}>
-                {c.label}
+            {OPPORTUNITY_CATEGORIES.map((c) => (
+              <option key={c} value={c}>
+                {CATEGORY_LABELS[c]}
               </option>
             ))}
           </select>
@@ -55,6 +83,46 @@ export function OpportunityForm({ opportunity }: { opportunity?: OpportunityRow 
       <TextArea label="Konten lengkap" name="content" defaultValue={opportunity?.content} rows={6} required />
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <Field label="Penyelenggara" name="organizer" defaultValue={opportunity?.organizer ?? ""} />
+        <Field
+          label="Ekosistem (pisahkan koma, mis. solana, ethereum)"
+          name="ecosystems"
+          defaultValue={opportunity?.ecosystems?.join(", ") ?? ""}
+        />
+      </div>
+
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <Field label="Skill (pisahkan koma)" name="skills" defaultValue={opportunity?.skills?.join(", ") ?? ""} />
+        <div>
+          <label htmlFor="rewardCertainty" className="text-sm font-medium text-offwhite">
+            Jenis kepastian reward
+          </label>
+          <select
+            id="rewardCertainty"
+            name="rewardCertainty"
+            defaultValue={opportunity?.reward_certainty ?? "unknown"}
+            className="mt-1.5 w-full rounded-lg border border-border-subtle bg-surface-raised px-3 py-2 text-sm text-offwhite focus:border-teal"
+          >
+            {Object.entries(REWARD_CERTAINTY_LABELS).map(([value, label]) => (
+              <option key={value} value={value}>
+                {label}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <Field label="Info modal/biaya" name="costInfo" defaultValue={opportunity?.cost_info ?? ""} />
+        <Field
+          label="Tanggal mulai"
+          name="startsAt"
+          type="datetime-local"
+          defaultValue={opportunity?.starts_at?.slice(0, 16) ?? ""}
+        />
+      </div>
+
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <Field
           label="Deskripsi reward"
           name="rewardDescription"
@@ -77,6 +145,8 @@ export function OpportunityForm({ opportunity }: { opportunity?: OpportunityRow 
         <Field label="Tags (pisahkan koma)" name="tags" defaultValue={opportunity?.tags?.join(", ") ?? ""} />
       </div>
 
+      <Field label="Lokasi / cakupan negara" name="country" defaultValue={opportunity?.country ?? ""} />
+
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <Field label="URL resmi" name="externalUrl" defaultValue={opportunity?.external_url ?? ""} />
         <Field label="URL sumber" name="sourceUrl" defaultValue={opportunity?.source_url ?? ""} />
@@ -90,6 +160,25 @@ export function OpportunityForm({ opportunity }: { opportunity?: OpportunityRow 
           className="h-4 w-4 rounded border-border-subtle bg-surface-raised accent-teal"
         />
         Tanpa modal (gratis)
+      </label>
+
+      <label className="flex items-center gap-2 text-sm text-offwhite">
+        <input
+          type="checkbox"
+          name="markVerified"
+          className="h-4 w-4 rounded border-border-subtle bg-surface-raised accent-teal"
+        />
+        Saya sudah memeriksa sumber resmi — tandai terverifikasi hari ini
+      </label>
+
+      <label className="flex items-center gap-2 text-sm text-offwhite">
+        <input
+          type="checkbox"
+          name="adExcluded"
+          defaultChecked={opportunity?.ad_excluded ?? false}
+          className="h-4 w-4 rounded border-border-subtle bg-surface-raised accent-teal"
+        />
+        Jangan tampilkan iklan di halaman ini (eksklusi AdSense)
       </label>
 
       <div className="flex items-center gap-3">

@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { CATEGORIES } from "@/lib/nav";
+import { HOME_CATEGORIES } from "@/lib/nav";
 
 export function CategoryGrid() {
   return (
@@ -9,10 +9,10 @@ export function CategoryGrid() {
         Kategori peluang
       </h2>
       <div className="grid grid-cols-3 gap-3 md:grid-cols-6 md:gap-4">
-        {CATEGORIES.map((category, i) => (
+        {HOME_CATEGORIES.map((category, i) => (
           <Link
             key={category.slug}
-            href={`/${category.slug}`}
+            href={category.href}
             className="group flex flex-col items-center gap-2 rounded-2xl border border-border-subtle bg-surface p-3 text-center transition-all duration-200 hover:-translate-y-1 hover:border-gold/60 md:p-4"
             style={{ animationDelay: `${i * 50}ms` }}
           >

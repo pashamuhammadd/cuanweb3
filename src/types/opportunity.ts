@@ -1,4 +1,11 @@
-import type { OpportunityCategory, OpportunityRow } from "@/lib/supabase/database.types";
+import type {
+  ImportMethod,
+  OpportunityCategory,
+  OpportunityRow,
+  OpportunityState,
+  RewardCertainty,
+  RiskLevel,
+} from "@/lib/supabase/database.types";
 
 export type { OpportunityCategory };
 
@@ -22,6 +29,23 @@ export type Opportunity = {
   publishedAt: string | null;
   isFree: boolean;
   isDemo: boolean;
+  // Field Opportunity Engine — opsional agar seed data lama tetap valid.
+  state?: OpportunityState;
+  organizer?: string | null;
+  ecosystems?: string[];
+  skills?: string[];
+  startsAt?: string | null;
+  costInfo?: string | null;
+  rewardCertainty?: RewardCertainty;
+  sourceProvider?: string | null;
+  sourceName?: string | null;
+  importMethod?: ImportMethod;
+  lastCheckedAt?: string | null;
+  riskLevel?: RiskLevel;
+  riskFlags?: string[];
+  expiredAt?: string | null;
+  adExcluded?: boolean;
+  updatedAt?: string;
 };
 
 export function mapOpportunityRow(row: OpportunityRow): Opportunity {
@@ -45,11 +69,28 @@ export function mapOpportunityRow(row: OpportunityRow): Opportunity {
     publishedAt: row.published_at,
     isFree: row.is_free,
     isDemo: false,
+    state: row.state,
+    organizer: row.organizer,
+    ecosystems: row.ecosystems ?? [],
+    skills: row.skills ?? [],
+    startsAt: row.starts_at,
+    costInfo: row.cost_info,
+    rewardCertainty: row.reward_certainty,
+    sourceProvider: row.source_provider,
+    sourceName: row.source_name,
+    importMethod: row.import_method,
+    lastCheckedAt: row.last_checked_at,
+    riskLevel: row.risk_level,
+    riskFlags: row.risk_flags ?? [],
+    expiredAt: row.expired_at,
+    adExcluded: row.ad_excluded,
+    updatedAt: row.updated_at,
   };
 }
 
 export type OpportunityFilters = {
   category?: OpportunityCategory;
+  categories?: OpportunityCategory[];
   search?: string;
   freeOnly?: boolean;
   deadlineSoon?: boolean;

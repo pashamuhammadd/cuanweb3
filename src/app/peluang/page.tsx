@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import { OpportunityFilterBar } from "@/components/opportunities/opportunity-filter-bar";
 import { listOpportunities } from "@/lib/data/opportunities";
 
+// ISR: listing diperbarui otomatis tiap 5 menit (hasil cron Opportunity Engine).
+export const revalidate = 300;
+
 export const metadata: Metadata = {
   title: "Peluang",
   description: "Semua peluang Web3: airdrop, giveaway, bounty, jobs, hackathon, dan grants.",

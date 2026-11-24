@@ -3,7 +3,7 @@
 Next.js App Router, TypeScript strict, Tailwind, Supabase Auth/Postgres/Storage. Server components untuk halaman publik, client components hanya untuk interaksi. Postgres migrations dan RLS, bukan role checks di browser saja. Jalankan pnpm lint, typecheck, build serta smoke tests. Struktur folder mengikuti konvensi Next.js yang digunakan. Buat .env.example tanpa secret, README setup dan migrations yang dapat dijalankan ulang dengan aman.
 
 ## Routes
-/, /peluang, /airdrop, /giveaway, /bounty, /jobs, /hackathon, /grants, /misi, /market, /belajar, /komunitas, /plus, /login, /akun, /akun/aktivitas, /akun/tersimpan, /akun/pembayaran. Detail gunakan slug unik; halaman admin /admin dan subhalaman opportunities, campaigns, submissions, sponsors, payouts, articles, users, subscriptions, settings. Public landing dan detail di-render SEO, canonical URL, metadata, sitemap dan robots; private akun/admin noindex. About, Contact, Privacy dan Terms tersedia dan sesuai praktik aktual.
+/, /peluang, /airdrop, /giveaway, /bounty (bounty + kontes), /kontes, /jobs, /hackathon, /grants, /testnet, /ambassador, /misi-berbayar, /misi, /market, /belajar, /komunitas, /plus, /login, /akun, /akun/aktivitas, /akun/tersimpan, /akun/pembayaran. Detail gunakan slug unik; halaman admin /admin dan subhalaman opportunities, automation (overview, sources, review, history, usage), campaigns, submissions, sponsors, payouts, articles, users, subscriptions, settings. Public landing dan detail di-render SEO, canonical URL, metadata, sitemap dan robots; private akun/admin noindex. About, Contact, Privacy dan Terms tersedia dan sesuai praktik aktual.
 
 ## Data model konseptual
 - profiles: id auth user, username unique, avatar, skill tags, locale, status; membership terpisah, hak admin disimpan server-side.
@@ -20,3 +20,6 @@ Google OAuth lewat Supabase dengan callback yang valid, mapping provider identit
 
 ## Env keys contoh (pilih sesuai integrasi yang akhirnya digunakan)
 NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY, SUPABASE_SERVICE_ROLE_KEY (server), MARKET_API_KEY (server), CRON_SECRET (server), NEXT_PUBLIC_SITE_URL, NEXT_PUBLIC_ADSENSE_CLIENT (opsional, kosong default). Google OAuth secret dikonfigurasi pada provider auth, tidak masuk browser/build. Payment provider secret hanya kelak setelah dipilih.
+
+## Opportunity Engine (ditambahkan 2026-11-25)
+Kategori: airdrop, giveaway, bounty, contest, jobs, hackathon, grants, testnet, ambassador, paid_mission. Tabel: integration_sources, import_runs, api_usage, job_locks, app_settings, feature_flags, subscriptions; kolom provenance/validasi di opportunities (organizer, ecosystems, skills, reward_certainty, review_state, import_method, source_id, canonical_url, content_hash, risk_level/flags, ad_excluded, dll). Penjadwalan: Supabase Cron → POST /api/cron/opportunity-sync (Bearer CRON_SECRET), engine memakai service role di server. Detail: docs/OPPORTUNITY-ENGINE.md.

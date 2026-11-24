@@ -297,3 +297,57 @@ diubah.
 
 Catatan: dev server yang sudah berjalan lama tidak memuat ulang perubahan
 `globals.css`; restart `pnpm dev` bila style global tidak berubah.
+
+## 2026-11-25 — CuanWeb3 Opportunity Engine (tahap 1)
+
+Detail desain, sumber, kuota, dan aturan: `docs/OPPORTUNITY-ENGINE.md`.
+
+### Yang dibangun
+- Migrasi `0002_opportunity_engine.sql`: 4 kategori baru (contest, testnet, ambassador,
+  paid_mission), kolom provenance/validasi/review di `opportunities`, tabel
+  `integration_sources`, `import_runs`, `api_usage`, `job_locks`, `app_settings`,
+  `feature_flags`, `subscriptions`; fungsi `consume_api_quota`, `acquire/release_job_lock`,
+  `expire_opportunities` (hanya service_role); RLS admin-only; constraint sumber berbayar
+  tidak bisa diaktifkan; 13 sumber awal (6 RSS aktif).
+- Engine `src/lib/engine/`: adapter RSS/Atom (cache ETag/304), Web3.Career (token), Devpost
+  (nonaktif); klasifikasi aturan (kategori/ekosistem/skill/hadiah eksplisit/kepastian
+  hadiah/biaya), deteksi risiko penipuan, ringkasan & panduan Indonesia berbasis template,
+  dedupe 3 lapis, validasi + keputusan publish, gerbang kuota, retry/backoff, runner dengan
+  lock, riwayat, backoff sumber, deteksi perubahan sumber.
+- `/api/cron/opportunity-sync` (Bearer CRON_SECRET, timing-safe) + `supabase/cron.sql`
+  (pg_cron tiap 3 jam + expire tiap jam, secret di Vault).
+- Admin Automation Center: Overview (statistik 7 hari, sync manual, mode publikasi per
+  kategori), Sources (aktif/nonaktif, kategori, interval, mode, kuota, tes koneksi, sync,
+  tambah RSS), Review Queue (filter, preview, approve/reject/edit, duplikat, risiko),
+  Sync History, API Usage (harian/bulanan/sisa/diblokir/estimasi biaya).
+- Publik: halaman /kontes /testnet /ambassador /misi-berbayar; detail menampilkan
+  penyelenggara, ekosistem, kepastian hadiah, modal/biaya, sumber + tanggal cek, peringatan
+  risiko, banner "Berakhir" (noindex setelah 30 hari); sitemap memakai lastModified.
+- Fondasi Plus & AdSense: `feature-flags.ts` (`canShowAds`, `hasPlusAccess`), kolom
+  `ad_excluded`, flag `plus_*` dan `ads_enabled` (semua mati).
+
+### Bug lama yang ikut diperbaiki
+- Listing publik (beranda, /peluang, kategori, sitemap) dirender statis saat build → peluang
+  baru tidak muncul tanpa redeploy. Kini ISR 5 menit + revalidate dari cron/aksi admin.
+- Saat query Supabase gagal di produksi, daftar peluang diam-diam menampilkan data demo.
+- `published_at` di-reset setiap admin menyimpan; enum kategori admin hanya 6; URL admin
+  tidak divalidasi skemanya (`javascript:`); field lokasi tidak ada di form.
+- Deadline kosong ditampilkan "Tanpa batas waktu" (klaim tak berdasar) → "Belum diketahui".
+- Link resmi selalu `nofollow` → kini follow untuk sumber yang mensyaratkannya (Web3.Career).
+
+### Verifikasi
+- `pnpm lint`, `pnpm typecheck`, `pnpm build` (44 route) — lulus.
+- `pnpm test` — 40/40 lulus. `pnpm test:live` — 6 feed asli: 185 item diambil, EF 5 relevan,
+  Sui 2, Aptos 1, Arbitrum 0, Base 0, Cryptocurrency Jobs 40; tidak ada item invalid.
+- SQL 0001/0002/cron diparse dengan parser Postgres (pglast/libpg_query) — sintaks valid.
+- Smoke test build produksi lokal: semua route publik baru 200; cron tanpa/dengan secret
+  salah → 401; mobile 360/390px tanpa horizontal overflow.
+
+### Belum terverifikasi / tersisa
+- Migrasi 0002 + runner belum dijalankan terhadap Supabase asli (butuh pemilik menjalankan
+  migrasi dan mengisi `SUPABASE_SERVICE_ROLE_KEY`, `CRON_SECRET`, Vault, `supabase/cron.sql`).
+  Halaman Automation Center belum dilihat dengan data asli.
+- Belum ada adapter untuk Superteam Earn, Galxe, Layer3, DoraHacks, ETHGlobal, CMC (tidak ada
+  API gratis/izin). Devpost & Solana RSS menunggu verifikasi.
+- Fitur Plus (radar, notifikasi, pengingat, agenda), unit AdSense, dan pengayaan AI belum
+  dibangun (hanya fondasi + flag).
