@@ -1,8 +1,9 @@
 import Link from "next/link";
-import { Gift, Clock } from "lucide-react";
+import { Gift, Clock, Briefcase } from "lucide-react";
 import type { Opportunity } from "@/types/opportunity";
 import { getCategory } from "@/lib/nav";
 import { ecosystemLabel } from "@/lib/categories";
+import { detailValueLabel, getCategorySpec } from "@/lib/category-specs";
 import { formatRelativeDeadline } from "@/lib/format";
 import { cn } from "@/lib/cn";
 
@@ -16,6 +17,16 @@ export function OpportunityCard({
   const category = getCategory(opportunity.category);
   const Icon = category.icon;
   const ecosystems = opportunity.ecosystems ?? [];
+  const spec = getCategorySpec(opportunity.category);
+  const details = opportunity.details ?? {};
+  const jobTraits =
+    opportunity.category === "jobs"
+      ? [
+          details.employment_type && detailValueLabel("jobs", "employment_type", details.employment_type),
+          details.work_mode && detailValueLabel("jobs", "work_mode", details.work_mode),
+          opportunity.country,
+        ].filter(Boolean)
+      : [];
 
   return (
     <Link
@@ -58,13 +69,22 @@ export function OpportunityCard({
         <div className="flex items-center gap-1.5 text-offwhite/90">
           <Gift className="h-3.5 w-3.5 shrink-0 text-gold" aria-hidden />
           <span className="truncate">
-            {opportunity.category === "jobs" ? "Kompensasi" : "Reward"}: {opportunity.rewardDescription ?? "Belum diketahui"}
+            {spec.labels.reward}: {opportunity.rewardDescription ?? "Belum diketahui"}
           </span>
         </div>
-        <div className="flex items-center gap-1.5 text-muted-foreground">
-          <Clock className="h-3.5 w-3.5 shrink-0" aria-hidden />
-          <span>Deadline: {formatRelativeDeadline(opportunity.deadlineAt)}</span>
-        </div>
+        {jobTraits.length > 0 && !opportunity.deadlineAt ? (
+          <div className="flex items-center gap-1.5 text-muted-foreground">
+            <Briefcase className="h-3.5 w-3.5 shrink-0" aria-hidden />
+            <span className="truncate">{jobTraits.join(" · ")}</span>
+          </div>
+        ) : (
+          <div className="flex items-center gap-1.5 text-muted-foreground">
+            <Clock className="h-3.5 w-3.5 shrink-0" aria-hidden />
+            <span>
+              {spec.labels.deadline}: {formatRelativeDeadline(opportunity.deadlineAt)}
+            </span>
+          </div>
+        )}
       </div>
 
       <span

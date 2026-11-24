@@ -351,3 +351,20 @@ Detail desain, sumber, kuota, dan aturan: `docs/OPPORTUNITY-ENGINE.md`.
   API gratis/izin). Devpost & Solana RSS menunggu verifikasi.
 - Fitur Plus (radar, notifikasi, pengingat, agenda), unit AdSense, dan pengayaan AI belum
   dibangun (hanya fondasi + flag).
+
+## 2026-11-25 — Spesifikasi per kategori (persiapan auto-publish)
+
+- Permintaan pemilik: label & field harus sesuai jenis peluang (mis. Bounty "Hadiah",
+  Jobs "Gaji") dan lengkap sebelum auto-publish.
+- `src/lib/category-specs.ts`: label, field khusus, field wajib & disarankan untuk 10
+  kategori. Migrasi `0003_category_details.sql` menambah `opportunities.details` (jsonb).
+- Engine: ekstraksi field khusus dari teks sumber (`engine/details.ts`), ringkasan per
+  kategori, syarat auto-publish = semua field wajib terisi (menggantikan skor 60%), draft
+  diperbarui & dinilai ulang saat aturan berubah (`NORMALIZER_VERSION`), item yang sudah
+  ditolak tidak muncul lagi di antrean saat sumber berubah (bug diperbaiki).
+- UI: detail, kartu, form admin (label & field berubah sesuai kategori, validasi opsi),
+  Review Queue (field wajib vs disarankan, tanda "memenuhi syarat auto-publish").
+- Bug: "July Global Testnet" terbaca sebagai jaringan "July" — diperbaiki + tes.
+- Verifikasi: lint, typecheck, build lulus; 46/46 unit test; live: 38/40 lowongan
+  Cryptocurrency Jobs memenuhi field wajib (2 tanpa lokasi di sumber).
+- Belum: migrasi 0003 di Supabase, deploy, dan cek visual form admin dengan data asli.

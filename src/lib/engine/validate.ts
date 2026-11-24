@@ -1,31 +1,5 @@
 import type { RiskLevel } from "@/lib/supabase/database.types";
 
-export const FIELD_LABELS: Record<string, string> = {
-  organizer: "Penyelenggara",
-  deadline: "Deadline",
-  reward: "Hadiah/kompensasi",
-  officialLink: "Link resmi",
-  description: "Deskripsi sumber",
-};
-
-export function assessCompleteness(input: {
-  organizer: string | null;
-  deadlineAt: string | null;
-  rewardValue: number | null;
-  externalUrl: string | null;
-  description: string;
-}): { missing: string[]; score: number } {
-  const checks: Array<[string, boolean]> = [
-    ["organizer", Boolean(input.organizer)],
-    ["deadline", Boolean(input.deadlineAt)],
-    ["reward", input.rewardValue != null],
-    ["officialLink", Boolean(input.externalUrl)],
-    ["description", input.description.trim().length >= 40],
-  ];
-  const missing = checks.filter(([, ok]) => !ok).map(([k]) => k);
-  return { missing, score: (checks.length - missing.length) / checks.length };
-}
-
 export type DeadlineStatus = "unknown" | "open" | "expired";
 
 export function deadlineStatus(deadlineAt: string | null, now = Date.now()): DeadlineStatus {
@@ -44,8 +18,6 @@ export function isStale(publishedAt: string | null | undefined, maxAgeDays: numb
 
 export type PublishDecision = { publish: boolean; reasons: string[] };
 
-export const MIN_AUTO_PUBLISH_COMPLETENESS = 0.6;
-
 /**
  * Auto-publish hanya bila SEMUA syarat terpenuhi. Default selalu manual.
  * Alasan dikembalikan untuk ditampilkan di Review Queue.
@@ -55,7 +27,8 @@ export function decidePublish(input: {
   categoryMode: "manual" | "auto";
   trusted: boolean;
   riskLevel: RiskLevel;
-  completeness: number;
+  /** Label field wajib kategori yang belum terisi. */
+  missingRequired: string[];
   deadline: DeadlineStatus;
   linkOk: boolean | null;
   possibleDuplicate: boolean;
@@ -65,7 +38,7 @@ export function decidePublish(input: {
   if (input.categoryMode !== "auto") reasons.push("Kategori memakai mode manual");
   if (!input.trusted) reasons.push("Sumber belum ditandai tepercaya");
   if (input.riskLevel !== "low") reasons.push(`Risiko ${input.riskLevel === "high" ? "tinggi" : "sedang"}`);
-  if (input.completeness < MIN_AUTO_PUBLISH_COMPLETENESS) reasons.push("Informasi belum cukup lengkap");
+  if (input.missingRequired.length > 0) reasons.push(`Field wajib belum lengkap: ${input.missingRequired.join(", ")}`);
   if (input.deadline === "expired") reasons.push("Deadline sudah lewat");
   if (input.linkOk === false) reasons.push("Link resmi tidak dapat diakses");
   if (input.linkOk === null && input.sourceMode === "auto") reasons.push("Link resmi belum dicek");

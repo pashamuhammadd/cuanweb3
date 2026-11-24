@@ -67,6 +67,34 @@ jadi batas dipasang agar tetap sopan (1 request per sumber per 3 jam).
   (`ad_excluded`), risiko rendah, dan bukan kategori tugas/klaim (giveaway, misi berbayar). Belum ada unit iklan
   terpasang. Integrasi ini **tidak menjamin** persetujuan AdSense.
 
+## Spesifikasi per kategori
+
+Sumber kebenaran: `src/lib/category-specs.ts`. Setiap kategori punya label sendiri, field khusus (disimpan di
+`opportunities.details`, migrasi `0003_category_details.sql`), dan **field wajib** untuk auto-publish.
+
+| Kategori | Label pendapatan | Field khusus | Wajib untuk auto-publish |
+| --- | --- | --- | --- |
+| Web3 Jobs | Gaji | Jenis pekerjaan, mode kerja, level, bidang | Perusahaan, link, jenis pekerjaan, mode kerja, lokasi kerja |
+| Bounty | Hadiah bounty | Jenis tugas, jumlah pemenang, format | Pemberi bounty, link, hadiah |
+| Kontes Web3 | Total hadiah | Jenis karya, jumlah pemenang, cara penentuan | Penyelenggara, link, batas pengumpulan |
+| Hackathon | Total hadiah (prize pool) | Format, track, ukuran tim | Penyelenggara, link, batas submission |
+| Grants | Nilai pendanaan | Jenis pendanaan, tahap proyek, fokus | Pemberi dana, link |
+| Airdrop | Estimasi alokasi | Cara memenuhi syarat, jaringan, cara klaim | Proyek, link, cara memenuhi syarat |
+| Testnet | Potensi reward | Jaringan, jenis aktivitas | Proyek, link, jaringan |
+| Ambassador | Kompensasi / benefit | Komitmen, durasi, benefit | Program dari, link, batas pendaftaran |
+| Giveaway | Hadiah | Jumlah pemenang, cara penentuan | Penyelenggara, link, hadiah, batas ikut, cara penentuan |
+| Misi Berbayar | Bayaran | Estimasi waktu, kuota, metode bayar | Pemberi misi, link, bayaran, estimasi waktu |
+
+Field diisi otomatis hanya bila tertulis di sumber (mis. "full-time", "100% remote", "based in Paris" → on-site,
+level dari judul "Senior/Staff"). Level/nilai yang tidak tertulis dibiarkan kosong. Uji data asli 25 Nov 2026:
+38 dari 40 lowongan Cryptocurrency Jobs memenuhi field wajib; 2 tidak menyebut lokasi → tetap direview.
+`NORMALIZER_VERSION` di `normalize.ts` ikut masuk hash konten sehingga draft lama diproses ulang setelah aturan
+berubah.
+
+**Rekomendasi auto-publish:** aktifkan untuk **Web3 Jobs + Cryptocurrency Jobs** (feed listing terstruktur).
+Kategori dari blog ekosistem (testnet, grants) sering berupa pengumuman teknis/berita, bukan peluang yang bisa
+diikuti — tetap manual.
+
 ## Validasi & deteksi risiko
 
 Kandidat dilewati bila: link tidak valid, bukan peluang (filter kata kunci / pengumuman pemenang & rekap),
@@ -75,7 +103,7 @@ deadline sudah lewat, atau berita >45 hari tanpa deadline. Tanda risiko: meminta
 HTTP tanpa TLS, TLD berisiko, bahasa klaim mendesak. Risiko sedang/tinggi selalu masuk antrean review.
 
 Auto-publish hanya bila **semua** terpenuhi: sumber mode auto + tepercaya, kategori mode auto, risiko rendah,
-kelengkapan ≥60%, deadline belum lewat, link resmi merespons, tidak ada kemungkinan duplikat.
+semua field wajib kategori terisi, deadline belum lewat, link resmi merespons, tidak ada kemungkinan duplikat.
 
 Perubahan di sumber terdeteksi lewat `content_hash`: draft diperbarui otomatis; listing tayang diberi status
 review `changed` agar admin memeriksa.

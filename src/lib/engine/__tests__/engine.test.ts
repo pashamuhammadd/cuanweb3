@@ -126,7 +126,7 @@ describe("validation & publish decision", () => {
     categoryMode: "auto" as const,
     trusted: true,
     riskLevel: "low" as const,
-    completeness: 0.8,
+    missingRequired: [] as string[],
     deadline: "open" as const,
     linkOk: true,
     possibleDuplicate: false,
@@ -135,7 +135,7 @@ describe("validation & publish decision", () => {
     expect(decidePublish(base)).toEqual({ publish: true, reasons: [] });
     expect(decidePublish({ ...base, categoryMode: "manual" }).publish).toBe(false);
     expect(decidePublish({ ...base, riskLevel: "medium" }).publish).toBe(false);
-    expect(decidePublish({ ...base, completeness: 0.4 }).publish).toBe(false);
+    expect(decidePublish({ ...base, missingRequired: ["Gaji"] }).publish).toBe(false);
     expect(decidePublish({ ...base, linkOk: false }).publish).toBe(false);
     expect(decidePublish({ ...base, deadline: "expired" }).publish).toBe(false);
     expect(decidePublish({ ...base, possibleDuplicate: true }).publish).toBe(false);
@@ -165,9 +165,12 @@ describe("normalizeItem", () => {
     expect(c.rewardValue).toBe(2_000_000);
     expect(c.rewardCertainty).toBe("competition");
     expect(c.deadlineAt).toBeNull();
-    expect(c.missing).toContain("deadline");
+    expect(c.missing).toEqual([]);
+    expect(c.missingRecommended).toContain("deadline");
+    expect(c.details.funding_type).toBe("research");
     expect(c.summary).toContain("Grants dari Ethereum Foundation");
-    expect(c.summary).toContain("Deadline belum diketahui");
+    expect(c.summary).toContain("Nilai pendanaan: US$2.000.000");
+    expect(c.summary).toContain("Batas pengajuan: belum diketahui");
     expect(c.canonicalUrl).toBe("https://blog.ethereum.org/en/2026/11/agr");
     expect(c.isFree).toBe(false);
     expect(c.riskLevel).toBe("low");
@@ -223,5 +226,79 @@ describe("relevance & reward context", () => {
   it("drops winners/recap announcements", () => {
     const out = normalizeItem({ externalId: "w", title: "Announcing the Sui Overflow 2026 Hackathon Winners", url: "https://blog.sui.io/w" }, rssSource);
     expect(out).toEqual({ ok: false, reason: "irrelevant" });
+  });
+});
+
+describe("category-specific details (jobs)", () => {
+  const jobsSource = { ...rssSource, key: "cryptocurrency_jobs", name: "Cryptocurrency Jobs", keyword_filter: false, default_category: "jobs" as const, categories: ["jobs"], ecosystems: [] };
+  it("extracts employment type, work mode, level, function and location", () => {
+    const out = normalizeItem(
+      {
+        externalId: "j1",
+        title: "Staff Backend Engineer at Superstate",
+        url: "https://cryptocurrencyjobs.co/engineering/superstate-staff-backend-engineer/",
+        description: "Superstate is looking to hire a Staff Backend Engineer to join their team. This is a full-time position that is 100% remote with no geographical restrictions. Work remotely from anywhere.",
+      },
+      jobsSource,
+    );
+    expect(out.ok).toBe(true);
+    if (!out.ok) return;
+    expect(out.candidate.details).toEqual({ employment_type: "full_time", work_mode: "remote", experience_level: "lead", job_function: "Engineering" });
+    expect(out.candidate.country).toBe("Global — bisa dari mana saja");
+    expect(out.candidate.missing).toEqual([]);
+    expect(out.candidate.missingRecommended).toEqual(["reward"]);
+    expect(out.candidate.summary).toBe("Lowongan kerja Web3 di Superstate (Full-time · Remote · Lead / Staff / Principal). Lokasi kerja: Global — bisa dari mana saja. Gaji: belum diketahui.");
+  });
+  it("captures regional remote restrictions and does not guess level", () => {
+    const out = normalizeItem(
+      {
+        externalId: "j2",
+        title: "Strategic Account Manager at Sardine",
+        url: "https://cryptocurrencyjobs.co/sales/sardine-strategic-account-manager/",
+        description: "Sardine is looking to hire a Strategic Account Manager to join their team. This is a full-time position that can be done remotely anywhere in the United States, or Canada.",
+      },
+      jobsSource,
+    );
+    if (!out.ok) throw new Error("expected ok");
+    expect(out.candidate.country).toBe("Remote: United States, Canada");
+    expect(out.candidate.details.experience_level).toBeUndefined();
+    expect(out.candidate.details.job_function).toBe("Sales");
+  });
+  it("blocks auto-publish when a required job field is missing", () => {
+    const out = normalizeItem({ externalId: "j3", title: "Engineer at Acme", url: "https://cryptocurrencyjobs.co/engineering/x/", description: "Join us." }, jobsSource);
+    if (!out.ok) throw new Error("expected ok");
+    expect(out.candidate.missing).toEqual(["details.employment_type", "details.work_mode", "location"]);
+  });
+});
+
+describe("category-specific details (other categories)", () => {
+  it("extracts testnet network from the title", () => {
+    const out = normalizeItem({ externalId: "t", title: "Glamsterdam Hoodi Testnet Announcement", url: "https://blog.ethereum.org/t", organizer: "Ethereum Foundation" }, rssSource);
+    if (!out.ok) throw new Error("expected ok");
+    expect(out.candidate.category).toBe("testnet");
+    expect(out.candidate.details.network).toBe("Hoodi");
+    expect(out.candidate.missing).toEqual([]);
+  });
+});
+
+describe("testnet network guard", () => {
+  it("does not treat a month as a network name", () => {
+    const out = normalizeItem({ externalId: "m", title: "Partners Join Coalition Ahead of July Global Testnet", url: "https://blog.sui.io/m", organizer: "Sui" }, { ...rssSource, ecosystems: ["sui"] });
+    if (!out.ok) throw new Error("expected ok");
+    expect(out.candidate.details.network).toBeUndefined();
+    expect(out.candidate.missing).toContain("details.network");
+  });
+});
+
+describe("on-site jobs", () => {
+  it("treats 'based in' without remote as on-site and keeps the city", () => {
+    const out = normalizeItem(
+      { externalId: "o", title: "Options Trader at Wintermute", url: "https://cryptocurrencyjobs.co/trading/x/", description: "Wintermute is looking to hire an Options Trader to join their team. This is a full-time position that can be based in London, or New York NY." },
+      { ...rssSource, key: "cryptocurrency_jobs", keyword_filter: false, default_category: "jobs", categories: ["jobs"], ecosystems: [] },
+    );
+    if (!out.ok) throw new Error("expected ok");
+    expect(out.candidate.details.work_mode).toBe("onsite");
+    expect(out.candidate.country).toBe("London, New York NY");
+    expect(out.candidate.missing).toEqual([]);
   });
 });

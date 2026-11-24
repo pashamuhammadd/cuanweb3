@@ -30,7 +30,8 @@ describe("live RSS sources", () => {
       expect(result.items.length).toBeGreaterThan(0);
       const outcomes = result.items.map((item) => normalizeItem(item, source));
       const ok = outcomes.filter((o) => o.ok);
-      const counts = { fetched: result.items.length, relevant: ok.length, irrelevant: outcomes.filter((o) => !o.ok && o.reason === "irrelevant").length, invalid: outcomes.filter((o) => !o.ok && o.reason === "invalid").length, requests };
+      const autoReady = ok.filter((o) => o.ok && o.candidate.missing.length === 0).length;
+      const counts = { fetched: result.items.length, relevant: ok.length, autoReady, irrelevant: outcomes.filter((o) => !o.ok && o.reason === "irrelevant").length, invalid: outcomes.filter((o) => !o.ok && o.reason === "invalid").length, requests };
       console.log(`\n[${feed.key}] ${JSON.stringify(counts)}`);
       for (const o of ok.slice(0, 3)) if (o.ok) {
         const c = o.candidate;

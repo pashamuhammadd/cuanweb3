@@ -9,6 +9,7 @@ import type {
   OpportunityRow,
 } from "@/lib/supabase/database.types";
 import { createSupabaseServiceRoleClient } from "@/lib/supabase/server";
+import { requirementLabel } from "@/lib/category-specs";
 import { getAdapter } from "./adapters";
 import { findDuplicate, type ExistingRef } from "./dedupe";
 import { fetchWithRetry } from "./http";
@@ -148,6 +149,7 @@ function candidateColumns(c: NormalizedCandidate) {
     content_hash: c.contentHash,
     risk_level: c.riskLevel,
     risk_flags: c.riskFlags,
+    details: c.details as Record<string, string>,
   } satisfies Partial<OpportunityRow>;
 }
 
@@ -224,7 +226,8 @@ async function runSource(
         organizer: c.organizer,
         reward: c.rewardDescription,
         risk: c.riskLevel,
-        missing: c.missing,
+        missing: c.missing.map((r) => requirementLabel(c.category, r)),
+        details: c.details,
       }));
       details.skipReasons = skipReasons;
       summary.status = "success";
@@ -243,24 +246,57 @@ async function runSource(
       try {
         const dup = findDuplicate({ sourceKey: source.key, externalId: c.externalId, canonicalUrl: c.canonicalUrl, title: c.title }, existing);
 
+        const decide = async (possibleDuplicate: boolean) => {
+          const categoryMode = categoryModes[c.category] ?? "manual";
+          const wantsAuto =
+            source.publish_mode === "auto" && categoryMode === "auto" && source.trusted && c.riskLevel === "low" && c.missing.length === 0;
+          const linkOk = wantsAuto ? await checkLink(c.externalUrl, deadline) : null;
+          const decision = decidePublish({
+            sourceMode: source.publish_mode,
+            categoryMode,
+            trusted: source.trusted,
+            riskLevel: c.riskLevel,
+            missingRequired: c.missing.map((r) => requirementLabel(c.category, r)),
+            deadline: deadlineStatus(c.deadlineAt),
+            linkOk,
+            possibleDuplicate,
+          });
+          return { decision, linkOk };
+        };
+
         if (dup?.kind === "same_source") {
           if (dup.existing.content_hash === c.contentHash) {
             unchangedIds.push(dup.existing.id);
             skip("unchanged");
             continue;
           }
-          // Informasi di sumber berubah.
-          const isDraft = dup.existing.state === "draft";
-          const { error } = await client
-            .from("opportunities")
-            .update(
-              isDraft
-                ? { ...candidateColumns(c), last_checked_at: now, source_changed_at: now }
-                : { content_hash: c.contentHash, last_checked_at: now, source_changed_at: now, review_state: "changed" },
-            )
-            .eq("id", dup.existing.id);
+          const state = dup.existing.state;
+          let update: Partial<OpportunityRow>;
+          let publishedNow = false;
+          if (state === "draft") {
+            // Draft (belum direview): perbarui isi & nilai ulang kelayakan auto-publish.
+            const { decision, linkOk } = await decide(false);
+            publishedNow = decision.publish;
+            update = {
+              ...candidateColumns(c),
+              last_checked_at: now,
+              source_changed_at: now,
+              review_note: decision.publish ? null : decision.reasons.join(" · "),
+              ...(decision.publish
+                ? { state: "published", review_state: "approved", published_at: now, verified_at: linkOk ? now : null }
+                : {}),
+            };
+          } else if (state === "archived") {
+            // Sudah ditolak/diarsipkan admin: jangan dimunculkan lagi di antrean.
+            update = { content_hash: c.contentHash, last_checked_at: now };
+          } else {
+            // Sudah tayang/berakhir: tandai agar admin memeriksa perubahan sumber.
+            update = { content_hash: c.contentHash, last_checked_at: now, source_changed_at: now, review_state: "changed" };
+          }
+          const { error } = await client.from("opportunities").update(update).eq("id", dup.existing.id);
           if (error) throw new Error(error.message);
           summary.updated++;
+          if (publishedNow) summary.published++;
           continue;
         }
 
@@ -269,19 +305,7 @@ async function runSource(
           continue;
         }
 
-        const categoryMode = categoryModes[c.category] ?? "manual";
-        const wantsAuto = source.publish_mode === "auto" && categoryMode === "auto" && source.trusted && c.riskLevel === "low";
-        const linkOk = wantsAuto ? await checkLink(c.externalUrl, deadline) : null;
-        const decision = decidePublish({
-          sourceMode: source.publish_mode,
-          categoryMode,
-          trusted: source.trusted,
-          riskLevel: c.riskLevel,
-          completeness: c.completeness,
-          deadline: deadlineStatus(c.deadlineAt),
-          linkOk,
-          possibleDuplicate: dup?.kind === "similar_title",
-        });
+        const { decision, linkOk } = await decide(dup?.kind === "similar_title");
 
         const slug = `${slugify(c.title) || "peluang"}-${hashContent([source.key, c.externalId]).slice(0, 6)}`;
         const { data: inserted, error } = await client

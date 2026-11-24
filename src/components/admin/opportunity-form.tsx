@@ -1,9 +1,10 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import { saveOpportunity, type SaveOpportunityState } from "@/lib/actions/admin-opportunities";
 import { CATEGORY_LABELS, REWARD_CERTAINTY_LABELS } from "@/lib/categories";
-import { OPPORTUNITY_CATEGORIES } from "@/lib/supabase/database.types";
+import { OPPORTUNITY_CATEGORIES, type OpportunityCategory } from "@/lib/supabase/database.types";
+import { getCategorySpec, requirementLabel } from "@/lib/category-specs";
 import { RISK_FLAG_LABELS } from "@/lib/engine/risk";
 import type { OpportunityRow } from "@/lib/supabase/database.types";
 
@@ -11,6 +12,8 @@ const initialState: SaveOpportunityState = { status: "idle" };
 
 export function OpportunityForm({ opportunity }: { opportunity?: OpportunityRow }) {
   const [state, formAction, isPending] = useActionState(saveOpportunity, initialState);
+  const [category, setCategory] = useState<OpportunityCategory>(opportunity?.category ?? "airdrop");
+  const spec = getCategorySpec(category);
 
   return (
     <form action={formAction} className="space-y-5">
@@ -53,7 +56,8 @@ export function OpportunityForm({ opportunity }: { opportunity?: OpportunityRow 
           <select
             id="category"
             name="category"
-            defaultValue={opportunity?.category ?? "airdrop"}
+            value={category}
+            onChange={(e) => setCategory(e.target.value as OpportunityCategory)}
             className="mt-1.5 w-full rounded-lg border border-border-subtle bg-surface-raised px-3 py-2 text-sm text-offwhite focus:border-teal"
           >
             {OPPORTUNITY_CATEGORIES.map((c) => (
@@ -83,7 +87,7 @@ export function OpportunityForm({ opportunity }: { opportunity?: OpportunityRow 
       <TextArea label="Konten lengkap" name="content" defaultValue={opportunity?.content} rows={6} required />
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <Field label="Penyelenggara" name="organizer" defaultValue={opportunity?.organizer ?? ""} />
+        <Field label={spec.labels.organizer} name="organizer" defaultValue={opportunity?.organizer ?? ""} />
         <Field
           label="Ekosistem (pisahkan koma, mis. solana, ethereum)"
           name="ecosystems"
@@ -115,7 +119,7 @@ export function OpportunityForm({ opportunity }: { opportunity?: OpportunityRow 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <Field label="Info modal/biaya" name="costInfo" defaultValue={opportunity?.cost_info ?? ""} />
         <Field
-          label="Tanggal mulai"
+          label={spec.labels.startsAt}
           name="startsAt"
           type="datetime-local"
           defaultValue={opportunity?.starts_at?.slice(0, 16) ?? ""}
@@ -124,12 +128,12 @@ export function OpportunityForm({ opportunity }: { opportunity?: OpportunityRow 
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <Field
-          label="Deskripsi reward"
+          label={spec.labels.reward}
           name="rewardDescription"
           defaultValue={opportunity?.reward_description ?? ""}
         />
         <Field
-          label="Deadline"
+          label={spec.labels.deadline}
           name="deadlineAt"
           type="datetime-local"
           defaultValue={opportunity?.deadline_at?.slice(0, 16) ?? ""}
@@ -138,14 +142,54 @@ export function OpportunityForm({ opportunity }: { opportunity?: OpportunityRow 
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <Field
-          label="Syarat (pisahkan koma)"
+          label={`${spec.labels.requirements} (pisahkan koma)`}
           name="requirements"
           defaultValue={opportunity?.requirements?.join(", ") ?? ""}
         />
         <Field label="Tags (pisahkan koma)" name="tags" defaultValue={opportunity?.tags?.join(", ") ?? ""} />
       </div>
 
-      <Field label="Lokasi / cakupan negara" name="country" defaultValue={opportunity?.country ?? ""} />
+      <Field label={spec.labels.location} name="country" defaultValue={opportunity?.country ?? ""} />
+
+      <fieldset className="rounded-xl border border-border-subtle p-4">
+        <legend className="px-1 text-sm font-medium text-offwhite">Detail khusus kategori</legend>
+        <p className="text-xs text-muted-foreground">
+          Wajib untuk auto-publish: {spec.required.map((r) => requirementLabel(category, r)).join(", ")}.
+          {spec.recommended.length > 0 && <> Disarankan: {spec.recommended.map((r) => requirementLabel(category, r)).join(", ")}.</>}
+        </p>
+        <div key={category} className="mt-3 grid grid-cols-1 gap-4 sm:grid-cols-2">
+          {spec.details.map((field) =>
+            field.options ? (
+              <div key={field.key}>
+                <label htmlFor={`detail_${field.key}`} className="text-sm font-medium text-offwhite">
+                  {field.label}
+                </label>
+                <select
+                  id={`detail_${field.key}`}
+                  name={`detail_${field.key}`}
+                  defaultValue={opportunity?.details?.[field.key] ?? ""}
+                  className="mt-1.5 w-full rounded-lg border border-border-subtle bg-surface-raised px-3 py-2 text-sm text-offwhite focus:border-teal"
+                >
+                  <option value="">Belum diketahui</option>
+                  {field.options.map((o) => (
+                    <option key={o.value} value={o.value}>
+                      {o.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            ) : (
+              <Field
+                key={field.key}
+                label={field.label}
+                name={`detail_${field.key}`}
+                defaultValue={opportunity?.details?.[field.key] ?? ""}
+                placeholder={field.placeholder}
+              />
+            ),
+          )}
+        </div>
+      </fieldset>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <Field label="URL resmi" name="externalUrl" defaultValue={opportunity?.external_url ?? ""} />
@@ -201,12 +245,14 @@ function Field({
   defaultValue,
   required,
   type = "text",
+  placeholder,
 }: {
   label: string;
   name: string;
   defaultValue?: string;
   required?: boolean;
   type?: string;
+  placeholder?: string;
 }) {
   return (
     <div>
@@ -219,7 +265,8 @@ function Field({
         type={type}
         defaultValue={defaultValue}
         required={required}
-        className="mt-1.5 w-full rounded-lg border border-border-subtle bg-surface-raised px-3 py-2 text-sm text-offwhite focus:border-teal"
+        placeholder={placeholder}
+        className="mt-1.5 w-full rounded-lg border border-border-subtle bg-surface-raised px-3 py-2 text-sm text-offwhite placeholder:text-muted-foreground focus:border-teal"
       />
     </div>
   );

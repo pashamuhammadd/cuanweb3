@@ -46,6 +46,8 @@ export type Opportunity = {
   expiredAt?: string | null;
   adExcluded?: boolean;
   updatedAt?: string;
+  /** Field khusus kategori (lihat src/lib/category-specs.ts). */
+  details?: Record<string, string>;
 };
 
 export function mapOpportunityRow(row: OpportunityRow): Opportunity {
@@ -85,6 +87,7 @@ export function mapOpportunityRow(row: OpportunityRow): Opportunity {
     expiredAt: row.expired_at,
     adExcluded: row.ad_excluded,
     updatedAt: row.updated_at,
+    details: row.details ?? {},
   };
 }
 

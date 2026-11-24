@@ -8,6 +8,7 @@ import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { OPPORTUNITY_CATEGORIES } from "@/lib/supabase/database.types";
 import { CATEGORY_HREFS } from "@/lib/categories";
 import { canonicalUrl } from "@/lib/engine/url";
+import { getCategorySpec } from "@/lib/category-specs";
 
 const optionalHttpUrl = z
   .string()
@@ -115,6 +116,17 @@ export async function saveOpportunity(
   }
   const d = parsed.data;
   const now = new Date().toISOString();
+
+  // Field khusus kategori: hanya kunci milik kategori terpilih; opsi select divalidasi.
+  const details: Record<string, string> = {};
+  for (const field of getCategorySpec(d.category).details) {
+    const value = formData.get(`detail_${field.key}`)?.toString().trim().slice(0, 200);
+    if (!value) continue;
+    if (field.options && !field.options.some((o) => o.value === value)) {
+      return { status: "error", message: `Nilai "${field.label}" tidak valid.` };
+    }
+    details[field.key] = value;
+  }
   const sourceUrl = d.sourceUrl || null;
 
   const supabase = await createSupabaseServerClient();
@@ -141,6 +153,7 @@ export async function saveOpportunity(
     state: d.state,
     is_free: d.isFree,
     ad_excluded: d.adExcluded,
+    details,
     // Pertahankan tanggal publish pertama agar urutan "terbaru" tidak berubah saat edit.
     published_at: d.state === "published" ? (d.previousPublishedAt ?? now) : d.previousPublishedAt ?? null,
     // Simpan oleh admin = keputusan review final.

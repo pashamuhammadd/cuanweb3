@@ -4,6 +4,7 @@ import { reviewOpportunity } from "@/lib/actions/automation";
 import { CATEGORY_LABELS, REWARD_CERTAINTY_LABELS, ecosystemLabel } from "@/lib/categories";
 import { getOpportunityTitles, listReviewQueue, listSources } from "@/lib/data/automation";
 import { RISK_FLAG_LABELS } from "@/lib/engine/risk";
+import { assessCategoryCompleteness, detailValueLabel, getCategorySpec, requirementLabel } from "@/lib/category-specs";
 import { formatDate } from "@/lib/format";
 import { OPPORTUNITY_CATEGORIES, type OpportunityRow } from "@/lib/supabase/database.types";
 import { cn } from "@/lib/cn";
@@ -12,13 +13,22 @@ export const dynamic = "force-dynamic";
 
 type Search = { source?: string; category?: string; view?: string };
 
-function missingFields(o: OpportunityRow): string[] {
-  const missing: string[] = [];
-  if (!o.organizer) missing.push("penyelenggara");
-  if (!o.deadline_at) missing.push("deadline");
-  if (!o.reward_description) missing.push("hadiah");
-  if (!o.external_url) missing.push("link resmi");
-  return missing;
+function completeness(o: OpportunityRow) {
+  const result = assessCategoryCompleteness(o.category, {
+    organizer: o.organizer,
+    externalUrl: o.external_url,
+    deadlineAt: o.deadline_at,
+    startsAt: o.starts_at,
+    rewardValue: o.reward_value,
+    rewardDescription: o.reward_description,
+    country: o.country,
+    description: o.source_excerpt,
+    details: o.details ?? {},
+  });
+  return {
+    required: result.missingRequired.map((r) => requirementLabel(o.category, r)),
+    recommended: result.missingRecommended.map((r) => requirementLabel(o.category, r)),
+  };
 }
 
 export default async function ReviewQueuePage({ searchParams }: { searchParams: Promise<Search> }) {
@@ -79,7 +89,9 @@ export default async function ReviewQueuePage({ searchParams }: { searchParams: 
 
       <ul className="space-y-4">
         {items.map((o) => {
-          const missing = missingFields(o);
+          const missing = completeness(o);
+          const spec = getCategorySpec(o.category);
+          const details = o.details ?? {};
           const dup = o.duplicate_of ? duplicates.get(o.duplicate_of) : undefined;
           return (
             <li key={o.id} className="rounded-2xl border border-border-subtle bg-surface p-5">
@@ -107,13 +119,29 @@ export default async function ReviewQueuePage({ searchParams }: { searchParams: 
               <p className="mt-1 text-sm text-muted-foreground">{o.summary}</p>
 
               <dl className="mt-3 grid grid-cols-1 gap-x-6 gap-y-1 text-xs sm:grid-cols-2">
-                <div><dt className="inline text-muted-foreground">Penyelenggara: </dt><dd className="inline text-offwhite">{o.organizer ?? "Belum diketahui"}</dd></div>
-                <div><dt className="inline text-muted-foreground">Ekosistem: </dt><dd className="inline text-offwhite">{o.ecosystems.map(ecosystemLabel).join(", ") || "Belum diketahui"}</dd></div>
-                <div><dt className="inline text-muted-foreground">Hadiah: </dt><dd className="inline text-offwhite">{o.reward_description ?? "Belum diketahui"} · {REWARD_CERTAINTY_LABELS[o.reward_certainty]}</dd></div>
-                <div><dt className="inline text-muted-foreground">Deadline: </dt><dd className="inline text-offwhite">{o.deadline_at ? formatDate(o.deadline_at) : "Belum diketahui"}</dd></div>
+                <div><dt className="inline text-muted-foreground">{spec.labels.organizer}: </dt><dd className="inline text-offwhite">{o.organizer ?? "Belum diketahui"}</dd></div>
+                <div><dt className="inline text-muted-foreground">{spec.labels.reward}: </dt><dd className="inline text-offwhite">{o.reward_description ?? "Belum diketahui"}{o.category !== "jobs" && <> · {REWARD_CERTAINTY_LABELS[o.reward_certainty]}</>}</dd></div>
+                <div><dt className="inline text-muted-foreground">{spec.labels.deadline}: </dt><dd className="inline text-offwhite">{o.deadline_at ? formatDate(o.deadline_at) : "Belum diketahui"}</dd></div>
+                <div><dt className="inline text-muted-foreground">{spec.labels.location}: </dt><dd className="inline text-offwhite">{o.country ?? "Belum diketahui"}</dd></div>
+                {spec.details.map((f) => (
+                  <div key={f.key}>
+                    <dt className="inline text-muted-foreground">{f.label}: </dt>
+                    <dd className="inline text-offwhite">{details[f.key] ? detailValueLabel(o.category, f.key, details[f.key]!) : "Belum diketahui"}</dd>
+                  </div>
+                ))}
+                {o.ecosystems.length > 0 && (
+                  <div><dt className="inline text-muted-foreground">Ekosistem: </dt><dd className="inline text-offwhite">{o.ecosystems.map(ecosystemLabel).join(", ")}</dd></div>
+                )}
               </dl>
 
-              {missing.length > 0 && <p className="mt-2 text-xs text-amber-300">Belum lengkap: {missing.join(", ")}</p>}
+              {missing.required.length > 0 ? (
+                <p className="mt-2 text-xs text-amber-300">Wajib dilengkapi sebelum auto-publish: {missing.required.join(", ")}</p>
+              ) : (
+                <p className="mt-2 text-xs text-emerald-400">Field wajib lengkap — memenuhi syarat auto-publish.</p>
+              )}
+              {missing.recommended.length > 0 && (
+                <p className="mt-1 text-xs text-muted-foreground">Sebaiknya dilengkapi: {missing.recommended.join(", ")}</p>
+              )}
               {o.risk_flags.length > 0 && (
                 <p className="mt-1 text-xs text-rose-300">Indikasi risiko: {o.risk_flags.map((f) => RISK_FLAG_LABELS[f] ?? f).join(", ")}</p>
               )}

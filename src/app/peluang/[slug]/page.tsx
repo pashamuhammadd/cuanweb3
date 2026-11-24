@@ -15,10 +15,12 @@ import {
   CalendarClock,
   AlertTriangle,
   Info,
+  ListChecks,
 } from "lucide-react";
 import { getOpportunityBySlug, EXPIRED_INDEX_DAYS } from "@/lib/data/opportunities";
 import { getCategory } from "@/lib/nav";
 import { REWARD_CERTAINTY_LABELS, ecosystemLabel } from "@/lib/categories";
+import { detailValueLabel, getCategorySpec } from "@/lib/category-specs";
 import { RISK_FLAG_LABELS } from "@/lib/engine/risk";
 import { formatDate, formatRelativeDeadline } from "@/lib/format";
 import { BookmarkButton } from "@/components/opportunities/bookmark-button";
@@ -81,6 +83,9 @@ export default async function OpportunityDetailPage({ params }: { params: Promis
   if (!item) notFound();
 
   const category = getCategory(item.category);
+  const spec = getCategorySpec(item.category);
+  const details = item.details ?? {};
+  const detailFacts = spec.details.filter((f) => details[f.key]);
   const ended = isEnded(item);
   const certainty = item.rewardCertainty ?? "unknown";
   const riskFlags = (item.riskFlags ?? []).filter((f) => RISK_FLAG_LABELS[f]);
@@ -151,17 +156,17 @@ export default async function OpportunityDetailPage({ params }: { params: Promis
       )}
 
       <dl className="mt-6 grid grid-cols-1 gap-4 rounded-2xl border border-border-subtle bg-surface p-5 sm:grid-cols-2">
-        <Fact icon={<Gift className={`${iconClass} text-gold`} />} label={item.category === "jobs" ? "Kompensasi" : "Reward"}>
+        <Fact icon={<Gift className={`${iconClass} text-gold`} />} label={spec.labels.reward}>
           {item.rewardDescription ?? "Belum diketahui"}
           <span className="mt-0.5 block text-xs font-normal text-muted-foreground">
             {REWARD_CERTAINTY_LABELS[certainty]}
           </span>
         </Fact>
-        <Fact icon={<Clock className={`${iconClass} text-muted-foreground`} />} label="Deadline">
+        <Fact icon={<Clock className={`${iconClass} text-muted-foreground`} />} label={spec.labels.deadline}>
           {item.deadlineAt ? deadlineText(item.deadlineAt) : "Belum diketahui"}
         </Fact>
         {item.organizer !== undefined && (
-          <Fact icon={<Building2 className={`${iconClass} text-muted-foreground`} />} label="Penyelenggara">
+          <Fact icon={<Building2 className={`${iconClass} text-muted-foreground`} />} label={spec.labels.organizer}>
             {item.organizer ?? "Belum diketahui"}
           </Fact>
         )}
@@ -171,23 +176,30 @@ export default async function OpportunityDetailPage({ params }: { params: Promis
           </Fact>
         )}
         {item.startsAt && (
-          <Fact icon={<CalendarClock className={`${iconClass} text-muted-foreground`} />} label="Mulai">
+          <Fact icon={<CalendarClock className={`${iconClass} text-muted-foreground`} />} label={spec.labels.startsAt}>
             {formatDate(item.startsAt)}
           </Fact>
         )}
-        <Fact icon={<Wallet className={`${iconClass} text-muted-foreground`} />} label="Modal / biaya">
-          {item.costInfo ?? (item.isFree ? "Gratis" : "Belum diketahui")}
-        </Fact>
-        {item.country && (
-          <Fact icon={<MapPin className={`${iconClass} text-muted-foreground`} />} label="Lokasi / cakupan">
-            {item.country}
+        {detailFacts.map((field) => (
+          <Fact key={field.key} icon={<ListChecks className={`${iconClass} text-muted-foreground`} />} label={field.label}>
+            {detailValueLabel(item.category, field.key, details[field.key]!)}
+          </Fact>
+        ))}
+        {(item.country || item.category === "jobs") && (
+          <Fact icon={<MapPin className={`${iconClass} text-muted-foreground`} />} label={spec.labels.location}>
+            {item.country ?? "Belum diketahui"}
+          </Fact>
+        )}
+        {item.category !== "jobs" && (
+          <Fact icon={<Wallet className={`${iconClass} text-muted-foreground`} />} label="Modal / biaya">
+            {item.costInfo ?? (item.isFree ? "Gratis" : "Belum diketahui")}
           </Fact>
         )}
       </dl>
 
       {item.requirements.length > 0 && (
         <div className="mt-6">
-          <h2 className="font-heading text-lg font-semibold text-offwhite">Syarat</h2>
+          <h2 className="font-heading text-lg font-semibold text-offwhite">{spec.labels.requirements}</h2>
           <ul className="mt-2 list-inside list-disc space-y-1 text-sm text-muted-foreground">
             {item.requirements.map((req) => (
               <li key={req}>{req}</li>
@@ -233,7 +245,7 @@ export default async function OpportunityDetailPage({ params }: { params: Promis
             rel={followLink ? "noopener" : "noopener noreferrer nofollow"}
             className="inline-flex min-h-11 items-center gap-2 rounded-full bg-gold px-5 py-2.5 text-sm font-semibold text-charcoal transition-transform hover:scale-[1.02] active:scale-95 motion-reduce:transition-none"
           >
-            {ended ? "Lihat halaman resmi" : item.category === "jobs" ? "Lamar di situs resmi" : "Buka sumber resmi"}
+            {ended ? "Lihat halaman resmi" : spec.labels.cta}
             <ExternalLink className="h-4 w-4" aria-hidden />
             <span className="sr-only">(membuka tab baru)</span>
           </a>

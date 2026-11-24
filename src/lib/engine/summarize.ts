@@ -1,4 +1,5 @@
 import { CATEGORY_LABELS, ecosystemLabel } from "@/lib/categories";
+import { CATEGORY_SPECS, detailValueLabel, type DetailKey } from "@/lib/category-specs";
 import type { OpportunityCategory, RewardCertainty } from "@/lib/supabase/database.types";
 
 const ID_DATE = new Intl.DateTimeFormat("id-ID", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" });
@@ -21,6 +22,7 @@ export type SummaryInput = {
   location: string | null;
   remote: boolean | null;
   skills: string[];
+  details: Partial<Record<DetailKey, string>>;
   sourceName: string;
 };
 
@@ -29,20 +31,39 @@ export type SummaryInput = {
  * teks sumber — hanya fakta yang sudah diekstrak + kata "belum diketahui".
  */
 export function buildSummary(input: SummaryInput): string {
-  const label = CATEGORY_LABELS[input.category];
-  const who = input.organizer ? ` dari ${input.organizer}` : "";
-  const eco = input.ecosystems.length ? ` di ekosistem ${input.ecosystems.map(ecosystemLabel).join(", ")}` : "";
+  const spec = CATEGORY_SPECS[input.category];
   const reward = formatReward(input.rewardValue, input.rewardCurrency);
-  const rewardText =
-    input.category === "jobs"
-      ? reward
-        ? `Kompensasi disebut sekitar ${reward}.`
-        : "Kompensasi belum diketahui."
-      : reward
-        ? `Nilai hadiah yang disebut sumber: ${reward}.`
-        : "Nilai hadiah belum diketahui.";
-  const deadline = input.deadlineAt ? `Deadline ${ID_DATE.format(new Date(input.deadlineAt))}.` : "Deadline belum diketahui.";
-  return `${label}${who}${eco}. ${rewardText} ${deadline}`.replace(/\s+/g, " ").trim().slice(0, 300);
+  const eco = input.ecosystems.length ? ` di ekosistem ${input.ecosystems.map(ecosystemLabel).join(", ")}` : "";
+
+  if (input.category === "jobs") {
+    const d = input.details;
+    const traits = [
+      d.employment_type && detailValueLabel("jobs", "employment_type", d.employment_type),
+      d.work_mode && detailValueLabel("jobs", "work_mode", d.work_mode),
+      d.experience_level && detailValueLabel("jobs", "experience_level", d.experience_level),
+    ].filter(Boolean);
+    const who = input.organizer ? ` di ${input.organizer}` : "";
+    const traitText = traits.length ? ` (${traits.join(" · ")})` : "";
+    return [
+      `Lowongan kerja Web3${who}${traitText}.`,
+      `${spec.labels.location}: ${input.location ?? "belum diketahui"}.`,
+      `${spec.labels.reward}: ${reward ? `sekitar ${reward}` : "belum diketahui"}.`,
+    ]
+      .join(" ")
+      .slice(0, 300);
+  }
+
+  const who = input.organizer ? ` dari ${input.organizer}` : "";
+  const deadline = input.deadlineAt ? ID_DATE.format(new Date(input.deadlineAt)) : "belum diketahui";
+  return [
+    `${CATEGORY_LABELS[input.category]}${who}${eco}.`,
+    `${spec.labels.reward}: ${reward ?? "belum diketahui"}.`,
+    `${spec.labels.deadline}: ${deadline}.`,
+  ]
+    .join(" ")
+    .replace(/\s+/g, " ")
+    .trim()
+    .slice(0, 300);
 }
 
 const CATEGORY_TIPS: Record<OpportunityCategory, string[]> = {
@@ -89,16 +110,19 @@ const CATEGORY_TIPS: Record<OpportunityCategory, string[]> = {
 };
 
 export function buildContent(input: SummaryInput & { requirements: string[]; costInfo: string | null }): string {
+  const spec = CATEGORY_SPECS[input.category];
   const lines: string[] = [];
   lines.push(`Peluang ini ditemukan otomatis dari ${input.sourceName} dan dirangkum oleh CuanWeb3. Selalu baca informasi lengkap di link resmi.`);
   const facts: string[] = [];
-  if (input.organizer) facts.push(`Penyelenggara: ${input.organizer}`);
-  if (input.ecosystems.length) facts.push(`Ekosistem: ${input.ecosystems.map(ecosystemLabel).join(", ")}`);
-  if (input.location || input.remote != null) {
-    facts.push(`Lokasi: ${[input.remote ? "Remote" : null, input.location].filter(Boolean).join(" · ") || "Belum diketahui"}`);
+  facts.push(`${spec.labels.organizer}: ${input.organizer ?? "Belum diketahui"}`);
+  for (const field of spec.details) {
+    const value = input.details[field.key];
+    if (value) facts.push(`${field.label}: ${detailValueLabel(input.category, field.key, value)}`);
   }
+  if (input.ecosystems.length) facts.push(`Ekosistem: ${input.ecosystems.map(ecosystemLabel).join(", ")}`);
+  if (input.location) facts.push(`${spec.labels.location}: ${input.location}`);
   if (input.skills.length) facts.push(`Skill terkait: ${input.skills.join(", ")}`);
-  facts.push(`Biaya/modal: ${input.costInfo ?? "Belum diketahui — cek di sumber resmi"}`);
+  if (input.category !== "jobs") facts.push(`Modal/biaya: ${input.costInfo ?? "Belum diketahui — cek di sumber resmi"}`);
   lines.push(facts.join("\n"));
   lines.push(`Tips CuanWeb3:\n${CATEGORY_TIPS[input.category].map((t) => `• ${t}`).join("\n")}`);
   return lines.join("\n\n");

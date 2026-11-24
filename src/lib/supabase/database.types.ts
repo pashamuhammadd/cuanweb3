@@ -75,6 +75,8 @@ export type OpportunityRow = {
   duplicate_of: string | null;
   ad_excluded: boolean;
   expired_at: string | null;
+  /** Field khusus kategori — kunci di src/lib/category-specs.ts (DetailKey). */
+  details: Record<string, string>;
 };
 
 export type ProfileRow = {

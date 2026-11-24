@@ -13,13 +13,21 @@ import { buildContent, buildSummary } from "./summarize";
 import { cleanTitle, hashContent, stripHtml, toIsoDate, truncate } from "./text";
 import type { NormalizedCandidate, RawItem, SourceConfig } from "./types";
 import { canonicalUrl, safeParseUrl } from "./url";
-import { assessCompleteness } from "./validate";
+import { assessCategoryCompleteness } from "@/lib/category-specs";
+import { extractDetails } from "./details";
 
 export type NormalizeOutcome =
   | { ok: true; candidate: NormalizedCandidate }
   | { ok: false; reason: "irrelevant" | "invalid" };
 
 const SOURCE_EXCERPT_MAX = 280;
+
+/**
+ * Naikkan bila aturan normalisasi berubah: hash konten ikut berubah sehingga
+ * draft lama diproses ulang (mis. backfill field kategori). Listing yang sudah
+ * tayang hanya ditandai "changed" untuk dicek admin.
+ */
+export const NORMALIZER_VERSION = "n2-category-specs";
 const LEAD_CHARS = 1200;
 
 /** Judul pengumuman hasil/rekap — bukan peluang yang masih bisa diikuti. */
@@ -70,7 +78,17 @@ export function normalizeItem(raw: RawItem, source: SourceConfig): NormalizeOutc
   // Judul lowongan "Posisi at Perusahaan" → perusahaan sebagai penyelenggara.
   const jobCompany = category === "jobs" ? / at ([^|–—]{2,60})$/.exec(title)?.[1]?.trim() : undefined;
   const organizer = raw.organizer?.trim() || jobCompany || null;
-  const location = raw.location?.trim() || null;
+  const extracted = extractDetails({
+    category,
+    title,
+    text,
+    url: raw.url,
+    location: raw.location,
+    remote: raw.remote,
+    tags: raw.tags,
+    skills,
+  });
+  const location = extracted.location;
 
   const summaryInput = {
     category,
@@ -84,16 +102,21 @@ export function normalizeItem(raw: RawItem, source: SourceConfig): NormalizeOutc
     location,
     remote: raw.remote ?? null,
     skills,
+    details: extracted.details,
     sourceName: source.name,
   };
 
   const risk = assessRisk({ text, urls: [raw.url, officialUrl] });
-  const completeness = assessCompleteness({
+  const completeness = assessCategoryCompleteness(category, {
     organizer,
-    deadlineAt,
-    rewardValue: reward.value,
     externalUrl: officialUrl,
+    deadlineAt,
+    startsAt,
+    rewardValue: reward.value,
+    rewardDescription: reward.description,
+    country: location,
     description,
+    details: extracted.details,
   });
 
   return {
@@ -125,10 +148,12 @@ export function normalizeItem(raw: RawItem, source: SourceConfig): NormalizeOutc
       externalUrl: officialUrl,
       sourceUrl: raw.url,
       canonicalUrl: canonicalUrl(raw.url),
-      contentHash: hashContent([title, description, raw.deadlineAt, raw.rewardText, officialUrl]),
+      contentHash: hashContent([NORMALIZER_VERSION, title, description, raw.deadlineAt, raw.rewardText, officialUrl]),
       riskLevel: risk.level,
       riskFlags: risk.flags,
-      missing: completeness.missing,
+      details: extracted.details,
+      missing: completeness.missingRequired,
+      missingRecommended: completeness.missingRecommended,
       completeness: completeness.score,
     },
   };

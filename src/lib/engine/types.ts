@@ -1,3 +1,4 @@
+import type { DetailKey, RequirementKey } from "@/lib/category-specs";
 import type {
   IntegrationSourceRow,
   OpportunityCategory,
@@ -119,6 +120,10 @@ export type NormalizedCandidate = {
   contentHash: string;
   riskLevel: RiskLevel;
   riskFlags: string[];
-  missing: string[];
+  /** Field khusus kategori (lihat category-specs). */
+  details: Partial<Record<DetailKey, string>>;
+  /** Field WAJIB kategori yang belum terisi — harus kosong untuk auto-publish. */
+  missing: RequirementKey[];
+  missingRecommended: RequirementKey[];
   completeness: number;
 };
