@@ -41,8 +41,16 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="id" className={`${bricolage.variable} ${geist.variable} h-full`}>
       <body className="flex min-h-full flex-col bg-background text-foreground antialiased">
+        <a
+          href="#konten"
+          className="sr-only rounded-full bg-gold px-4 py-2 text-sm font-semibold text-charcoal focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:px-4 focus:py-2"
+        >
+          Lewati ke konten
+        </a>
         <SiteHeader />
-        <main className="flex-1 pb-20 md:pb-0">{children}</main>
+        <main id="konten" tabIndex={-1} className="flex-1 pb-20 focus:outline-none md:pb-0">
+          {children}
+        </main>
         <SiteFooter />
         <MobileBottomNav />
       </body>

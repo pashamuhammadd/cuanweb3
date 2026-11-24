@@ -13,7 +13,7 @@ const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 function toFriendlyMessage(error: { message: string; status?: number; code?: string }) {
   if (error.status === 429 || error.code === "over_email_send_rate_limit") {
-    return "Terlalu banyak permintaan. Tunggu sebentar lalu coba lagi.";
+    return "Batas pengiriman email sedang tercapai. Coba lagi dalam beberapa menit hingga 1 jam.";
   }
   if (error.code === "email_address_invalid") return "Alamat email tidak valid.";
   return "Gagal mengirim link masuk. Coba lagi beberapa saat lagi.";

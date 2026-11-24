@@ -54,14 +54,14 @@ export function OpportunityFilterBar({ items }: { items: Opportunity[] }) {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Cari judul atau kata kunci…"
-            className="w-full rounded-full border border-border-subtle bg-surface py-2.5 pl-10 pr-4 text-sm text-offwhite placeholder:text-muted-foreground focus:border-teal focus:outline-none"
+            className="w-full rounded-full border border-border-subtle bg-surface py-2.5 pl-10 pr-4 text-sm text-offwhite placeholder:text-muted-foreground focus:border-teal"
           />
         </label>
 
         <select
           value={skill}
           onChange={(e) => setSkill(e.target.value)}
-          className="rounded-full border border-border-subtle bg-surface px-4 py-2.5 text-sm text-offwhite focus:border-teal focus:outline-none"
+          className="rounded-full border border-border-subtle bg-surface px-4 py-2.5 text-sm text-offwhite focus:border-teal"
           aria-label="Filter skill/tag"
         >
           <option value="semua">Semua skill</option>
@@ -82,7 +82,7 @@ export function OpportunityFilterBar({ items }: { items: Opportunity[] }) {
         </div>
       </div>
 
-      <p className="mt-3 text-sm text-muted-foreground">
+      <p className="mt-3 text-sm text-muted-foreground" aria-live="polite">
         Menampilkan {filtered.length} dari {items.length} peluang
       </p>
 

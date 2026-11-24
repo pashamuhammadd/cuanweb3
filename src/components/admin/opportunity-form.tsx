@@ -21,11 +21,12 @@ export function OpportunityForm({ opportunity }: { opportunity?: OpportunityRow 
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div>
-          <label className="text-sm font-medium text-offwhite">Kategori</label>
+          <label htmlFor="category" className="text-sm font-medium text-offwhite">Kategori</label>
           <select
+            id="category"
             name="category"
             defaultValue={opportunity?.category ?? "airdrop"}
-            className="mt-1.5 w-full rounded-lg border border-border-subtle bg-surface-raised px-3 py-2 text-sm text-offwhite focus:border-teal focus:outline-none"
+            className="mt-1.5 w-full rounded-lg border border-border-subtle bg-surface-raised px-3 py-2 text-sm text-offwhite focus:border-teal"
           >
             {CATEGORIES.map((c) => (
               <option key={c.slug} value={c.slug}>
@@ -35,11 +36,12 @@ export function OpportunityForm({ opportunity }: { opportunity?: OpportunityRow 
           </select>
         </div>
         <div>
-          <label className="text-sm font-medium text-offwhite">Status</label>
+          <label htmlFor="state" className="text-sm font-medium text-offwhite">Status</label>
           <select
+            id="state"
             name="state"
             defaultValue={opportunity?.state ?? "draft"}
-            className="mt-1.5 w-full rounded-lg border border-border-subtle bg-surface-raised px-3 py-2 text-sm text-offwhite focus:border-teal focus:outline-none"
+            className="mt-1.5 w-full rounded-lg border border-border-subtle bg-surface-raised px-3 py-2 text-sm text-offwhite focus:border-teal"
           >
             <option value="draft">Draft</option>
             <option value="published">Published</option>
@@ -128,7 +130,7 @@ function Field({
         type={type}
         defaultValue={defaultValue}
         required={required}
-        className="mt-1.5 w-full rounded-lg border border-border-subtle bg-surface-raised px-3 py-2 text-sm text-offwhite focus:border-teal focus:outline-none"
+        className="mt-1.5 w-full rounded-lg border border-border-subtle bg-surface-raised px-3 py-2 text-sm text-offwhite focus:border-teal"
       />
     </div>
   );
@@ -158,7 +160,7 @@ function TextArea({
         rows={rows}
         defaultValue={defaultValue}
         required={required}
-        className="mt-1.5 w-full rounded-lg border border-border-subtle bg-surface-raised px-3 py-2 text-sm text-offwhite focus:border-teal focus:outline-none"
+        className="mt-1.5 w-full rounded-lg border border-border-subtle bg-surface-raised px-3 py-2 text-sm text-offwhite focus:border-teal"
       />
     </div>
   );

@@ -19,7 +19,7 @@ export function ProfileForm({ profile }: { profile: ProfileRow }) {
           id="username"
           name="username"
           defaultValue={profile.username}
-          className="mt-1.5 w-full rounded-lg border border-border-subtle bg-surface-raised px-3 py-2 text-sm text-offwhite focus:border-teal focus:outline-none"
+          className="mt-1.5 w-full rounded-lg border border-border-subtle bg-surface-raised px-3 py-2 text-sm text-offwhite focus:border-teal"
         />
       </div>
 
@@ -32,7 +32,7 @@ export function ProfileForm({ profile }: { profile: ProfileRow }) {
           name="skillTags"
           defaultValue={profile.skill_tags?.join(", ") ?? ""}
           placeholder="desain, developer, menulis"
-          className="mt-1.5 w-full rounded-lg border border-border-subtle bg-surface-raised px-3 py-2 text-sm text-offwhite placeholder:text-muted-foreground focus:border-teal focus:outline-none"
+          className="mt-1.5 w-full rounded-lg border border-border-subtle bg-surface-raised px-3 py-2 text-sm text-offwhite placeholder:text-muted-foreground focus:border-teal"
         />
       </div>
 

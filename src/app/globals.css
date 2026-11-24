@@ -86,6 +86,15 @@ body {
   font-feature-settings: "tnum" 1;
 }
 
+/* Fokus keyboard: outline emas kontras di latar gelap untuk semua elemen
+   interaktif. Utility focus-visible:* per komponen tetap bisa menimpanya. */
+@layer base {
+  :focus-visible {
+    outline: 2px solid var(--color-gold);
+    outline-offset: 2px;
+  }
+}
+
 /* Reduced motion: disable non-essential animation but keep functionality */
 @media (prefers-reduced-motion: reduce) {
   *,

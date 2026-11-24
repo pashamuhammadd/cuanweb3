@@ -52,16 +52,15 @@ export function FeedSection({ items }: { items: Opportunity[] }) {
       </div>
 
       <div
-        role="tablist"
+        role="group"
         aria-label="Filter peluang terbaru"
         className="mt-4 flex gap-2 overflow-x-auto pb-1"
       >
         {FILTERS.map((filter) => (
           <button
             key={filter.key}
-            role="tab"
             type="button"
-            aria-selected={active === filter.key}
+            aria-pressed={active === filter.key}
             onClick={() => setActive(filter.key)}
             className={cn(
               "shrink-0 rounded-full px-4 py-1.5 text-sm font-medium transition-colors",

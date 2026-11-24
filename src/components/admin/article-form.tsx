@@ -23,7 +23,7 @@ export function ArticleForm({ article }: { article?: ArticleRow }) {
             name="title"
             defaultValue={article?.title}
             required
-            className="mt-1.5 w-full rounded-lg border border-border-subtle bg-surface-raised px-3 py-2 text-sm text-offwhite focus:border-teal focus:outline-none"
+            className="mt-1.5 w-full rounded-lg border border-border-subtle bg-surface-raised px-3 py-2 text-sm text-offwhite focus:border-teal"
           />
         </div>
         <div>
@@ -35,7 +35,7 @@ export function ArticleForm({ article }: { article?: ArticleRow }) {
             name="slug"
             defaultValue={article?.slug}
             required
-            className="mt-1.5 w-full rounded-lg border border-border-subtle bg-surface-raised px-3 py-2 text-sm text-offwhite focus:border-teal focus:outline-none"
+            className="mt-1.5 w-full rounded-lg border border-border-subtle bg-surface-raised px-3 py-2 text-sm text-offwhite focus:border-teal"
           />
         </div>
       </div>
@@ -48,7 +48,7 @@ export function ArticleForm({ article }: { article?: ArticleRow }) {
           id="state"
           name="state"
           defaultValue={article?.state ?? "draft"}
-          className="mt-1.5 w-full max-w-xs rounded-lg border border-border-subtle bg-surface-raised px-3 py-2 text-sm text-offwhite focus:border-teal focus:outline-none"
+          className="mt-1.5 w-full max-w-xs rounded-lg border border-border-subtle bg-surface-raised px-3 py-2 text-sm text-offwhite focus:border-teal"
         >
           <option value="draft">Draft</option>
           <option value="published">Published</option>
@@ -66,7 +66,7 @@ export function ArticleForm({ article }: { article?: ArticleRow }) {
           rows={2}
           defaultValue={article?.summary}
           required
-          className="mt-1.5 w-full rounded-lg border border-border-subtle bg-surface-raised px-3 py-2 text-sm text-offwhite focus:border-teal focus:outline-none"
+          className="mt-1.5 w-full rounded-lg border border-border-subtle bg-surface-raised px-3 py-2 text-sm text-offwhite focus:border-teal"
         />
       </div>
 
@@ -80,7 +80,7 @@ export function ArticleForm({ article }: { article?: ArticleRow }) {
           rows={10}
           defaultValue={article?.content}
           required
-          className="mt-1.5 w-full rounded-lg border border-border-subtle bg-surface-raised px-3 py-2 text-sm text-offwhite focus:border-teal focus:outline-none"
+          className="mt-1.5 w-full rounded-lg border border-border-subtle bg-surface-raised px-3 py-2 text-sm text-offwhite focus:border-teal"
         />
       </div>
 

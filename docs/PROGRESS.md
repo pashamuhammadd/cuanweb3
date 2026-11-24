@@ -238,3 +238,62 @@ Tidak ada pekerjaan kode yang menggantung/belum di-commit.
   butuh Supabase terkonfigurasi; akan dicek saat uji end-to-end.
 - Keterbatasan: SMTP bawaan Supabase sangat dibatasi (beberapa email/jam) —
   cukup untuk uji coba, perlu SMTP sendiri sebelum trafik besar.
+
+### Verifikasi produksi (2026-11-25, setelah push b9f4d59)
+
+- Deploy Vercel baru aktif; env Supabase terbaca (form "Kirim link masuk"
+  tampil di https://cuanweb3.com/login).
+- **Dikonfirmasi pemilik**: login magic link berhasil, profil auto-provision
+  terbuat, promosi admin via SQL berhasil, membuat + publish peluang di
+  `/admin` berhasil (tampil publik di `/peluang/inihanyatesaja`).
+- **Uji RLS sebagai anon** (REST API + publishable key): baca opportunities
+  hanya yang `published`; draft opportunities/articles → `[]`; baca
+  profiles/bookmarks → 42501; insert/update/delete opportunities → 42501;
+  update `profiles.is_admin` → 42501; `rpc/is_admin` → `false`.
+- Route terlindungi sebagai tamu: `/admin*` dan `/akun*` → 307 ke `/login`.
+- Open redirect live: `/auth/callback?redirect=@evil.com` → tetap ke
+  `cuanweb3.com/login`.
+- **Belum diuji**: akun login non-admin kedua (bookmark, "Akses ditolak" di
+  `/admin`, tidak bisa membaca profil/bookmark user lain), audit keyboard-only.
+
+### SMTP + uji pengguna non-admin (2026-11-25)
+
+- Custom SMTP **Resend** dipasang pemilik (domain `cuanweb3.com`
+  terverifikasi), template Magic Link + Confirm signup diarahkan ke
+  `/auth/confirm?token_hash=…&type=email` → link login berfungsi lintas
+  perangkat (dikonfirmasi pemilik: link dibuka di HP berhasil).
+- Pesan rate-limit di form login diperjelas.
+- **Dikonfirmasi pemilik** dengan akun kedua (non-admin): login berhasil,
+  bookmark peluang tersimpan dan tampil di profil.
+
+### Audit aksesibilitas keyboard (2026-11-25)
+
+Diuji di Chromium (desktop) dengan Tab/Enter/Space pada build produksi lokal,
+plus pemeriksaan kode untuk form yang butuh login.
+
+Temuan & perbaikan:
+- **Tidak ada skip link** → ditambah "Lewati ke konten" (elemen fokus
+  pertama, `main#konten` tabIndex -1). Diverifikasi: Enter memindahkan fokus
+  ke konten utama.
+- **Fokus nyaris tak terlihat** (outline bawaan 1px abu di latar gelap; 10
+  input memakai `focus:outline-none` + perubahan border saja) → outline emas
+  2px global via `:focus-visible` di `@layer base`, `focus:outline-none`
+  dihapus. Diverifikasi di chip filter `/peluang`.
+- **Pola ARIA tab tidak lengkap** di feed beranda (`role="tab"` tanpa
+  tabpanel/arrow keys) → diganti grup tombol toggle `aria-pressed`.
+- **Jumlah hasil filter tidak diumumkan** → `aria-live="polite"`.
+- **Label tidak terhubung** pada select Kategori/Status di form admin
+  peluang → `htmlFor`/`id`.
+
+Lolos tanpa perubahan: urutan tab mengikuti DOM, tidak ada `tabindex`
+positif, semua elemen interaktif punya nama aksesibel, landmark nav
+berlabel, satu `h1` di `main`, chip filter bisa di-toggle dengan Space,
+`prefers-reduced-motion` (CSS global + `useReducedMotion` di hero/ticker;
+feed hanya fade opacity 150ms).
+
+Belum: screen reader nyata (NVDA/VoiceOver), Safari/iOS, perangkat fisik.
+Link teks footer ~18px tinggi — masuk pengecualian spacing WCAG 2.5.8, tidak
+diubah.
+
+Catatan: dev server yang sudah berjalan lama tidak memuat ulang perubahan
+`globals.css`; restart `pnpm dev` bila style global tidak berubah.
