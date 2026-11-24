@@ -22,6 +22,7 @@ import { getCategory } from "@/lib/nav";
 import { REWARD_CERTAINTY_LABELS, ecosystemLabel } from "@/lib/categories";
 import { detailValueLabel, getCategorySpec } from "@/lib/category-specs";
 import { RISK_FLAG_LABELS } from "@/lib/engine/risk";
+import { safeParseUrl } from "@/lib/engine/url";
 import { formatDate, formatRelativeDeadline } from "@/lib/format";
 import { BookmarkButton } from "@/components/opportunities/bookmark-button";
 import type { Opportunity } from "@/types/opportunity";
@@ -87,6 +88,10 @@ export default async function OpportunityDetailPage({ params }: { params: Promis
   const details = item.details ?? {};
   const detailFacts = spec.details.filter((f) => details[f.key]);
   const ended = isEnded(item);
+  // Data lama bisa berisi URL tanpa skema (mis. "www.contoh.com"): jangan pernah
+  // membuat halaman gagal render, dan hanya tautkan URL http(s) yang valid.
+  const sourceHref = safeParseUrl(item.sourceUrl)?.toString() ?? null;
+  const externalHref = safeParseUrl(item.externalUrl)?.toString() ?? null;
   const certainty = item.rewardCertainty ?? "unknown";
   const riskFlags = (item.riskFlags ?? []).filter((f) => RISK_FLAG_LABELS[f]);
   const followLink = item.sourceProvider ? FOLLOW_LINK_SOURCES.has(item.sourceProvider) : false;
@@ -210,17 +215,17 @@ export default async function OpportunityDetailPage({ params }: { params: Promis
 
       <div className="prose-invert mt-6 whitespace-pre-line text-sm leading-relaxed text-offwhite/90">{item.content}</div>
 
-      {(item.sourceName || item.sourceUrl) && (
+      {(item.sourceName || sourceHref) && (
         <p className="mt-6 text-xs text-muted-foreground">
           Sumber:{" "}
-          {item.sourceUrl ? (
+          {sourceHref ? (
             <a
-              href={item.sourceUrl}
+              href={sourceHref}
               target="_blank"
               rel={followLink ? "noopener" : "noopener noreferrer nofollow"}
               className="text-teal underline-offset-4 hover:underline"
             >
-              {item.sourceName ?? new URL(item.sourceUrl).hostname}
+              {item.sourceName ?? new URL(sourceHref).hostname}
             </a>
           ) : (
             item.sourceName
@@ -238,9 +243,9 @@ export default async function OpportunityDetailPage({ params }: { params: Promis
       )}
 
       <div className="mt-8 flex flex-wrap gap-3">
-        {item.externalUrl ? (
+        {externalHref ? (
           <a
-            href={item.externalUrl}
+            href={externalHref}
             target="_blank"
             rel={followLink ? "noopener" : "noopener noreferrer nofollow"}
             className="inline-flex min-h-11 items-center gap-2 rounded-full bg-gold px-5 py-2.5 text-sm font-semibold text-charcoal transition-transform hover:scale-[1.02] active:scale-95 motion-reduce:transition-none"

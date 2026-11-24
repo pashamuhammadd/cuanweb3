@@ -302,3 +302,13 @@ describe("on-site jobs", () => {
     expect(out.candidate.missing).toEqual([]);
   });
 });
+
+describe("safeParseUrl", () => {
+  it("returns null for scheme-less or non-http URLs instead of throwing", async () => {
+    const { safeParseUrl } = await import("../url");
+    expect(safeParseUrl("www.cuanweb3.com")).toBeNull();
+    expect(safeParseUrl("javascript:alert(1)")).toBeNull();
+    expect(safeParseUrl("")).toBeNull();
+    expect(safeParseUrl("https://linktr.ee/x")?.hostname).toBe("linktr.ee");
+  });
+});
