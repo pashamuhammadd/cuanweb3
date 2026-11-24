@@ -19,9 +19,10 @@ export default function PrivasiPage() {
         <section>
           <h2 className="font-heading font-semibold text-offwhite">Data yang kami kumpulkan</h2>
           <p className="mt-1">
-            Saat kamu masuk dengan Google, kami menyimpan email, nama profil
-            Google, dan ID akun Google (provider subject) untuk membuat akun
-            CuanWeb3. Kami juga menyimpan username, skill tags, dan preferensi
+            Saat kamu masuk lewat link email, kami menyimpan alamat email kamu
+            untuk membuat akun CuanWeb3. Bila kamu masuk dengan Google, kami
+            juga menerima nama profil dan ID akun Google (provider subject).
+            Kami juga menyimpan username, skill tags, dan preferensi
             notifikasi yang kamu atur sendiri.
           </p>
         </section>

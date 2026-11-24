@@ -28,12 +28,22 @@ export async function ensureProfile(
 
   if (existing) return;
 
-  const base = slugifyUsername(email ?? `user-${userId.slice(0, 8)}`);
-  const username = `${base}-${userId.slice(0, 6)}`;
+  // Constraint DB: ^[a-zA-Z0-9_-]{3,24}$. Suffix "-xxxxxx" = 7 karakter,
+  // jadi base dipotong maks 17 karakter.
+  const base =
+    slugifyUsername(email ?? `user-${userId.slice(0, 8)}`)
+      .slice(0, 17)
+      .replace(/-+$/g, "") || "pengguna";
+  const username = `${base}-${userId.replace(/-/g, "").slice(0, 6)}`;
 
-  await supabase.from("profiles").insert({
+  const { error } = await supabase.from("profiles").insert({
     id: userId,
     username,
     locale: "id",
   });
+
+  // 23505 = sudah dibuat oleh request paralel; aman diabaikan (idempotent).
+  if (error && error.code !== "23505") {
+    console.error("[ensureProfile] gagal membuat profil:", error.code, error.message);
+  }
 }

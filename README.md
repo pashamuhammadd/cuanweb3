@@ -24,23 +24,43 @@ menampilkan pesan konfigurasi alih-alih error.
 ## Setup Supabase (opsional untuk pengembangan, wajib untuk fitur akun)
 
 1. Buat project di [supabase.com](https://supabase.com).
-2. Jalankan migrasi: `supabase/migrations/0001_init.sql` (lewat Supabase CLI
-   `supabase db push`, atau tempel manual di SQL editor dashboard).
-3. (Opsional) Jalankan `supabase/seed.sql` untuk data contoh berlabel.
-4. Aktifkan provider **Google** di Authentication → Providers, dan set
-   Authorized redirect URL ke `https://<project-ref>.supabase.co/auth/v1/callback`
-   serta `<NEXT_PUBLIC_SITE_URL>/auth/callback` di Google Cloud Console.
-5. Isi `.env.local`:
+2. Jalankan migrasi `supabase/migrations/0001_init.sql`: tempel seluruh isinya
+   di **SQL Editor** dashboard lalu Run (atau `supabase db push` via CLI).
+3. `supabase/seed.sql` berisi data contoh berlabel — **hanya** untuk project
+   pengembangan, jangan dijalankan di database produksi.
+4. **Authentication → URL Configuration**:
+   - Site URL: `<NEXT_PUBLIC_SITE_URL>` (mis. `https://cuanweb3.com`).
+   - Redirect URLs: `https://cuanweb3.com/auth/callback` dan
+     `http://localhost:3000/auth/callback`.
+5. **Login email (utama, gratis)** — provider Email aktif secara default di
+   Supabase (Authentication → Sign In / Providers → Email). Dengan template
+   bawaan, link masuk bekerja lewat `/auth/callback` tapi harus dibuka di
+   browser yang sama. Supabase hanya mengizinkan edit template setelah
+   custom SMTP dipasang; setelah itu, agar link berfungsi di perangkat lain, ubah template
+   **Authentication → Emails → Magic Link** (dan **Confirm signup**) agar
+   tautannya menjadi:
+   ```html
+   <a href="{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=email">Masuk ke CuanWeb3</a>
+   ```
+   Catatan: SMTP bawaan Supabase dibatasi sangat ketat (hanya beberapa email
+   per jam) dan ditujukan untuk uji coba. Sebelum promosi ke banyak pengguna,
+   pasang SMTP sendiri di Project Settings → Authentication → SMTP.
+   **Google (opsional)** — OAuth client di Google Cloud Console gratis.
+   Redirect URI-nya `https://<project-ref>.supabase.co/auth/v1/callback`;
+   tempel Client ID/Secret di provider Google Supabase, lalu set
+   `NEXT_PUBLIC_AUTH_GOOGLE_ENABLED=true` agar tombolnya tampil.
+6. Isi env (`.env.local` untuk lokal, Environment Variables untuk Vercel):
    - `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` — dari
-     Project Settings → API.
-   - `SUPABASE_SERVICE_ROLE_KEY` — hanya untuk kebutuhan server khusus,
-     jangan commit, jangan expose ke client.
-6. Login sekali dengan akun Google kamu di `/login` agar profil otomatis
+     Project Settings → API Keys (anon key atau publishable key `sb_publishable_…`).
+   - `SUPABASE_SERVICE_ROLE_KEY` tidak dipakai di Fase 1; jangan diisi di
+     client dan jangan di-commit.
+7. Login sekali lewat `/login` agar profil otomatis
    terbuat, lalu jadikan admin lewat SQL editor:
    ```sql
-   update profiles set is_admin = true where username = 'username-kamu';
+   update public.profiles set is_admin = true
+   where id = (select id from auth.users where email = 'email-kamu@gmail.com');
    ```
-7. Akses `/admin` untuk mengelola peluang dan artikel.
+8. Akses `/admin` untuk mengelola peluang dan artikel.
 
 ## Market data (opsional)
 

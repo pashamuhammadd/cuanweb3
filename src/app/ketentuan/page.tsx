@@ -22,8 +22,8 @@ export default function KetentuanPage() {
             CuanWeb3 adalah agregator informasi peluang Web3. Kami tidak
             menyelenggarakan airdrop, hackathon, atau grants pihak ketiga —
             pendaftaran dan syarat mengikuti aturan penyelenggara asli.
-            Login Google tidak membuktikan satu pengguna hanya memiliki satu
-            akun Google.
+            Login lewat email atau Google tidak membuktikan satu orang hanya
+            memiliki satu akun.
           </p>
         </section>
         <section>

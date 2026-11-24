@@ -188,3 +188,53 @@ Tidak ada pekerjaan kode yang menggantung/belum di-commit.
 4. Setelah 1–3 beres dan pemilik puas dengan Fase 1 di production, mulai
    Fase 2 (Campaign sponsor): tabel sponsors/campaigns/tasks/entries/
   draws/winners/payouts, alur funding, eligibility, draw CSPRNG teraudit.
+
+## 2026-11-25 — Persiapan Supabase produksi (sesi lanjutan)
+
+### Status dari pemilik
+
+- Vercel + domain `cuanweb3.com`: **sudah live** (konfirmasi pemilik).
+- Project Supabase `cuanweb3` sudah dibuat, masih kosong (migrasi belum jalan).
+
+### Bug yang ditemukan dan diperbaiki sebelum migrasi dijalankan
+
+1. **RLS infinite recursion** — policy `profiles_select_admin` membaca
+   `profiles` dari dalam policy `profiles`; semua policy admin lain ikut
+   memicu rekursi. Diganti fungsi `public.is_admin()` (SECURITY DEFINER,
+   `search_path = ''`). `0001_init.sql` diedit langsung karena belum pernah
+   dijalankan di database mana pun.
+2. **Admin tidak bisa edit profil sendiri** (`with check is_admin = false`).
+   Diganti column-level privileges: client hanya boleh menulis
+   username/avatar/skill/locale/notifikasi; `is_admin`/`status` tidak bisa
+   diubah dari client sama sekali.
+3. `GRANT` eksplisit per tabel/role, `search_path` terkunci pada
+   `set_updated_at`, bookmark hanya untuk peluang `published`.
+4. **Username auto-provision bisa melebihi 24 karakter** → insert profil gagal
+   diam-diam untuk email dengan local part > 17 karakter. Base dipotong 17
+   karakter + error insert kini dicatat.
+5. **Open redirect** di `/auth/callback` (`?redirect=@evil.com`) dan `/login`
+   (`?redirect=//evil.com`). Ditambah `src/lib/safe-redirect.ts`.
+6. README: langkah Google OAuth diperbaiki (Redirect URLs diisi di Supabase
+   URL Configuration; Google hanya perlu callback `*.supabase.co`).
+
+### Verifikasi
+
+- `pnpm lint`, `pnpm exec tsc --noEmit`, `pnpm build` — lulus.
+- `safeRedirectPath` diuji manual terhadap `//`, `@host`, `https://`,
+  `javascript:`, karakter kontrol → semua jatuh ke `/akun`.
+- **Belum**: SQL belum dijalankan di Postgres nyata (tidak ada Postgres lokal
+  di environment ini); uji end-to-end login/admin/bookmark/RLS menunggu
+  pemilik menjalankan migrasi dan mengisi env Vercel.
+
+### Login email (magic link) — pengganti Google sebagai metode utama
+
+- Permintaan pemilik: tidak memakai Google Cloud Console untuk saat ini.
+- Ditambah `EmailLoginForm` (`signInWithOtp`) + route `/auth/confirm`
+  (`verifyOtp` token_hash, lintas perangkat). `/auth/callback` tetap melayani
+  link PKCE default. Tombol Google kini hanya tampil bila
+  `NEXT_PUBLIC_AUTH_GOOGLE_ENABLED=true` (tidak ada tombol berujung error).
+- Teks Privasi/Ketentuan disesuaikan dengan login email.
+- Lint/typecheck/build lulus (40 route). Render form belum dicek visual karena
+  butuh Supabase terkonfigurasi; akan dicek saat uji end-to-end.
+- Keterbatasan: SMTP bawaan Supabase sangat dibatasi (beberapa email/jam) —
+  cukup untuk uji coba, perlu SMTP sendiri sebelum trafik besar.
