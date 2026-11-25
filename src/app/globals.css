@@ -134,6 +134,76 @@ body {
   animation: dot-pulse 2.4s ease-in-out infinite;
 }
 
+/* Kartu kategori: bingkai cahaya berputar (conic-gradient + @property). */
+@property --glow-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+@keyframes glow-spin {
+  to {
+    --glow-angle: 360deg;
+  }
+}
+.glow-frame {
+  position: relative;
+  isolation: isolate;
+  border-radius: 14px;
+}
+.glow-frame::before,
+.glow-frame::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: conic-gradient(
+    from var(--glow-angle),
+    #1f3533 0deg,
+    #1f3533 200deg,
+    #f4bd35 285deg,
+    #ffe7a8 315deg,
+    #f4bd35 335deg,
+    #1f3533 360deg
+  );
+  animation: glow-spin var(--glow-speed, 7s) linear infinite;
+  animation-delay: var(--glow-delay, 0s);
+}
+.glow-frame::before {
+  z-index: 1;
+  padding: 1px;
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box exclude,
+    linear-gradient(#000 0 0);
+}
+.glow-frame::after {
+  z-index: -1;
+  inset: -1px;
+  filter: blur(14px);
+  opacity: 0.22;
+  transition: opacity 0.3s;
+}
+.glow-frame:hover::after,
+.glow-frame:focus-within::after {
+  opacity: 0.55;
+}
+@media (prefers-reduced-motion: reduce) {
+  .glow-frame::before,
+  .glow-frame::after,
+  .caret,
+  .chip-dot {
+    animation: none;
+  }
+  .glow-frame::before,
+  .glow-frame::after {
+    --glow-angle: 120deg;
+  }
+}
+
 ::selection {
   background: var(--color-gold);
   color: var(--color-charcoal);
