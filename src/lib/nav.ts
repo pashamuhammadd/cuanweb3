@@ -119,6 +119,16 @@ export const PRIMARY_NAV: NavItem[] = [
   { href: "/komunitas", label: "Komunitas", icon: Users },
 ];
 
+const CATEGORY_PATHS = CATEGORIES.map((c) => c.href).concat("/kategori");
+
+/** Halaman kategori dianggap bagian dari "Peluang"; /login bagian dari "Akun". */
+export function isNavActive(href: string, pathname: string): boolean {
+  if (href === "/") return pathname === "/";
+  if (href === "/peluang" && CATEGORY_PATHS.some((p) => pathname === p || pathname.startsWith(`${p}/`))) return true;
+  if (href === "/akun" && pathname.startsWith("/login")) return true;
+  return pathname === href || pathname.startsWith(`${href}/`);
+}
+
 export const MOBILE_BOTTOM_NAV: NavItem[] = [
   { href: "/", label: "Beranda", icon: Home },
   { href: "/peluang", label: "Peluang", icon: Compass },

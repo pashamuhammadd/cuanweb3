@@ -72,3 +72,22 @@ export async function isOpportunityBookmarked(opportunityId: string): Promise<bo
 
   return Boolean(data);
 }
+
+export type MyBookmarksResult =
+  | { status: "ok"; ids: string[] }
+  | { status: "anonymous" }
+  | { status: "not_configured" };
+
+/** Read-only: ID peluang yang disimpan user saat ini (RLS membatasi ke milik sendiri). */
+export async function listMyBookmarkIds(): Promise<MyBookmarksResult> {
+  if (!isSupabaseConfigured()) return { status: "not_configured" };
+
+  const supabase = await createSupabaseServerClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { status: "anonymous" };
+
+  const { data } = await supabase.from("bookmarks").select("opportunity_id").eq("user_id", user.id).limit(1000);
+  return { status: "ok", ids: (data ?? []).map((r) => r.opportunity_id) };
+}
