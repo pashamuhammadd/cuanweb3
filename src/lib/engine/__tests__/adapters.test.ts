@@ -72,6 +72,20 @@ describe("rss parser", () => {
     });
     expect(result).toMatchObject({ items: [], notModified: true, requests: 1 });
   });
+  it("skips conditional headers when ignoreCache is set (forced manual sync)", async () => {
+    const fetchImpl = vi.fn(async (_url: string | URL | Request, init?: RequestInit) => {
+      expect((init?.headers as Record<string, string>)["If-None-Match"]).toBeUndefined();
+      return new Response(ATOM, { status: 200, headers: { "content-type": "application/atom+xml" } });
+    });
+    const result = await rssAdapter.fetchItems(source, {
+      beforeRequest: async () => {},
+      env: {},
+      fetchImpl: fetchImpl as unknown as typeof fetch,
+      deadline: Date.now() + 10_000,
+      ignoreCache: true,
+    });
+    expect(result.items.length).toBeGreaterThan(0);
+  });
 });
 
 describe("web3.career adapter", () => {

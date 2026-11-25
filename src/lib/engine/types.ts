@@ -70,6 +70,8 @@ export type AdapterContext = {
   fetchImpl?: typeof fetch;
   /** Batas waktu absolut (epoch ms) untuk seluruh pekerjaan adapter. */
   deadline: number;
+  /** true = abaikan cache HTTP (ETag/Last-Modified) agar item lama diproses ulang. */
+  ignoreCache?: boolean;
 };
 
 export type SourceAdapter = {

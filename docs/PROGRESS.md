@@ -368,3 +368,24 @@ Detail desain, sumber, kuota, dan aturan: `docs/OPPORTUNITY-ENGINE.md`.
 - Verifikasi: lint, typecheck, build lulus; 46/46 unit test; live: 38/40 lowongan
   Cryptocurrency Jobs memenuhi field wajib (2 tanpa lokasi di sumber).
 - Belum: migrasi 0003 di Supabase, deploy, dan cek visual form admin dengan data asli.
+
+## 2026-11-25 — Produksi berjalan + perbaikan sinkronisasi manual
+
+- Terverifikasi di produksi: migrasi 0002/0003 jalan, sinkronisasi pertama 250 ditemukan /
+  41 diimport / 0 error, canonical + sitemap memakai `https://cuanweb3.com`.
+- Bug: tombol "Jalankan sinkronisasi sekarang" tidak memproses apa pun bila belum jatuh
+  tempo ("Tidak ada sumber yang jatuh tempo") → kini selalu memaksa semua sumber aktif
+  (kuota tetap berlaku) dan mengabaikan cache ETag agar feed diambil ulang.
+- Bug: draft yang isinya tidak berubah tidak pernah dinilai ulang, sehingga mengubah
+  mode ke auto tidak menayangkan antrean → draft `pending` kini selalu dinilai ulang.
+- Bug: halaman detail yang tidak ada membalas HTTP 200 (soft-404, akibat `loading.tsx`)
+  → kini 404. Teks footer "Data demo…" diganti peringatan keamanan.
+- Hotfix: detail crash pada `source_url` lama tanpa skema → `safeParseUrl`.
+- Verifikasi: 48/48 unit test, lint, typecheck, build; 404 dicek dengan `next start`.
+
+### Sisa pekerjaan (di luar Fase 1)
+- Pemilik: aktifkan auto (sumber Cryptocurrency Jobs: mode auto + tepercaya; kategori
+  Web3 Jobs: auto), lalu jalankan sinkronisasi; konfirmasi `cron.job` berisi 2 jadwal.
+- Ticker market masih data demo berlabel ("Market · Demo") — `market_snapshots` belum dibuat.
+- Token Web3.Career, izin Devpost, Fase 2–5 (campaign, misi, Plus, AdSense) belum dimulai.
+- Belum: uji screen reader nyata dan Safari/iOS.

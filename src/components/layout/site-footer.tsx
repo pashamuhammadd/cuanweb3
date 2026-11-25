@@ -67,8 +67,8 @@ export function SiteFooter() {
         </div>
         <div className="mt-10 border-t border-border-subtle pt-6 text-xs text-muted-foreground">
           © {new Date().getFullYear()} CuanWeb3. Peluang eksternal mengikuti
-          aturan penyelenggara masing-masing. Data demo pada halaman ini hanya
-          untuk ilustrasi.
+          aturan penyelenggara masing-masing. Selalu cek ulang di situs resmi —
+          CuanWeb3 tidak pernah meminta seed phrase atau private key.
         </div>
       </div>
     </footer>

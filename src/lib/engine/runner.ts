@@ -159,6 +159,7 @@ async function runSource(
   trigger: SyncTrigger,
   categoryModes: Partial<Record<OpportunityCategory, "manual" | "auto">>,
   globalDeadline: number,
+  force = false,
 ): Promise<RunSummary> {
   const summary = emptySummary(source);
   const startedAt = Date.now();
@@ -190,7 +191,7 @@ async function runSource(
       return data === true;
     });
 
-    const result = await adapter.fetchItems(source, { beforeRequest: gate.beforeRequest, env: process.env, deadline });
+    const result = await adapter.fetchItems(source, { beforeRequest: gate.beforeRequest, env: process.env, deadline, ignoreCache: force });
     summary.requests = result.requests;
     fetchMeta = result;
     summary.found = result.items.length;
@@ -265,9 +266,27 @@ async function runSource(
         };
 
         if (dup?.kind === "same_source") {
-          if (dup.existing.content_hash === c.contentHash) {
+          const unchanged = dup.existing.content_hash === c.contentHash;
+          const pendingDraft = dup.existing.state === "draft" && dup.existing.review_state === "pending";
+          if (unchanged && !pendingDraft) {
             unchangedIds.push(dup.existing.id);
             skip("unchanged");
+            continue;
+          }
+          if (unchanged) {
+            // Isi sama, tapi mode publikasi bisa saja baru diubah admin: nilai ulang draft yang menunggu review.
+            const { decision, linkOk } = await decide(false);
+            const update: Partial<OpportunityRow> = decision.publish
+              ? { state: "published", review_state: "approved", published_at: now, verified_at: linkOk ? now : null, review_note: null, last_checked_at: now }
+              : { review_note: decision.reasons.join(" · "), last_checked_at: now };
+            const { error } = await client.from("opportunities").update(update).eq("id", dup.existing.id);
+            if (error) throw new Error(error.message);
+            if (decision.publish) {
+              summary.updated++;
+              summary.published++;
+            } else {
+              skip("unchanged");
+            }
             continue;
           }
           const state = dup.existing.state;
@@ -465,7 +484,7 @@ export async function runOpportunitySync(options: {
         pendingSources.push(source.key);
         continue;
       }
-      runs.push(await runSource(client, source, options.trigger, settings.categoryModes, globalDeadline));
+      runs.push(await runSource(client, source, options.trigger, settings.categoryModes, globalDeadline, Boolean(options.force)));
     }
     return { status: "ok", expired: expired ?? 0, runs, pendingSources };
   } finally {

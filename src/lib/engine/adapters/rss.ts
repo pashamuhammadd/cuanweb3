@@ -88,8 +88,10 @@ export const rssAdapter: SourceAdapter = {
   key: "rss",
   async fetchItems(source, ctx) {
     const headers: Record<string, string> = { Accept: "application/rss+xml, application/atom+xml, application/xml;q=0.9, */*;q=0.5" };
-    if (source.http_etag) headers["If-None-Match"] = source.http_etag;
-    if (source.http_last_modified) headers["If-Modified-Since"] = source.http_last_modified;
+    if (!ctx.ignoreCache) {
+      if (source.http_etag) headers["If-None-Match"] = source.http_etag;
+      if (source.http_last_modified) headers["If-Modified-Since"] = source.http_last_modified;
+    }
 
     let requests = 0;
     const res = await fetchWithRetry(source.url, {

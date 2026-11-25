@@ -181,7 +181,8 @@ export async function runSyncNow(_prev: ActionResult, formData: FormData): Promi
   const result = await runOpportunitySync({
     trigger: "manual",
     sourceKeys: key?.success ? [key.data] : undefined,
-    force: Boolean(key?.success),
+    // Dijalankan admin secara manual: abaikan jadwal & cache agar draft dinilai ulang.
+    force: true,
     budgetMs: 45_000,
   });
   revalidateAutomation();
@@ -190,7 +191,7 @@ export async function runSyncNow(_prev: ActionResult, formData: FormData): Promi
   if (result.status === "locked") return { status: "error", message: "Sinkronisasi lain sedang berjalan. Coba lagi beberapa menit." };
   if (result.status === "not_configured") return { status: "error", message: "Service role key belum dikonfigurasi." };
   if (result.runs.length === 0) {
-    return { status: "ok", message: key ? "Sumber nonaktif atau tidak ditemukan." : "Tidak ada sumber yang jatuh tempo." };
+    return { status: "ok", message: key ? "Sumber nonaktif atau tidak ditemukan." : "Tidak ada sumber aktif." };
   }
   const t = result.runs.reduce(
     (a, r) => ({ c: a.c + r.created, p: a.p + r.published, q: a.q + r.queued, d: a.d + r.duplicates, e: a.e + r.errors }),
@@ -198,7 +199,7 @@ export async function runSyncNow(_prev: ActionResult, formData: FormData): Promi
   );
   return {
     status: t.e > 0 ? "error" : "ok",
-    message: `${result.runs.length} sumber diproses: ${t.c} baru (${t.p} dipublikasikan, ${t.q} ke antrean review), ${t.d} duplikat, ${t.e} error.${result.pendingSources.length ? ` Sisa ${result.pendingSources.length} sumber diproses pada jadwal berikutnya.` : ""}`,
+    message: `${result.runs.length} sumber diproses: ${t.c} baru, ${t.p} dipublikasikan, ${t.q} ke antrean review, ${t.d} duplikat, ${t.e} error.${result.pendingSources.length ? ` Sisa ${result.pendingSources.length} sumber diproses pada jadwal berikutnya.` : ""}`,
     detail: result.runs.map((r) => `${r.sourceName}: ${r.status}${r.message ? ` — ${r.message}` : ""}`).join("\n"),
   };
 }
