@@ -20,14 +20,10 @@ export default async function HomePage() {
     <>
       <Hero />
       <CategoryGrid />
-      <section className="mx-auto grid max-w-[1440px] grid-cols-1 gap-6 px-4 md:grid-cols-[1fr_320px] md:px-6">
-        <div className="min-w-0">
-          <FeedSection items={items} />
-        </div>
-        <aside className="order-first min-w-0 pb-2 md:order-last md:py-8">
-          <PlusPanel />
-        </aside>
-      </section>
+      <FeedSection items={items} />
+      <aside className="mx-auto max-w-[1440px] px-4 pb-8 md:px-6">
+        <PlusPanel />
+      </aside>
       <MissionGuideBanners />
     </>
   );

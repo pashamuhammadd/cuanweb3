@@ -4,8 +4,12 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion } from "motion/react";
 import type { Opportunity } from "@/types/opportunity";
-import { OpportunityCard } from "@/components/opportunities/opportunity-card";
+import { ArrowRight } from "lucide-react";
+import { FeedCard } from "./feed-card";
 import { cn } from "@/lib/cn";
+
+/** Jumlah peluang terbaru yang tampil di beranda. */
+const FEED_LIMIT = 8;
 
 type FilterKey = "semua" | "tanpa-modal" | "pemula" | "deadline-dekat";
 
@@ -36,19 +40,23 @@ export function FeedSection({ items }: { items: Opportunity[] }) {
   const [active, setActive] = useState<FilterKey>("semua");
 
   const filtered = useMemo(
-    () => items.filter((item) => matchesFilter(item, active)),
+    () =>
+      items
+        .filter((item) => matchesFilter(item, active))
+        .sort((a, b) => (b.publishedAt ?? "").localeCompare(a.publishedAt ?? ""))
+        .slice(0, FEED_LIMIT),
     [items, active],
   );
 
   return (
     <section aria-labelledby="feed-heading" className="mx-auto max-w-[1440px] px-4 py-8 md:px-6">
-      <div className="flex flex-wrap items-center justify-between gap-3">
+      <div className="flex flex-wrap items-baseline justify-between gap-3">
         <h2 id="feed-heading" className="font-heading text-xl font-bold text-offwhite md:text-2xl">
           Peluang terbaru
         </h2>
-        <Link href="/peluang" className="text-sm font-medium text-gold hover:underline">
-          Lihat semua →
-        </Link>
+        <span className="font-mono text-xs text-muted-foreground">
+          {String(filtered.length).padStart(2, "0")} terbaru
+        </span>
       </div>
 
       <div
@@ -75,23 +83,35 @@ export function FeedSection({ items }: { items: Opportunity[] }) {
       </div>
 
       <AnimatePresence mode="wait">
-        <motion.div
+        <motion.ol
           key={active}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.15 }}
-          className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
+          className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4"
         >
           {filtered.length === 0 ? (
-            <p className="col-span-full rounded-2xl border border-dashed border-border-subtle p-8 text-center text-sm text-muted-foreground">
+            <li className="col-span-full rounded-2xl border border-dashed border-border-subtle p-8 text-center text-sm text-muted-foreground">
               Belum ada peluang yang cocok dengan filter ini.
-            </p>
+            </li>
           ) : (
-            filtered.map((item) => <OpportunityCard key={item.id} opportunity={item} />)
+            filtered.map((item, i) => (
+              <FeedCard key={item.id} opportunity={item} index={i} total={filtered.length} />
+            ))
           )}
-        </motion.div>
+        </motion.ol>
       </AnimatePresence>
+
+      <div className="mt-8 flex justify-center">
+        <Link
+          href="/peluang"
+          className="inline-flex min-h-11 items-center gap-2 rounded-full border border-gold/60 px-6 py-3 text-sm font-semibold text-gold transition-colors hover:bg-gold hover:text-charcoal"
+        >
+          Lihat semua peluang
+          <ArrowRight className="h-4 w-4" aria-hidden />
+        </Link>
+      </div>
     </section>
   );
 }
