@@ -11,7 +11,7 @@ export function DesktopNav() {
   const reduce = useReducedMotion();
 
   return (
-    <nav aria-label="Navigasi utama" className="hidden md:block">
+    <nav aria-label="Navigasi utama" className="hidden lg:block">
       <ul className="flex items-center gap-1">
         {PRIMARY_NAV.map((item) => {
           const active = isNavActive(item.href, pathname);

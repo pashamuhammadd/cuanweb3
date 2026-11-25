@@ -389,3 +389,27 @@ Detail desain, sumber, kuota, dan aturan: `docs/OPPORTUNITY-ENGINE.md`.
 - Ticker market masih data demo berlabel ("Market · Demo") — `market_snapshots` belum dibuat.
 - Token Web3.Career, izin Devpost, Fase 2–5 (campaign, misi, Plus, AdSense) belum dimulai.
 - Belum: uji screen reader nyata dan Safari/iOS.
+
+## 2026-11-25 — Redesign UI/UX (P1–P3)
+
+- Fondasi: token surface bertingkat, radius, `card-surface`/`card-interactive`/`press`,
+  `Reveal` (entrance sekali per viewport), keyframe loop mulus; tema per kategori
+  (`src/lib/category-theme.ts`) dan `CategoryIcon` (WebP bila ada, fallback Lucide).
+- Favicon/app icon/apple icon dari kepala CUA (`src/app/favicon.ico`, `icon.png`, `apple-icon.png`).
+- P1: header ringkas + ticker (mobile geser, desktop marquee dengan tombol jeda), nav aktif
+  beranimasi, beranda (hero animasi hanya ≥1024px; mobile/tablet langsung kategori 3×2,
+  "Lihat semua" ke `/kategori` baru, feed 6 item, rail per kategori, panel Plus "Segera hadir"
+  tanpa tombol beli), kartu peluang baru (label dari category-specs, bookmark di kartu),
+  `/peluang` (cari, kategori, skill, urutan, toggle, bottom sheet filter mobile, muat lebih),
+  detail dua kolom + breadcrumb + peluang terkait, halaman kategori + chip kategori.
+- P2: market, belajar (+artikel editorial), komunitas, login, akun (tab + ringkasan), plus, footer
+  (kini tampil di mobile agar link Privasi/Ketentuan terjangkau), 404.
+- P3: sidebar admin dengan ikon/aktif, tombol/input/surface konsisten.
+- Tanda pisah panjang dihapus dari copy UI; teks engine di DB dirapikan saat tampil (`tidyDashes`).
+- Navigasi atas mulai 1024px; di bawahnya bottom navigation (768px sebelumnya overflow).
+- Verifikasi: lint, typecheck, 49/49 test, build; tanpa overflow horizontal di 14 halaman ×
+  360/390/768/1024/1440px; fokus keyboard terlihat; bottom sheet memindahkan fokus; detail
+  tidak ada → 404.
+- Belum: ikon kategori WebP (menunggu aset; daftarkan di `CATEGORY_ILLUSTRATIONS_READY`),
+  uji perangkat fisik/Safari iOS, screen reader nyata, cek visual admin dengan login.
+- Catatan: route Jobs tetap `/jobs` (bukan `/web3-jobs`) agar URL/SEO yang sudah terindeks tidak berubah.

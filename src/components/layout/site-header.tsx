@@ -11,7 +11,7 @@ export async function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-40 border-b border-border-faint bg-charcoal/85 backdrop-blur-md supports-[backdrop-filter]:bg-charcoal/75">
-      <div className="mx-auto flex h-14 max-w-[1440px] items-center gap-3 px-4 md:h-16 md:gap-6 md:px-6">
+      <div className="mx-auto flex h-14 max-w-[1440px] items-center gap-3 px-4 md:h-16 md:px-6 lg:gap-6">
         <Logo />
         <DesktopNav />
         <div className="ml-auto flex items-center gap-2">

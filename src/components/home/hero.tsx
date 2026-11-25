@@ -15,14 +15,14 @@ const CHIP_POS = [
 ];
 
 /**
- * Hero DESKTOP saja (mobile langsung ke kategori). Komposisi animasi dengan CSS:
+ * Hero DESKTOP saja (≥1024px; mobile/tablet langsung ke kategori). Komposisi animasi dengan CSS:
  * ilustrasi resmi CUA bergeser sangat pelan (loop alternate, tanpa distorsi),
  * cahaya teal/gold melayang, garis jaringan blockchain mengalir, dan chip
  * kategori berisi jumlah peluang asli. Semua loop berhenti di reduced motion.
  */
 export function Hero({ total, chips }: { total: number; chips: Chip[] }) {
   return (
-    <section aria-labelledby="hero-heading" className="relative hidden overflow-hidden border-b border-border-faint md:block">
+    <section aria-labelledby="hero-heading" className="relative hidden overflow-hidden border-b border-border-faint lg:block">
       {/* Lapisan ilustrasi */}
       <div className="absolute inset-0" aria-hidden>
         <div className="absolute inset-y-0 right-0 w-[68%] motion-safe:animate-pan">

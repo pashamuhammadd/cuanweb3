@@ -13,7 +13,7 @@ export function MobileBottomNav() {
   return (
     <nav
       aria-label="Navigasi bawah"
-      className="pb-safe fixed inset-x-0 bottom-0 z-40 border-t border-border-faint bg-charcoal/90 backdrop-blur-md md:hidden"
+      className="pb-safe fixed inset-x-0 bottom-0 z-40 border-t border-border-faint bg-charcoal/90 backdrop-blur-md lg:hidden"
     >
       <ul className="mx-auto flex max-w-lg items-stretch justify-between px-2 pt-1.5 pb-1">
         {MOBILE_BOTTOM_NAV.map((item) => {
