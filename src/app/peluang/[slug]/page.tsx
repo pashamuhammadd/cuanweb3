@@ -25,7 +25,7 @@ import { detailValueLabel, getCategorySpec } from "@/lib/category-specs";
 import { CATEGORY_THEME } from "@/lib/category-theme";
 import { RISK_FLAG_LABELS } from "@/lib/engine/risk";
 import { safeParseUrl } from "@/lib/engine/url";
-import { formatDate, formatRelativeDeadline, isFutureDate } from "@/lib/format";
+import { formatDate, formatRelativeDeadline, isFutureDate, tidyDashes } from "@/lib/format";
 import { BookmarkButton } from "@/components/opportunities/bookmark-button";
 import { OpportunityCard } from "@/components/opportunities/opportunity-card";
 import { CategoryIcon } from "@/components/category/category-icon";
@@ -118,7 +118,7 @@ export default async function OpportunityDetailPage({ params }: { params: Promis
               : "mt-1 text-base font-medium text-offwhite/70"
           }
         >
-          {item.rewardDescription ?? "Belum diketahui"}
+          {tidyDashes(item.rewardDescription) ?? "Belum diketahui"}
         </p>
         {item.category !== "jobs" && <p className="mt-0.5 text-xs text-muted-foreground">{REWARD_CERTAINTY_LABELS[certainty]}</p>}
       </div>
@@ -134,7 +134,7 @@ export default async function OpportunityDetailPage({ params }: { params: Promis
         )}
         {(item.country || item.category === "jobs") && (
           <Fact icon={<MapPin className={iconClass} />} label={spec.labels.location}>
-            {item.country ?? "Belum diketahui"}
+            {tidyDashes(item.country) ?? "Belum diketahui"}
           </Fact>
         )}
         {detailFacts.map((field) => (
@@ -154,7 +154,7 @@ export default async function OpportunityDetailPage({ params }: { params: Promis
         )}
         {item.category !== "jobs" && (
           <Fact icon={<Wallet className={iconClass} />} label="Modal / biaya">
-            {item.costInfo ?? (item.isFree ? "Gratis" : "Belum diketahui")}
+            {tidyDashes(item.costInfo) ?? (item.isFree ? "Gratis" : "Belum diketahui")}
           </Fact>
         )}
       </dl>
@@ -285,7 +285,7 @@ export default async function OpportunityDetailPage({ params }: { params: Promis
             <h2 id="tentang-heading" className="font-heading text-lg font-semibold text-offwhite">
               Tentang peluang ini
             </h2>
-            <p className="mt-2 text-base leading-relaxed text-offwhite/85">{item.summary}</p>
+            <p className="mt-2 text-base leading-relaxed text-offwhite/85">{tidyDashes(item.summary)}</p>
           </section>
 
           {item.requirements.length > 0 && (
@@ -309,7 +309,7 @@ export default async function OpportunityDetailPage({ params }: { params: Promis
               <h2 id="panduan-heading" className="font-heading text-lg font-semibold text-offwhite">
                 Panduan mengikuti
               </h2>
-              <div className="card-surface mt-2 p-4 text-sm leading-relaxed whitespace-pre-line text-offwhite/85 md:p-5">{item.content}</div>
+              <div className="card-surface mt-2 p-4 text-sm leading-relaxed whitespace-pre-line text-offwhite/85 md:p-5">{tidyDashes(item.content)}</div>
             </section>
           )}
 

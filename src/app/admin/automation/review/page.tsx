@@ -111,7 +111,7 @@ export default async function ReviewQueuePage({ searchParams }: { searchParams: 
                   Risiko {o.risk_level === "high" ? "tinggi" : o.risk_level === "medium" ? "sedang" : "rendah"}
                 </span>
                 <span className="text-muted-foreground">
-                  {o.source_name ?? o.source_provider ?? "manual"} · ditemukan {o.discovered_at ? formatDate(o.discovered_at) : "—"} · status {o.state}
+                  {o.source_name ?? o.source_provider ?? "manual"} · ditemukan {o.discovered_at ? formatDate(o.discovered_at) : "-"} · status {o.state}
                 </span>
               </div>
 
@@ -137,7 +137,7 @@ export default async function ReviewQueuePage({ searchParams }: { searchParams: 
               {missing.required.length > 0 ? (
                 <p className="mt-2 text-xs text-amber-300">Wajib dilengkapi sebelum auto-publish: {missing.required.join(", ")}</p>
               ) : (
-                <p className="mt-2 text-xs text-emerald-400">Field wajib lengkap — memenuhi syarat auto-publish.</p>
+                <p className="mt-2 text-xs text-emerald-400">Field wajib lengkap, memenuhi syarat auto-publish.</p>
               )}
               {missing.recommended.length > 0 && (
                 <p className="mt-1 text-xs text-muted-foreground">Sebaiknya dilengkapi: {missing.recommended.join(", ")}</p>

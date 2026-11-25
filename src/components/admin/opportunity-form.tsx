@@ -212,7 +212,7 @@ export function OpportunityForm({ opportunity }: { opportunity?: OpportunityRow 
           name="markVerified"
           className="h-4 w-4 rounded border-border-subtle bg-surface-raised accent-teal"
         />
-        Saya sudah memeriksa sumber resmi — tandai terverifikasi hari ini
+        Saya sudah memeriksa sumber resmi, tandai terverifikasi hari ini
       </label>
 
       <label className="flex items-center gap-2 text-sm text-offwhite">

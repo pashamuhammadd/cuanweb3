@@ -19,7 +19,7 @@ export default function MisiPage() {
         dari sponsor akan hadir di sini.
       </p>
       <p className="mt-6 rounded-2xl border border-dashed border-border-subtle p-8 text-sm text-muted-foreground">
-        Fitur ini direncanakan pada Fase 3 — Misi dan komunitas (lihat
+        Fitur ini direncanakan pada Fase 3: Misi dan komunitas (lihat
         docs/ROADMAP.md). Slot reservasi, review, dan pembayaran akan
         transparan dan terkontrol sebelum tayang ke publik.
       </p>

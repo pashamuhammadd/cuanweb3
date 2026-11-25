@@ -46,7 +46,7 @@ function SourceCard({ source }: { source: IntegrationSourceRow }) {
         </div>
         <div className="flex flex-wrap gap-1.5">
           {source.is_paid ? (
-            <Badge tone="danger">Berbayar — dikunci</Badge>
+            <Badge tone="danger">Berbayar, dikunci</Badge>
           ) : source.enabled ? (
             <Badge tone="ok">Aktif</Badge>
           ) : (
@@ -74,11 +74,11 @@ function SourceCard({ source }: { source: IntegrationSourceRow }) {
       <dl className="mt-3 grid grid-cols-2 gap-2 text-xs sm:grid-cols-4">
         <div>
           <dt className="text-muted-foreground">Sinkron terakhir</dt>
-          <dd className="text-offwhite">{source.last_run_at ? formatDateTime(source.last_run_at) : "—"}</dd>
+          <dd className="text-offwhite">{source.last_run_at ? formatDateTime(source.last_run_at) : "-"}</dd>
         </div>
         <div>
           <dt className="text-muted-foreground">Status</dt>
-          <dd className={source.last_status === "failed" ? "text-rose-300" : "text-offwhite"}>{source.last_status ?? "—"}</dd>
+          <dd className={source.last_status === "failed" ? "text-rose-300" : "text-offwhite"}>{source.last_status ?? "-"}</dd>
         </div>
         <div>
           <dt className="text-muted-foreground">Berikutnya</dt>
@@ -89,7 +89,7 @@ function SourceCard({ source }: { source: IntegrationSourceRow }) {
           <dd className="text-offwhite">
             {source.backoff_until && isFutureDate(source.backoff_until)
               ? `s/d ${formatDateTime(source.backoff_until)} (${source.consecutive_failures}× gagal)`
-              : "—"}
+              : "-"}
           </dd>
         </div>
       </dl>
@@ -133,7 +133,7 @@ function SourceCard({ source }: { source: IntegrationSourceRow }) {
             </div>
             <fieldset>
               <legend className="text-xs text-muted-foreground">
-                Kategori yang boleh dihasilkan (kosong = semua; kategori default: {source.default_category ? CATEGORY_LABELS[source.default_category] : "—"})
+                Kategori yang boleh dihasilkan (kosong = semua; kategori default: {source.default_category ? CATEGORY_LABELS[source.default_category] : "-"})
               </legend>
               <div className="mt-1 flex flex-wrap gap-2">
                 {OPPORTUNITY_CATEGORIES.map((c) => (

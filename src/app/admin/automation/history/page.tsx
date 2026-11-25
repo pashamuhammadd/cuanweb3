@@ -50,7 +50,7 @@ export default async function SyncHistoryPage() {
             return (
               <tr key={r.id} className="border-t border-border-subtle align-top">
                 <td className="px-3 py-2.5 whitespace-nowrap text-muted-foreground">{formatDateTime(r.started_at)}</td>
-                <td className="px-3 py-2.5 text-offwhite">{r.source_name ?? "—"}</td>
+                <td className="px-3 py-2.5 text-offwhite">{r.source_name ?? "-"}</td>
                 <td className="px-3 py-2.5 text-muted-foreground">{TRIGGER_LABEL[r.trigger] ?? r.trigger}</td>
                 <td className="px-3 py-2.5">
                   <span className={cn("rounded-full px-2 py-0.5 text-xs font-medium", STATUS_STYLE[r.status])}>

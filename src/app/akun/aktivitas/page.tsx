@@ -7,7 +7,7 @@ export default function AkunAktivitasPage() {
       </p>
       <p className="mt-6 rounded-2xl border border-dashed border-border-subtle p-8 text-center text-sm text-muted-foreground">
         Belum ada aktivitas. Fitur campaign dan misi berbayar akan tersedia
-        pada fase berikutnya (lihat docs/ROADMAP.md).
+        pada fase berikutnya.
       </p>
     </div>
   );

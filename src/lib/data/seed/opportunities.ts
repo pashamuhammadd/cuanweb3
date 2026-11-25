@@ -23,7 +23,7 @@ export const SEED_OPPORTUNITIES: Opportunity[] = [
     title: "Airdrop Komunitas (Contoh)",
     summary: "Ikuti tugas sederhana di komunitas dan dapatkan reward token (simulasi).",
     content:
-      "Ini adalah contoh listing airdrop untuk keperluan pengembangan. Langkah: (1) Bergabung ke komunitas resmi, (2) Selesaikan tugas sosial, (3) Hubungkan wallet pada platform resmi penyelenggara. Reward belum dikonfirmasi oleh proyek — jangan dianggap sebagai jaminan.",
+      "Ini adalah contoh listing airdrop untuk keperluan pengembangan. Langkah: (1) Bergabung ke komunitas resmi, (2) Selesaikan tugas sosial, (3) Hubungkan wallet pada platform resmi penyelenggara. Reward belum dikonfirmasi oleh proyek, jangan dianggap sebagai jaminan.",
     externalUrl: null,
     sourceUrl: null,
     rewardValue: null,
@@ -133,7 +133,7 @@ export const SEED_OPPORTUNITIES: Opportunity[] = [
     title: "Grants Ekosistem untuk Proyek Pemula (Contoh)",
     summary: "Pendanaan tahap awal untuk proyek yang mendukung ekosistem.",
     content:
-      "Contoh program grants. Proposal mencakup deskripsi proyek, milestone, dan anggaran. Tidak ada jaminan kelolosan — proses review dilakukan oleh tim penyelenggara resmi.",
+      "Contoh program grants. Proposal mencakup deskripsi proyek, milestone, dan anggaran. Tidak ada jaminan kelolosan. Proses review dilakukan oleh tim penyelenggara resmi.",
     externalUrl: null,
     sourceUrl: null,
     rewardValue: null,

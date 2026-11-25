@@ -13,8 +13,8 @@ export default function TentangPage() {
       <div className="prose-invert mt-4 space-y-4 text-sm leading-relaxed text-offwhite/90">
         <p>
           CuanWeb3 membantu masyarakat Indonesia menemukan peluang penghasilan
-          Web3 — airdrop, giveaway, bounty & kontes, pekerjaan, hackathon, dan
-          grants — dalam satu tempat. Platform ini berangkat dari komunitas
+          Web3 (airdrop, giveaway, bounty & kontes, pekerjaan, hackathon, dan
+          grants) dalam satu tempat. Platform ini berangkat dari komunitas
           Facebook Komunitas Cuan Web3 dengan sekitar 53,1 ribu anggota.
         </p>
         <p>
@@ -30,7 +30,7 @@ export default function TentangPage() {
         <p>
           Status platform: dalam pengembangan aktif. Beberapa fitur (campaign
           sponsor, misi berbayar, CuanWeb3 Plus) masih dalam tahap
-          perencanaan atau pengembangan — lihat roadmap publik untuk detail.
+          perencanaan atau pengembangan. Lihat roadmap publik untuk detail.
         </p>
       </div>
     </div>

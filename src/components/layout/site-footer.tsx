@@ -11,6 +11,7 @@ const FOOTER_LINKS = [
       { href: "/jobs", label: "Web3 Jobs" },
       { href: "/hackathon", label: "Hackathon" },
       { href: "/grants", label: "Grants" },
+      { href: "/kategori", label: "Semua kategori" },
     ],
   },
   {
@@ -35,9 +36,9 @@ const FOOTER_LINKS = [
 
 export function SiteFooter() {
   return (
-    <footer className="hidden border-t border-border-subtle bg-surface md:block">
-      <div className="mx-auto max-w-[1440px] px-6 py-12">
-        <div className="grid gap-10 md:grid-cols-[1.2fr_repeat(3,1fr)]">
+    <footer className="border-t border-border-faint bg-section">
+      <div className="mx-auto max-w-[1440px] px-4 py-8 md:px-6 md:py-12">
+        <div className="grid gap-8 md:grid-cols-[1.2fr_repeat(3,1fr)] md:gap-10">
           <div className="space-y-3">
             <Logo />
             <p className="max-w-xs text-sm text-muted-foreground">
@@ -45,17 +46,17 @@ export function SiteFooter() {
               untuk komunitas Indonesia.
             </p>
           </div>
-          {FOOTER_LINKS.map((group) => (
-            <div key={group.title}>
+          {FOOTER_LINKS.map((group, i) => (
+            <div key={group.title} className={i === 0 ? "hidden md:block" : undefined}>
               <h3 className="font-heading text-sm font-semibold text-offwhite">
                 {group.title}
               </h3>
-              <ul className="mt-3 space-y-2">
+              <ul className="mt-2 flex flex-wrap gap-x-4 md:mt-3 md:block md:space-y-1">
                 {group.links.map((link) => (
                   <li key={link.href}>
                     <Link
                       href={link.href}
-                      className="text-sm text-muted-foreground transition-colors hover:text-teal"
+                      className="inline-flex min-h-10 items-center text-sm text-muted-foreground transition-colors hover:text-teal md:min-h-8"
                     >
                       {link.label}
                     </Link>
@@ -67,7 +68,7 @@ export function SiteFooter() {
         </div>
         <div className="mt-10 border-t border-border-subtle pt-6 text-xs text-muted-foreground">
           © {new Date().getFullYear()} CuanWeb3. Peluang eksternal mengikuti
-          aturan penyelenggara masing-masing. Selalu cek ulang di situs resmi —
+          aturan penyelenggara masing-masing. Selalu cek ulang di situs resmi.
           CuanWeb3 tidak pernah meminta seed phrase atau private key.
         </div>
       </div>

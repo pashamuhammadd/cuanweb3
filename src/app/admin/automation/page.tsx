@@ -102,7 +102,7 @@ export default async function AutomationOverviewPage() {
             </div>
           </fieldset>
           <p className="text-xs text-muted-foreground">
-            Pengayaan AI: <strong>nonaktif</strong> (integrasi opsional berbayar — belum dipasang). Ringkasan dibuat
+            Pengayaan AI: <strong>nonaktif</strong> (integrasi opsional berbayar, belum dipasang). Ringkasan dibuat
             dengan template tanpa biaya.
           </p>
         </ActionForm>

@@ -30,8 +30,8 @@ export const CATEGORY_HREFS: Record<OpportunityCategory, string> = {
 
 export const REWARD_CERTAINTY_LABELS: Record<RewardCertainty, string> = {
   guaranteed: "Bayaran pasti (sesuai sumber)",
-  competition: "Hadiah kompetisi — hanya untuk pemenang",
-  raffle: "Hadiah undian — tidak semua peserta menang",
+  competition: "Hadiah kompetisi, hanya untuk pemenang",
+  raffle: "Hadiah undian, tidak semua peserta menang",
   unconfirmed: "Reward belum dikonfirmasi",
   unknown: "Belum diketahui",
 };

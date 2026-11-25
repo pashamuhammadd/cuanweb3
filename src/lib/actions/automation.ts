@@ -200,7 +200,7 @@ export async function runSyncNow(_prev: ActionResult, formData: FormData): Promi
   return {
     status: t.e > 0 ? "error" : "ok",
     message: `${result.runs.length} sumber diproses: ${t.c} baru, ${t.p} dipublikasikan, ${t.q} ke antrean review, ${t.d} duplikat, ${t.e} error.${result.pendingSources.length ? ` Sisa ${result.pendingSources.length} sumber diproses pada jadwal berikutnya.` : ""}`,
-    detail: result.runs.map((r) => `${r.sourceName}: ${r.status}${r.message ? ` — ${r.message}` : ""}`).join("\n"),
+    detail: result.runs.map((r) => `${r.sourceName}: ${r.status}${r.message ? `: ${r.message}` : ""}`).join("\n"),
   };
 }
 
@@ -226,7 +226,7 @@ export async function reviewOpportunity(_prev: ActionResult, formData: FormData)
     update = { review_state: "rejected" as const, state: "archived" as const };
   } else {
     if (row.deadline_at && Date.parse(row.deadline_at) < Date.now()) {
-      return { status: "error", message: "Deadline sudah lewat — tidak dapat dipublikasikan." };
+      return { status: "error", message: "Deadline sudah lewat, tidak dapat dipublikasikan." };
     }
     update = {
       review_state: "approved" as const,

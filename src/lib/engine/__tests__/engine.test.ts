@@ -312,3 +312,12 @@ describe("safeParseUrl", () => {
     expect(safeParseUrl("https://linktr.ee/x")?.hostname).toBe("linktr.ee");
   });
 });
+
+describe("tidyDashes (tampilan)", () => {
+  it("mengganti tanda pisah panjang dan mempertahankan rentang angka", async () => {
+    const { tidyDashes } = await import("@/lib/format");
+    expect(tidyDashes("Global — bisa dari mana saja")).toBe("Global, bisa dari mana saja");
+    expect(tidyDashes("1–5 orang")).toBe("1–5 orang");
+    expect(tidyDashes(null)).toBeNull();
+  });
+});

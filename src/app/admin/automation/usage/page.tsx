@@ -61,7 +61,7 @@ export default async function ApiUsagePage() {
                 <td className="px-3 py-2.5">
                   <span className="text-offwhite">{r.source.name}</span>
                   <span className="block text-xs text-muted-foreground">
-                    {r.source.is_paid ? "Berbayar — nonaktif" : r.source.enabled ? "Aktif" : "Nonaktif"}
+                    {r.source.is_paid ? "Berbayar, nonaktif" : r.source.enabled ? "Aktif" : "Nonaktif"}
                   </span>
                 </td>
                 <td className="px-3 py-2.5"><Meter used={r.today} limit={r.source.daily_quota} label={`Kuota harian ${r.source.name}`} /></td>

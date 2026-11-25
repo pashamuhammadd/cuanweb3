@@ -5,7 +5,7 @@ import { getCategory } from "@/lib/nav";
 import { ecosystemLabel } from "@/lib/categories";
 import { detailValueLabel, getCategorySpec } from "@/lib/category-specs";
 import { CATEGORY_THEME } from "@/lib/category-theme";
-import { formatRelativeDeadline, isFutureDate } from "@/lib/format";
+import { formatRelativeDeadline, isFutureDate, tidyDashes } from "@/lib/format";
 import { CategoryIcon } from "@/components/category/category-icon";
 import { CardBookmark } from "./card-bookmark";
 import { cn } from "@/lib/cn";
@@ -44,7 +44,8 @@ export function OpportunityCard({
   const ended = isEnded(o);
   const risky = o.riskLevel === "medium" || o.riskLevel === "high";
   const Heading = headingLevel;
-  const reward = o.rewardDescription;
+  const reward = tidyDashes(o.rewardDescription);
+  const location = tidyDashes(o.country);
 
   const jobTraits =
     o.category === "jobs"
@@ -129,8 +130,8 @@ export function OpportunityCard({
               <MapPin className="h-3 w-3" aria-hidden />
               {spec.labels.location}
             </dt>
-            <dd className="truncate text-sm text-offwhite/90" title={o.country ?? undefined}>
-              {o.country ?? "Belum diketahui"}
+            <dd className="truncate text-sm text-offwhite/90" title={location ?? undefined}>
+              {location ?? "Belum diketahui"}
             </dd>
           </div>
         ) : (

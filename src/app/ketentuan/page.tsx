@@ -11,7 +11,7 @@ export default function KetentuanPage() {
     <div className="mx-auto max-w-2xl px-4 py-10 md:px-6">
       <h1 className="font-heading text-2xl font-bold text-offwhite">Ketentuan Layanan</h1>
       <p className="mt-2 text-xs text-muted-foreground">
-        Draf awal — akan diperbarui mengikuti implementasi fitur dan
+        Draf awal. Akan diperbarui mengikuti implementasi fitur dan
         persetujuan pemilik platform.
       </p>
 
@@ -20,7 +20,7 @@ export default function KetentuanPage() {
           <h2 className="font-heading font-semibold text-offwhite">Sifat layanan</h2>
           <p className="mt-1">
             CuanWeb3 adalah agregator informasi peluang Web3. Kami tidak
-            menyelenggarakan airdrop, hackathon, atau grants pihak ketiga —
+            menyelenggarakan airdrop, hackathon, atau grants pihak ketiga;
             pendaftaran dan syarat mengikuti aturan penyelenggara asli.
             Login lewat email atau Google tidak membuktikan satu orang hanya
             memiliki satu akun.
@@ -30,7 +30,7 @@ export default function KetentuanPage() {
           <h2 className="font-heading font-semibold text-offwhite">Data contoh</h2>
           <p className="mt-1">
             Selama pengembangan, sebagian listing berlabel &quot;Contoh&quot;
-            adalah data simulasi untuk keperluan desain dan pengujian — bukan
+            adalah data simulasi untuk keperluan desain dan pengujian, bukan
             peluang nyata.
           </p>
         </section>

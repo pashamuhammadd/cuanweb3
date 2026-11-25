@@ -96,17 +96,17 @@ export function EmailLoginForm({ redirectTo }: { redirectTo?: string }) {
         aria-invalid={status.kind === "error"}
         aria-describedby={status.kind === "error" ? statusId : undefined}
         placeholder="nama@email.com"
-        className="mt-1.5 block min-h-11 w-full rounded-xl border border-border-subtle bg-surface px-4 py-2.5 text-sm text-offwhite placeholder:text-muted-foreground focus-visible:border-gold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
+        className="mt-1.5 block h-12 w-full rounded-xl border border-border-subtle bg-surface-raised px-4 text-sm text-offwhite placeholder:text-muted-foreground focus-visible:border-gold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
       />
       <button
         type="submit"
         disabled={isSending}
-        className="mt-3 inline-flex min-h-11 w-full items-center justify-center rounded-full bg-gold px-5 py-3 text-sm font-semibold text-charcoal transition-transform hover:scale-[1.01] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-offwhite active:scale-95 disabled:opacity-60 motion-reduce:transition-none motion-reduce:hover:scale-100"
+        className="press glow-gold mt-3 inline-flex h-12 w-full items-center justify-center rounded-xl bg-gold px-5 text-sm font-semibold text-charcoal transition-[filter] hover:brightness-105 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-offwhite disabled:opacity-60"
       >
         {isSending ? "Mengirim…" : "Kirim link masuk"}
       </button>
       {status.kind === "error" && (
-        <p id={statusId} role="alert" className="mt-2 text-sm text-rose-400">
+        <p id={statusId} role="alert" className="mt-2 text-sm text-rose-300">
           {status.message}
         </p>
       )}
