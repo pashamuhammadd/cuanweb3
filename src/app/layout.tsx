@@ -53,7 +53,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           Lewati ke konten
         </a>
         <SiteHeader />
-        <main id="konten" tabIndex={-1} className="flex-1 pb-20 focus:outline-none md:pb-0">
+        <main id="konten" tabIndex={-1} className="flex-1 pb-20 focus:outline-none lg:pb-0">
           {children}
         </main>
         <SiteFooter />

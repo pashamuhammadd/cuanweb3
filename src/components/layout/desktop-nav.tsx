@@ -9,7 +9,7 @@ export function DesktopNav() {
   const pathname = usePathname();
 
   return (
-    <nav aria-label="Navigasi utama" className="hidden md:flex md:items-center md:gap-1">
+    <nav aria-label="Navigasi utama" className="hidden lg:flex lg:items-center lg:gap-1">
       {PRIMARY_NAV.map((item) => {
         const active =
           item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);

@@ -35,7 +35,7 @@ const FOOTER_LINKS = [
 
 export function SiteFooter() {
   return (
-    <footer className="hidden border-t border-border-subtle bg-surface md:block">
+    <footer className="hidden border-t border-border-subtle bg-surface pb-20 md:block lg:pb-0">
       <div className="mx-auto max-w-[1440px] px-6 py-12">
         <div className="grid gap-10 md:grid-cols-[1.2fr_repeat(3,1fr)]">
           <div className="space-y-3">
