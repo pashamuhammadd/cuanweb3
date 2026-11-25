@@ -11,7 +11,7 @@ export default async function AdminArticlesPage() {
         <h1 className="font-heading text-xl font-bold text-offwhite">Artikel</h1>
         <Link
           href="/admin/articles/new"
-          className="rounded-full bg-gold px-4 py-2 text-sm font-semibold text-charcoal"
+          className="press inline-flex h-11 items-center justify-center rounded-xl bg-gold px-4 text-sm font-semibold text-charcoal"
         >
           + Tulis artikel
         </Link>

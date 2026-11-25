@@ -5,7 +5,7 @@ import { cn } from "@/lib/cn";
 
 const STATE_STYLES: Record<string, string> = {
   draft: "bg-surface-raised text-muted-foreground",
-  published: "bg-emerald-500/15 text-emerald-400",
+  published: "bg-emerald-500/15 text-emerald-300",
   expired: "bg-amber-500/15 text-amber-400",
   archived: "bg-rose-500/15 text-rose-400",
 };
@@ -19,7 +19,7 @@ export default async function AdminOpportunitiesPage() {
         <h1 className="font-heading text-xl font-bold text-offwhite">Peluang</h1>
         <Link
           href="/admin/opportunities/new"
-          className="rounded-full bg-gold px-4 py-2 text-sm font-semibold text-charcoal"
+          className="press inline-flex h-11 items-center justify-center rounded-xl bg-gold px-4 text-sm font-semibold text-charcoal"
         >
           + Tambah
         </Link>

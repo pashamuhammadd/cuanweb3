@@ -11,7 +11,7 @@ export const dynamic = "force-dynamic";
 
 function Stat({ label, value, hint }: { label: string; value: string | number; hint?: string }) {
   return (
-    <div className="rounded-2xl border border-border-subtle bg-surface p-4">
+    <div className="card-surface p-4">
       <dt className="text-xs text-muted-foreground">{label}</dt>
       <dd className="font-heading tabular-nums-fixed mt-1 text-2xl font-bold text-offwhite">{value}</dd>
       {hint && <dd className="mt-0.5 text-xs text-muted-foreground">{hint}</dd>}
@@ -65,7 +65,7 @@ export default async function AutomationOverviewPage() {
         </div>
       </section>
 
-      <section aria-labelledby="pengaturan" className="rounded-2xl border border-border-subtle bg-surface p-5">
+      <section aria-labelledby="pengaturan" className="card-surface p-4 md:p-5">
         <h2 id="pengaturan" className="font-heading text-lg font-semibold text-offwhite">Pengaturan publikasi</h2>
         <p className="mt-1 text-sm text-muted-foreground">
           Auto-publish hanya terjadi bila <strong>sumber</strong> dan <strong>kategori</strong> sama-sama mode otomatis,

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import { AdminNav } from "@/components/admin/admin-nav";
 import { redirect } from "next/navigation";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { getSessionUser } from "@/lib/auth";
@@ -9,18 +9,6 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-const NAV = [
-  { href: "/admin", label: "Dashboard" },
-  { href: "/admin/opportunities", label: "Peluang" },
-  { href: "/admin/automation", label: "Automation" },
-  { href: "/admin/articles", label: "Artikel" },
-  { href: "/admin/campaigns", label: "Campaign" },
-  { href: "/admin/submissions", label: "Submission" },
-  { href: "/admin/sponsors", label: "Sponsor" },
-  { href: "/admin/payouts", label: "Payout" },
-  { href: "/admin/users", label: "Pengguna" },
-  { href: "/admin/settings", label: "Pengaturan" },
-];
 
 export default async function AdminLayout({ children }: LayoutProps<"/admin">) {
   if (!isSupabaseConfigured()) {
@@ -51,22 +39,9 @@ export default async function AdminLayout({ children }: LayoutProps<"/admin">) {
   }
 
   return (
-    <div className="mx-auto flex max-w-[1440px] flex-col gap-6 px-4 py-8 md:flex-row md:px-6">
-      <nav
-        aria-label="Navigasi admin"
-        className="flex gap-2 overflow-x-auto border-b border-border-subtle pb-3 md:w-48 md:flex-col md:border-b-0 md:border-r md:pb-0 md:pr-4"
-      >
-        {NAV.map((item) => (
-          <Link
-            key={item.href}
-            href={item.href}
-            className="shrink-0 rounded-lg px-3 py-2 text-sm font-medium text-offwhite/80 transition-colors hover:bg-surface hover:text-gold"
-          >
-            {item.label}
-          </Link>
-        ))}
-      </nav>
-      <div className="flex-1">{children}</div>
+    <div className="mx-auto flex max-w-[1440px] flex-col gap-5 px-4 py-5 md:flex-row md:gap-8 md:px-6 md:py-8">
+      <AdminNav />
+      <div className="min-w-0 flex-1">{children}</div>
     </div>
   );
 }

@@ -43,17 +43,17 @@ export default async function ReviewQueuePage({ searchParams }: { searchParams: 
 
   return (
     <div className="space-y-5">
-      <form method="get" className="flex flex-wrap items-end gap-3 rounded-2xl border border-border-subtle bg-surface p-4" aria-label="Filter antrean">
+      <form method="get" className="flex flex-wrap items-end gap-3 card-surface p-4" aria-label="Filter antrean">
         <div>
           <label htmlFor="f-view" className="text-xs text-muted-foreground">Tampilan</label>
-          <select id="f-view" name="view" defaultValue={view} className="mt-1 block rounded-lg border border-border-subtle bg-surface-raised px-3 py-2 text-sm">
+          <select id="f-view" name="view" defaultValue={view} className="mt-1 block min-h-11 rounded-xl border border-border-subtle bg-surface-raised px-3 py-2 text-sm">
             <option value="queue">Menunggu review / berubah</option>
             <option value="rejected">Ditolak</option>
           </select>
         </div>
         <div>
           <label htmlFor="f-source" className="text-xs text-muted-foreground">Sumber</label>
-          <select id="f-source" name="source" defaultValue={sp.source ?? ""} className="mt-1 block rounded-lg border border-border-subtle bg-surface-raised px-3 py-2 text-sm">
+          <select id="f-source" name="source" defaultValue={sp.source ?? ""} className="mt-1 block min-h-11 rounded-xl border border-border-subtle bg-surface-raised px-3 py-2 text-sm">
             <option value="">Semua sumber</option>
             {sources.map((s) => (
               <option key={s.key} value={s.key}>
@@ -64,7 +64,7 @@ export default async function ReviewQueuePage({ searchParams }: { searchParams: 
         </div>
         <div>
           <label htmlFor="f-cat" className="text-xs text-muted-foreground">Kategori</label>
-          <select id="f-cat" name="category" defaultValue={category ?? ""} className="mt-1 block rounded-lg border border-border-subtle bg-surface-raised px-3 py-2 text-sm">
+          <select id="f-cat" name="category" defaultValue={category ?? ""} className="mt-1 block min-h-11 rounded-xl border border-border-subtle bg-surface-raised px-3 py-2 text-sm">
             <option value="">Semua kategori</option>
             {OPPORTUNITY_CATEGORIES.map((c) => (
               <option key={c} value={c}>
@@ -94,7 +94,7 @@ export default async function ReviewQueuePage({ searchParams }: { searchParams: 
           const details = o.details ?? {};
           const dup = o.duplicate_of ? duplicates.get(o.duplicate_of) : undefined;
           return (
-            <li key={o.id} className="rounded-2xl border border-border-subtle bg-surface p-5">
+            <li key={o.id} className="card-surface p-4 md:p-5">
               <div className="flex flex-wrap items-center gap-2 text-xs">
                 <span className="rounded-full bg-teal/15 px-2 py-0.5 font-medium text-teal">{CATEGORY_LABELS[o.category]}</span>
                 {o.review_state === "changed" && (
@@ -105,7 +105,7 @@ export default async function ReviewQueuePage({ searchParams }: { searchParams: 
                 <span
                   className={cn(
                     "rounded-full px-2 py-0.5 font-medium",
-                    o.risk_level === "high" ? "bg-rose-500/15 text-rose-300" : o.risk_level === "medium" ? "bg-amber-500/15 text-amber-300" : "bg-emerald-500/15 text-emerald-400",
+                    o.risk_level === "high" ? "bg-rose-500/15 text-rose-300" : o.risk_level === "medium" ? "bg-amber-500/15 text-amber-300" : "bg-emerald-500/15 text-emerald-300",
                   )}
                 >
                   Risiko {o.risk_level === "high" ? "tinggi" : o.risk_level === "medium" ? "sedang" : "rendah"}
@@ -137,7 +137,7 @@ export default async function ReviewQueuePage({ searchParams }: { searchParams: 
               {missing.required.length > 0 ? (
                 <p className="mt-2 text-xs text-amber-300">Wajib dilengkapi sebelum auto-publish: {missing.required.join(", ")}</p>
               ) : (
-                <p className="mt-2 text-xs text-emerald-400">Field wajib lengkap, memenuhi syarat auto-publish.</p>
+                <p className="mt-2 text-xs text-emerald-300">Field wajib lengkap, memenuhi syarat auto-publish.</p>
               )}
               {missing.recommended.length > 0 && (
                 <p className="mt-1 text-xs text-muted-foreground">Sebaiknya dilengkapi: {missing.recommended.join(", ")}</p>

@@ -58,7 +58,7 @@ export function OpportunityForm({ opportunity }: { opportunity?: OpportunityRow 
             name="category"
             value={category}
             onChange={(e) => setCategory(e.target.value as OpportunityCategory)}
-            className="mt-1.5 w-full rounded-lg border border-border-subtle bg-surface-raised px-3 py-2 text-sm text-offwhite focus:border-teal"
+            className="mt-1.5 w-full min-h-11 rounded-xl border border-border-subtle bg-surface-raised px-3 py-2 text-sm text-offwhite focus:border-teal"
           >
             {OPPORTUNITY_CATEGORIES.map((c) => (
               <option key={c} value={c}>
@@ -73,7 +73,7 @@ export function OpportunityForm({ opportunity }: { opportunity?: OpportunityRow 
             id="state"
             name="state"
             defaultValue={opportunity?.state ?? "draft"}
-            className="mt-1.5 w-full rounded-lg border border-border-subtle bg-surface-raised px-3 py-2 text-sm text-offwhite focus:border-teal"
+            className="mt-1.5 w-full min-h-11 rounded-xl border border-border-subtle bg-surface-raised px-3 py-2 text-sm text-offwhite focus:border-teal"
           >
             <option value="draft">Draft</option>
             <option value="published">Published</option>
@@ -105,7 +105,7 @@ export function OpportunityForm({ opportunity }: { opportunity?: OpportunityRow 
             id="rewardCertainty"
             name="rewardCertainty"
             defaultValue={opportunity?.reward_certainty ?? "unknown"}
-            className="mt-1.5 w-full rounded-lg border border-border-subtle bg-surface-raised px-3 py-2 text-sm text-offwhite focus:border-teal"
+            className="mt-1.5 w-full min-h-11 rounded-xl border border-border-subtle bg-surface-raised px-3 py-2 text-sm text-offwhite focus:border-teal"
           >
             {Object.entries(REWARD_CERTAINTY_LABELS).map(([value, label]) => (
               <option key={value} value={value}>
@@ -168,7 +168,7 @@ export function OpportunityForm({ opportunity }: { opportunity?: OpportunityRow 
                   id={`detail_${field.key}`}
                   name={`detail_${field.key}`}
                   defaultValue={opportunity?.details?.[field.key] ?? ""}
-                  className="mt-1.5 w-full rounded-lg border border-border-subtle bg-surface-raised px-3 py-2 text-sm text-offwhite focus:border-teal"
+                  className="mt-1.5 w-full min-h-11 rounded-xl border border-border-subtle bg-surface-raised px-3 py-2 text-sm text-offwhite focus:border-teal"
                 >
                   <option value="">Belum diketahui</option>
                   {field.options.map((o) => (
@@ -229,7 +229,7 @@ export function OpportunityForm({ opportunity }: { opportunity?: OpportunityRow 
         <button
           type="submit"
           disabled={isPending}
-          className="rounded-full bg-gold px-5 py-2.5 text-sm font-semibold text-charcoal transition-transform hover:scale-[1.02] active:scale-95 disabled:opacity-60"
+          className="press inline-flex h-11 items-center justify-center rounded-xl bg-gold px-5 text-sm font-semibold text-charcoal disabled:opacity-60"
         >
           {isPending ? "Menyimpan…" : "Simpan"}
         </button>
@@ -266,7 +266,7 @@ function Field({
         defaultValue={defaultValue}
         required={required}
         placeholder={placeholder}
-        className="mt-1.5 w-full rounded-lg border border-border-subtle bg-surface-raised px-3 py-2 text-sm text-offwhite placeholder:text-muted-foreground focus:border-teal"
+        className="mt-1.5 w-full min-h-11 rounded-xl border border-border-subtle bg-surface-raised px-3 py-2 text-sm text-offwhite placeholder:text-muted-foreground focus:border-teal"
       />
     </div>
   );
@@ -296,7 +296,7 @@ function TextArea({
         rows={rows}
         defaultValue={defaultValue}
         required={required}
-        className="mt-1.5 w-full rounded-lg border border-border-subtle bg-surface-raised px-3 py-2 text-sm text-offwhite focus:border-teal"
+        className="mt-1.5 w-full min-h-11 rounded-xl border border-border-subtle bg-surface-raised px-3 py-2 text-sm text-offwhite focus:border-teal"
       />
     </div>
   );

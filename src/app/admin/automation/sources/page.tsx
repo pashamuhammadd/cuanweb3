@@ -10,14 +10,14 @@ export const maxDuration = 60;
 export const dynamic = "force-dynamic";
 
 const inputClass =
-  "mt-1 w-full rounded-lg border border-border-subtle bg-surface-raised px-3 py-2 text-sm text-offwhite focus:border-teal";
+  "mt-1 w-full min-h-11 rounded-xl border border-border-subtle bg-surface-raised px-3 py-2 text-sm text-offwhite focus:border-teal";
 
 function Badge({ tone, children }: { tone: "ok" | "muted" | "warn" | "danger"; children: React.ReactNode }) {
   return (
     <span
       className={cn(
         "rounded-full px-2 py-0.5 text-xs font-medium",
-        tone === "ok" && "bg-emerald-500/15 text-emerald-400",
+        tone === "ok" && "bg-emerald-500/15 text-emerald-300",
         tone === "muted" && "bg-surface-raised text-muted-foreground",
         tone === "warn" && "bg-amber-500/15 text-amber-300",
         tone === "danger" && "bg-rose-500/15 text-rose-300",
@@ -34,7 +34,7 @@ function SourceCard({ source }: { source: IntegrationSourceRow }) {
   const fieldId = (name: string) => `${source.key}-${name}`;
 
   return (
-    <article className="rounded-2xl border border-border-subtle bg-surface p-5" aria-labelledby={fieldId("title")}>
+    <article className="card-surface p-4 md:p-5" aria-labelledby={fieldId("title")}>
       <header className="flex flex-wrap items-start justify-between gap-2">
         <div className="min-w-0">
           <h3 id={fieldId("title")} className="font-heading text-base font-semibold text-offwhite">
@@ -178,7 +178,7 @@ export default async function SourcesPage() {
         ))}
       </section>
 
-      <section aria-labelledby="tambah-sumber" className="rounded-2xl border border-border-subtle bg-surface p-5">
+      <section aria-labelledby="tambah-sumber" className="card-surface p-4 md:p-5">
         <h2 id="tambah-sumber" className="font-heading text-lg font-semibold text-offwhite">Tambah sumber RSS</h2>
         <p className="mt-1 text-sm text-muted-foreground">
           Hanya feed RSS/Atom resmi yang memang disediakan penerbitnya. Sumber baru masuk dalam keadaan nonaktif dan
