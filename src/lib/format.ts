@@ -63,13 +63,3 @@ export function formatDateTime(iso: string) {
 export function isFutureDate(iso: string | null | undefined): boolean {
   return Boolean(iso) && Date.parse(iso!) > Date.now();
 }
-
-/**
- * Rapikan tanda pisah panjang (— / –) pada teks tampilan menjadi koma.
- * Data asli di database tidak diubah (hash konten engine tetap stabil).
- * Rentang angka seperti "1–5" dipertahankan.
- */
-export function tidyDashes<T extends string | null | undefined>(text: T): T {
-  if (!text) return text;
-  return text.replace(/\s+[—–]\s+/g, ", ").replace(/\s*—\s*/g, ", ") as T;
-}

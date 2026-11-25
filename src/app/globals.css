@@ -1,47 +1,31 @@
 @import "tailwindcss";
 
-/*
- * Versi C — Charcoal & Gold (cuanweb3-redesign-c/docs/DESIGN.md).
- * Charcoal netral + gold/champagne. Tidak ada aksen teal/hijau dekoratif;
- * hijau/merah hanya untuk makna data (naik/turun, terverifikasi, risiko).
- */
 :root {
   --color-charcoal: #0c1117;
+  --color-petrol: #102b2b;
   --color-gold: #f4bd35;
-  --color-champagne: #e9bc65;
   --color-offwhite: #f5f5f5;
+  --color-teal: #258c83;
 
   --background: var(--color-charcoal);
   --foreground: var(--color-offwhite);
-  /* Tingkat surface: page < section < card < raised < overlay. */
-  --section: #11141a;
-  --surface: #171a21;
-  --surface-raised: #1d2129;
-  --elevated: #242832;
-  --surface-overlay: #242832;
-  --border-faint: rgba(255, 255, 255, 0.06);
-  --border-subtle: rgba(255, 255, 255, 0.08);
-  --border-strong: rgba(255, 255, 255, 0.14);
-  /* #A3A7B0 di atas #171A21 ≈ 7.3:1 (AA untuk teks kecil). */
-  --muted-foreground: #a3a7b0;
-
-  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
-  --header-h: 6.75rem;
+  --surface: #121a22;
+  --surface-raised: #16212b;
+  --border-subtle: rgba(37, 140, 131, 0.25);
+  --border-strong: rgba(37, 140, 131, 0.45);
+  --muted-foreground: rgba(245, 245, 245, 0.64);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --color-section: var(--section);
   --color-surface: var(--surface);
   --color-surface-raised: var(--surface-raised);
-  --color-elevated: var(--elevated);
-  --color-surface-overlay: var(--surface-overlay);
-  --color-border-faint: var(--border-faint);
   --color-charcoal: var(--color-charcoal);
+  --color-petrol: var(--color-petrol);
   --color-gold: var(--color-gold);
-  --color-champagne: var(--color-champagne);
   --color-offwhite: var(--color-offwhite);
+  --color-teal: var(--color-teal);
   --color-border-subtle: var(--border-subtle);
   --color-border-strong: var(--border-strong);
   --color-muted-foreground: var(--muted-foreground);
@@ -50,39 +34,36 @@
   --font-sans: var(--font-geist);
   --font-mono: var(--font-geist-mono);
 
-  --animate-fade-up: fade-up 0.24s var(--ease-out) both;
-  --animate-shimmer: shimmer 1.6s linear infinite;
-  --animate-pop: pop 0.22s var(--ease-out);
-  --animate-hero-glow: hero-glow 16s ease-in-out infinite alternate;
-  --animate-hero-glow-alt: hero-glow-alt 13s ease-in-out infinite alternate;
+  --animate-fade-up: fade-up 0.5s ease-out both;
+  --animate-bob: bob 4s ease-in-out infinite;
+  --animate-ticker: ticker 32s linear infinite;
 
   @keyframes fade-up {
     from {
       opacity: 0;
-      transform: translateY(8px);
+      transform: translateY(12px);
     }
     to {
       opacity: 1;
       transform: translateY(0);
     }
   }
-  @keyframes shimmer {
-    from { background-position: 200% 0; }
-    to { background-position: -200% 0; }
+  @keyframes bob {
+    0%,
+    100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-4px);
+    }
   }
-  @keyframes pop {
-    0% { transform: scale(1); }
-    40% { transform: scale(1.2); }
-    100% { transform: scale(1); }
-  }
-  /* Glow hero: bolak-balik (alternate) sehingga loop mulus tanpa lompatan. */
-  @keyframes hero-glow {
-    from { transform: translate3d(0, 0, 0) scale(1); opacity: 0.75; }
-    to { transform: translate3d(-6%, 4%, 0) scale(1.12); opacity: 1; }
-  }
-  @keyframes hero-glow-alt {
-    from { transform: translate3d(0, 0, 0) scale(1.05); opacity: 0.55; }
-    to { transform: translate3d(5%, -6%, 0) scale(0.95); opacity: 0.85; }
+  @keyframes ticker {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
   }
 }
 
@@ -105,7 +86,8 @@ body {
   font-feature-settings: "tnum" 1;
 }
 
-/* Fokus keyboard: outline emas untuk semua elemen interaktif. */
+/* Fokus keyboard: outline emas kontras di latar gelap untuk semua elemen
+   interaktif. Utility focus-visible:* per komponen tetap bisa menimpanya. */
 @layer base {
   :focus-visible {
     outline: 2px solid var(--color-gold);
@@ -113,81 +95,8 @@ body {
   }
 }
 
-/* Kartu: gradasi graphite lembut, border sangat tipis, tanpa glow per kartu. */
-.card-surface {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.025), rgba(255, 255, 255, 0) 60%) var(--surface);
-  border: 1px solid var(--border-faint);
-  border-radius: 14px;
-}
-.card-interactive {
-  transition:
-    transform 200ms var(--ease-out),
-    border-color 200ms var(--ease-out),
-    background-color 200ms var(--ease-out);
-}
-@media (hover: hover) {
-  .card-interactive:hover {
-    transform: translateY(-3px);
-    border-color: rgba(233, 188, 101, 0.28);
-  }
-}
-.press {
-  transition: transform 140ms var(--ease-out);
-}
-.press:active {
-  transform: scale(0.97);
-}
-
-.skeleton {
-  background: linear-gradient(90deg, var(--surface-raised) 0%, var(--elevated) 50%, var(--surface-raised) 100%);
-  background-size: 200% 100%;
-  animation: var(--animate-shimmer);
-}
-
-/* Hero desktop: gradasi gold/champagne di kanan, bergerak sangat pelan. */
-.hero-glow {
-  position: absolute;
-  pointer-events: none;
-  border-radius: 9999px;
-  filter: blur(40px);
-  will-change: transform, opacity;
-}
-
-/* Entrance sekali saat masuk viewport (lihat components/ui/reveal.tsx). */
-.reveal {
-  opacity: 0;
-  transform: translate3d(0, 8px, 0);
-  transition:
-    opacity 220ms var(--ease-out),
-    transform 220ms var(--ease-out);
-  transition-delay: var(--reveal-delay, 0ms);
-}
-.reveal[data-shown="true"] {
-  opacity: 1;
-  transform: none;
-}
-
-.no-scrollbar {
-  scrollbar-width: none;
-}
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
-}
-
-.pb-safe {
-  padding-bottom: env(safe-area-inset-bottom);
-}
-
-/* Reduced motion: matikan loop, parallax, stagger; fungsi tetap berjalan. */
+/* Reduced motion: disable non-essential animation but keep functionality */
 @media (prefers-reduced-motion: reduce) {
-  .reveal {
-    opacity: 1;
-    transform: none;
-    transition: none;
-  }
-  .card-interactive:hover {
-    transform: none;
-  }
   *,
   *::before,
   *::after {

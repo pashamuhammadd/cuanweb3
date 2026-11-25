@@ -18,7 +18,7 @@ function Meter({ used, limit, label }: { used: number; limit: number | null; lab
         aria-valuemax={limit}
         aria-valuenow={used}
       >
-        <div className={pct >= 90 ? "h-full bg-rose-400" : pct >= 70 ? "h-full bg-amber-400" : "h-full bg-champagne"} style={{ width: `${pct}%` }} />
+        <div className={pct >= 90 ? "h-full bg-rose-400" : pct >= 70 ? "h-full bg-amber-400" : "h-full bg-teal"} style={{ width: `${pct}%` }} />
       </div>
     </div>
   );
@@ -30,7 +30,7 @@ export default async function ApiUsagePage() {
 
   return (
     <div className="space-y-4">
-      <div className="card-surface p-4 text-sm">
+      <div className="rounded-2xl border border-border-subtle bg-surface p-4 text-sm">
         <p className="text-offwhite">
           Estimasi biaya bulan ini: <strong className="tabular-nums-fixed">US${totalCost.toFixed(2)}</strong>{" "}
           <span className="text-muted-foreground">(semua sumber aktif gratis; sumber berbayar dikunci di database)</span>
@@ -61,7 +61,7 @@ export default async function ApiUsagePage() {
                 <td className="px-3 py-2.5">
                   <span className="text-offwhite">{r.source.name}</span>
                   <span className="block text-xs text-muted-foreground">
-                    {r.source.is_paid ? "Berbayar, nonaktif" : r.source.enabled ? "Aktif" : "Nonaktif"}
+                    {r.source.is_paid ? "Berbayar — nonaktif" : r.source.enabled ? "Aktif" : "Nonaktif"}
                   </span>
                 </td>
                 <td className="px-3 py-2.5"><Meter used={r.today} limit={r.source.daily_quota} label={`Kuota harian ${r.source.name}`} /></td>

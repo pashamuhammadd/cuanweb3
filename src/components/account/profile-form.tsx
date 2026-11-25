@@ -10,7 +10,7 @@ export function ProfileForm({ profile }: { profile: ProfileRow }) {
   const [state, formAction, isPending] = useActionState(updateProfile, initialState);
 
   return (
-    <form action={formAction} className="card-surface space-y-5 p-4 md:p-5">
+    <form action={formAction} className="space-y-5 rounded-2xl border border-border-subtle bg-surface p-5">
       <div>
         <label htmlFor="username" className="text-sm font-medium text-offwhite">
           Username
@@ -19,7 +19,7 @@ export function ProfileForm({ profile }: { profile: ProfileRow }) {
           id="username"
           name="username"
           defaultValue={profile.username}
-          className="mt-1.5 h-11 w-full rounded-xl border border-border-subtle bg-surface-raised px-3 text-sm text-offwhite focus:border-champagne/60"
+          className="mt-1.5 w-full rounded-lg border border-border-subtle bg-surface-raised px-3 py-2 text-sm text-offwhite focus:border-teal"
         />
       </div>
 
@@ -32,7 +32,7 @@ export function ProfileForm({ profile }: { profile: ProfileRow }) {
           name="skillTags"
           defaultValue={profile.skill_tags?.join(", ") ?? ""}
           placeholder="desain, developer, menulis"
-          className="mt-1.5 h-11 w-full rounded-xl border border-border-subtle bg-surface-raised px-3 text-sm text-offwhite placeholder:text-muted-foreground focus:border-champagne/60"
+          className="mt-1.5 w-full rounded-lg border border-border-subtle bg-surface-raised px-3 py-2 text-sm text-offwhite placeholder:text-muted-foreground focus:border-teal"
         />
       </div>
 
@@ -41,7 +41,7 @@ export function ProfileForm({ profile }: { profile: ProfileRow }) {
           type="checkbox"
           name="notificationOptIn"
           defaultChecked={profile.notification_opt_in}
-          className="h-4 w-4 rounded border-border-subtle bg-surface-raised accent-gold"
+          className="h-4 w-4 rounded border-border-subtle bg-surface-raised accent-teal"
         />
         Kirim notifikasi deadline & campaign ke email saya
       </label>
@@ -50,14 +50,13 @@ export function ProfileForm({ profile }: { profile: ProfileRow }) {
         <button
           type="submit"
           disabled={isPending}
-          className="press h-11 rounded-xl bg-gold px-5 text-sm font-semibold text-charcoal disabled:opacity-60"
+          className="rounded-full bg-gold px-5 py-2.5 text-sm font-semibold text-charcoal transition-transform hover:scale-[1.02] active:scale-95 disabled:opacity-60"
         >
           {isPending ? "Menyimpan…" : "Simpan perubahan"}
         </button>
         {state.status !== "idle" && (
           <span
-            role="status"
-            className={state.status === "ok" ? "text-sm text-emerald-300" : "text-sm text-rose-300"}
+            className={state.status === "ok" ? "text-sm text-emerald-400" : "text-sm text-rose-400"}
           >
             {state.message}
           </span>

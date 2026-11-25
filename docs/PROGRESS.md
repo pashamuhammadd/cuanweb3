@@ -434,3 +434,14 @@ Detail desain, sumber, kuota, dan aturan: `docs/OPPORTUNITY-ENGINE.md`.
   parameter hero → hasil filter benar; tanpa error konsol/hidrasi.
 - Belum: tampilan admin dengan login, perangkat fisik/Safari iOS, screen reader. Folder kit
   `cuanweb3-redesign-c/` belum di-commit (milik pemilik).
+
+## 2026-11-25 — Kembali ke desain awal (permintaan pemilik)
+
+- Pemilik tidak menyukai hasil redesign; kelima commit redesign (teal P1–P3 dan versi C) di-revert
+  sehingga kode tampilan identik dengan `cf34d4a` (desain awal sesuai `references/ui-desktop-mobile.png`).
+- Sesuai pilihan pemilik ("kembalikan persis"), perbaikan yang ikut redesign juga kembali ke kondisi awal:
+  footer tersembunyi di mobile (link Privasi/Ketentuan tidak terjangkau di HP), tombol
+  "Gabung Plus — Rp10.000/bulan" muncul lagi padahal pembayaran belum aktif, favicon default, tanpa
+  `/kategori` dan redirect `/web3-jobs`, tanpa bookmark di kartu.
+- Riwayat redesign tetap di git (b7265cd…b808c10) untuk referensi improve berikutnya.
+- Rencana: pemilik akan meminta improve bertahap (bukan redesign total).

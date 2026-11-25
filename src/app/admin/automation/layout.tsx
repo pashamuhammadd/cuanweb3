@@ -6,7 +6,7 @@ export default function AutomationLayout({ children }: { children: ReactNode }) 
     <div>
       <h1 className="font-heading text-xl font-bold text-offwhite">Automation Center</h1>
       <p className="mt-1 text-sm text-muted-foreground">
-        CuanWeb3 Opportunity Engine: pencarian, pengolahan, dan publikasi peluang otomatis dengan anggaran Rp0.
+        CuanWeb3 Opportunity Engine — pencarian, pengolahan, dan publikasi peluang otomatis dengan anggaran Rp0.
       </p>
       <AutomationNav />
       <div className="mt-6">{children}</div>

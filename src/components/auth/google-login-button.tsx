@@ -35,11 +35,11 @@ export function GoogleLoginButton({ redirectTo }: { redirectTo?: string }) {
         type="button"
         onClick={handleClick}
         disabled={isLoading}
-        className="press inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-offwhite px-5 text-sm font-semibold text-charcoal disabled:opacity-60"
+        className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-offwhite px-5 py-3 text-sm font-semibold text-charcoal transition-transform hover:scale-[1.01] active:scale-95 disabled:opacity-60"
       >
         {isLoading ? "Mengalihkan…" : "Masuk dengan Google"}
       </button>
-      {error && <p className="mt-2 text-sm text-rose-300">{error}</p>}
+      {error && <p className="mt-2 text-sm text-rose-400">{error}</p>}
     </div>
   );
 }

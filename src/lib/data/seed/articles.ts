@@ -29,7 +29,7 @@ export const SEED_ARTICLES: SeedArticle[] = [
     title: "Cara Mulai Ikut Airdrop dengan Aman",
     summary: "Langkah praktis untuk pemula sebelum mengikuti airdrop pertama.",
     content:
-      "Pelajari proyek sebelum berpartisipasi: baca whitepaper, cek tim, dan cari tahu status audit jika ada.\n\nGunakan wallet eksplorasi terpisah dari wallet utama berisi aset besar.\n\nJangan membayar \"gas fee\" ke pihak yang tidak jelas untuk klaim airdrop. Proyek resmi biasanya memakai smart contract transparan.",
+      "Pelajari proyek sebelum berpartisipasi: baca whitepaper, cek tim, dan cari tahu status audit jika ada.\n\nGunakan wallet eksplorasi terpisah dari wallet utama berisi aset besar.\n\nJangan membayar \"gas fee\" ke pihak yang tidak jelas untuk klaim airdrop — proyek resmi biasanya memakai smart contract transparan.",
     publishedAt: daysAgo(14),
   },
 ];

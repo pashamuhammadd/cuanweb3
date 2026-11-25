@@ -17,13 +17,13 @@ export default async function AdminDashboardPage() {
       <div className="mt-6 flex gap-3">
         <Link
           href="/admin/opportunities/new"
-          className="press inline-flex h-11 items-center justify-center rounded-xl bg-gold px-5 text-sm font-semibold text-charcoal"
+          className="rounded-full bg-gold px-5 py-2.5 text-sm font-semibold text-charcoal"
         >
           + Tambah peluang
         </Link>
         <Link
           href="/admin/articles/new"
-          className="press inline-flex h-11 items-center rounded-xl border border-border-strong px-5 text-sm font-semibold text-offwhite hover:border-champagne/50 hover:text-champagne"
+          className="rounded-full border border-border-strong px-5 py-2.5 text-sm font-semibold text-offwhite"
         >
           + Tulis artikel
         </Link>
@@ -34,9 +34,9 @@ export default async function AdminDashboardPage() {
 
 function StatCard({ label, value }: { label: string; value: number }) {
   return (
-    <div className="card-surface p-4 md:p-5">
+    <div className="rounded-2xl border border-border-subtle bg-surface p-5">
       <div className="text-xs text-muted-foreground">{label}</div>
-      <div className="mt-1 font-mono text-2xl font-semibold text-offwhite tabular-nums-fixed">
+      <div className="font-heading mt-1 text-2xl font-bold text-offwhite tabular-nums-fixed">
         {value}
       </div>
     </div>

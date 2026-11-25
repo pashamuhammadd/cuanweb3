@@ -1,30 +1,49 @@
+import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Sparkles } from "lucide-react";
+import { Check } from "lucide-react";
 
-/** Teaser jujur: Plus belum aktif, tanpa tombol beli atau harga final. */
+const BENEFITS = [
+  "Peluang premium & kurasi",
+  "Info lebih cepat & prioritas",
+  "Konten & panduan eksklusif",
+];
+
 export function PlusPanel() {
   return (
-    <section
-      aria-labelledby="plus-heading"
-      className="relative overflow-hidden rounded-2xl border border-gold/20 bg-[radial-gradient(80%_140%_at_100%_0%,rgba(244,189,53,0.16),transparent_60%),linear-gradient(180deg,#1b1f27,#171a21)] p-5 md:flex md:items-center md:justify-between md:gap-6 md:p-7"
-    >
+    <div className="flex h-full flex-col justify-between rounded-2xl border border-gold/30 bg-gradient-to-br from-petrol to-surface p-5">
       <div>
-        <p className="inline-flex items-center gap-1.5 rounded-md bg-gold/15 px-2 py-0.5 text-xs font-semibold text-gold">
-          <Sparkles className="h-3.5 w-3.5" aria-hidden />
-          CuanWeb3 Plus · Segera hadir
+        <span className="inline-flex items-center rounded-full bg-gold/15 px-2.5 py-1 text-xs font-semibold text-gold">
+          CuanWeb3 Plus
+        </span>
+        <h3 className="font-heading mt-3 text-xl font-bold text-offwhite">
+          Level up peluangmu
+        </h3>
+        <p className="mt-2 text-sm text-muted-foreground">
+          Akses lebih banyak peluang pilihan, prioritas info, dan konten
+          eksklusif komunitas.
         </p>
-        <h2 id="plus-heading" className="font-heading mt-2.5 text-xl font-bold text-offwhite md:text-2xl">
-          Radar peluang, notifikasi, dan pengingat deadline
-        </h2>
-        <p className="mt-1.5 max-w-xl text-sm text-muted-foreground">Fitur premium sedang disiapkan. Belum ada pembayaran yang dibuka.</p>
+
+        <ul className="mt-4 space-y-2">
+          {BENEFITS.map((b) => (
+            <li key={b} className="flex items-start gap-2 text-sm text-offwhite/90">
+              <Check className="mt-0.5 h-4 w-4 shrink-0 text-teal" aria-hidden />
+              {b}
+            </li>
+          ))}
+        </ul>
       </div>
-      <Link
-        href="/plus"
-        className="press mt-4 inline-flex h-11 shrink-0 items-center gap-1.5 rounded-lg border border-gold/50 px-4 text-sm font-semibold text-gold transition-colors hover:bg-gold/10 md:mt-0"
-      >
-        Lihat rencana Plus
-        <ArrowRight className="h-4 w-4" aria-hidden />
-      </Link>
-    </section>
+
+      <div className="mt-5 flex items-center justify-between gap-3">
+        <Link
+          href="/plus"
+          className="inline-flex items-center justify-center rounded-full bg-gold px-5 py-2.5 text-sm font-semibold text-charcoal transition-transform hover:scale-[1.02] active:scale-95"
+        >
+          Gabung Plus — Rp10.000/bulan
+        </Link>
+        <div className="relative hidden h-16 w-16 shrink-0 sm:block">
+          <Image src="/assets/cua/plus.png" alt="" fill sizes="64px" className="object-contain" />
+        </div>
+      </div>
+    </div>
   );
 }

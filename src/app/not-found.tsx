@@ -16,12 +16,9 @@ export default function NotFound() {
       </p>
       <Link
         href="/"
-        className="press mt-6 inline-flex h-12 items-center gap-2 rounded-xl bg-gold px-5 text-sm font-semibold text-charcoal"
+        className="mt-6 inline-flex items-center gap-2 rounded-full bg-gold px-5 py-2.5 text-sm font-semibold text-charcoal transition-transform hover:scale-[1.02] active:scale-95"
       >
         Kembali ke Beranda
-      </Link>
-      <Link href="/peluang" className="mt-3 inline-flex min-h-10 items-center text-sm font-medium text-gold underline-offset-4 hover:underline">
-        Jelajahi semua peluang
       </Link>
     </div>
   );

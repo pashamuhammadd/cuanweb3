@@ -6,8 +6,9 @@ export default function AkunPembayaranPage() {
         Riwayat langganan CuanWeb3 Plus dan payout misi/campaign.
       </p>
       <p className="mt-6 rounded-2xl border border-dashed border-border-subtle p-8 text-center text-sm text-muted-foreground">
-        Pembayaran belum aktif. Belum ada tagihan atau transaksi di akunmu.
-        CuanWeb3 Plus dan sistem payout akan diumumkan saat siap.
+        Pembayaran produksi belum aktif. CuanWeb3 Plus dan sistem payout akan
+        diaktifkan setelah konfigurasi penyedia pembayaran disetujui pemilik
+        (lihat docs/ROADMAP.md Fase 4).
       </p>
     </div>
   );

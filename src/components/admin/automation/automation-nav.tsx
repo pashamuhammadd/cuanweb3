@@ -15,7 +15,7 @@ const TABS = [
 export function AutomationNav() {
   const pathname = usePathname();
   return (
-    <nav aria-label="Automation Center" className="no-scrollbar relative mt-4 flex gap-1.5 overflow-x-auto border-b border-border-faint pb-3">
+    <nav aria-label="Automation Center" className="mt-4 flex gap-2 overflow-x-auto border-b border-border-subtle pb-2">
       {TABS.map((tab) => {
         const active = pathname === tab.href;
         return (
@@ -24,8 +24,8 @@ export function AutomationNav() {
             href={tab.href}
             aria-current={active ? "page" : undefined}
             className={cn(
-              "inline-flex h-10 shrink-0 items-center rounded-xl px-3.5 text-sm font-medium transition-colors",
-              active ? "bg-gold/12 text-gold ring-1 ring-gold/30" : "text-offwhite/75 hover:bg-surface hover:text-offwhite",
+              "shrink-0 rounded-full px-3.5 py-2 text-sm font-medium transition-colors",
+              active ? "bg-gold text-charcoal" : "text-offwhite/80 hover:bg-surface hover:text-gold",
             )}
           >
             {tab.label}

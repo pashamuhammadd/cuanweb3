@@ -10,14 +10,14 @@ export const maxDuration = 60;
 export const dynamic = "force-dynamic";
 
 const inputClass =
-  "mt-1 w-full min-h-11 rounded-xl border border-border-subtle bg-surface-raised px-3 py-2 text-sm text-offwhite focus:border-champagne/60";
+  "mt-1 w-full rounded-lg border border-border-subtle bg-surface-raised px-3 py-2 text-sm text-offwhite focus:border-teal";
 
 function Badge({ tone, children }: { tone: "ok" | "muted" | "warn" | "danger"; children: React.ReactNode }) {
   return (
     <span
       className={cn(
         "rounded-full px-2 py-0.5 text-xs font-medium",
-        tone === "ok" && "bg-emerald-500/15 text-emerald-300",
+        tone === "ok" && "bg-emerald-500/15 text-emerald-400",
         tone === "muted" && "bg-surface-raised text-muted-foreground",
         tone === "warn" && "bg-amber-500/15 text-amber-300",
         tone === "danger" && "bg-rose-500/15 text-rose-300",
@@ -34,7 +34,7 @@ function SourceCard({ source }: { source: IntegrationSourceRow }) {
   const fieldId = (name: string) => `${source.key}-${name}`;
 
   return (
-    <article className="card-surface p-4 md:p-5" aria-labelledby={fieldId("title")}>
+    <article className="rounded-2xl border border-border-subtle bg-surface p-5" aria-labelledby={fieldId("title")}>
       <header className="flex flex-wrap items-start justify-between gap-2">
         <div className="min-w-0">
           <h3 id={fieldId("title")} className="font-heading text-base font-semibold text-offwhite">
@@ -46,7 +46,7 @@ function SourceCard({ source }: { source: IntegrationSourceRow }) {
         </div>
         <div className="flex flex-wrap gap-1.5">
           {source.is_paid ? (
-            <Badge tone="danger">Berbayar, dikunci</Badge>
+            <Badge tone="danger">Berbayar — dikunci</Badge>
           ) : source.enabled ? (
             <Badge tone="ok">Aktif</Badge>
           ) : (
@@ -74,11 +74,11 @@ function SourceCard({ source }: { source: IntegrationSourceRow }) {
       <dl className="mt-3 grid grid-cols-2 gap-2 text-xs sm:grid-cols-4">
         <div>
           <dt className="text-muted-foreground">Sinkron terakhir</dt>
-          <dd className="text-offwhite">{source.last_run_at ? formatDateTime(source.last_run_at) : "-"}</dd>
+          <dd className="text-offwhite">{source.last_run_at ? formatDateTime(source.last_run_at) : "—"}</dd>
         </div>
         <div>
           <dt className="text-muted-foreground">Status</dt>
-          <dd className={source.last_status === "failed" ? "text-rose-300" : "text-offwhite"}>{source.last_status ?? "-"}</dd>
+          <dd className={source.last_status === "failed" ? "text-rose-300" : "text-offwhite"}>{source.last_status ?? "—"}</dd>
         </div>
         <div>
           <dt className="text-muted-foreground">Berikutnya</dt>
@@ -89,7 +89,7 @@ function SourceCard({ source }: { source: IntegrationSourceRow }) {
           <dd className="text-offwhite">
             {source.backoff_until && isFutureDate(source.backoff_until)
               ? `s/d ${formatDateTime(source.backoff_until)} (${source.consecutive_failures}× gagal)`
-              : "-"}
+              : "—"}
           </dd>
         </div>
       </dl>
@@ -102,11 +102,11 @@ function SourceCard({ source }: { source: IntegrationSourceRow }) {
             <input type="hidden" name="id" value={source.id} />
             <div className="flex flex-wrap gap-4 text-sm text-offwhite">
               <label className="flex items-center gap-2">
-                <input type="checkbox" name="enabled" defaultChecked={source.enabled} className="h-4 w-4 accent-gold" />
+                <input type="checkbox" name="enabled" defaultChecked={source.enabled} className="h-4 w-4 accent-teal" />
                 Aktif
               </label>
               <label className="flex items-center gap-2">
-                <input type="checkbox" name="trusted" defaultChecked={source.trusted} className="h-4 w-4 accent-gold" />
+                <input type="checkbox" name="trusted" defaultChecked={source.trusted} className="h-4 w-4 accent-teal" />
                 Sumber tepercaya
               </label>
             </div>
@@ -133,12 +133,12 @@ function SourceCard({ source }: { source: IntegrationSourceRow }) {
             </div>
             <fieldset>
               <legend className="text-xs text-muted-foreground">
-                Kategori yang boleh dihasilkan (kosong = semua; kategori default: {source.default_category ? CATEGORY_LABELS[source.default_category] : "-"})
+                Kategori yang boleh dihasilkan (kosong = semua; kategori default: {source.default_category ? CATEGORY_LABELS[source.default_category] : "—"})
               </legend>
               <div className="mt-1 flex flex-wrap gap-2">
                 {OPPORTUNITY_CATEGORIES.map((c) => (
                   <label key={c} className="flex items-center gap-1.5 rounded-full border border-border-subtle px-2.5 py-1 text-xs text-offwhite">
-                    <input type="checkbox" name="categories" value={c} defaultChecked={source.categories.includes(c)} className="accent-gold" />
+                    <input type="checkbox" name="categories" value={c} defaultChecked={source.categories.includes(c)} className="accent-teal" />
                     {CATEGORY_LABELS[c]}
                   </label>
                 ))}
@@ -178,7 +178,7 @@ export default async function SourcesPage() {
         ))}
       </section>
 
-      <section aria-labelledby="tambah-sumber" className="card-surface p-4 md:p-5">
+      <section aria-labelledby="tambah-sumber" className="rounded-2xl border border-border-subtle bg-surface p-5">
         <h2 id="tambah-sumber" className="font-heading text-lg font-semibold text-offwhite">Tambah sumber RSS</h2>
         <p className="mt-1 text-sm text-muted-foreground">
           Hanya feed RSS/Atom resmi yang memang disediakan penerbitnya. Sumber baru masuk dalam keadaan nonaktif dan
@@ -213,7 +213,7 @@ export default async function SourcesPage() {
               <input id="new-eco" name="ecosystems" className={inputClass} placeholder="solana, ethereum" />
             </div>
             <label className="flex items-center gap-2 self-end pb-2 text-sm text-offwhite">
-              <input type="checkbox" name="keywordFilter" defaultChecked className="h-4 w-4 accent-gold" />
+              <input type="checkbox" name="keywordFilter" defaultChecked className="h-4 w-4 accent-teal" />
               Feed berita: ambil hanya item berkata kunci peluang
             </label>
           </div>

@@ -1,36 +1,41 @@
+import Image from "next/image";
 import Link from "next/link";
-import { BookOpen, ShieldCheck } from "lucide-react";
-import { SectionHeading } from "@/components/ui/section-heading";
+import { ArrowRight } from "lucide-react";
 
-type Article = { id: string; slug: string; title: string; summary: string };
-
-/** Edukasi praktis: pengingat keamanan + artikel terbaru. */
-export function MissionGuideBanners({ articles }: { articles: Article[] }) {
+export function MissionGuideBanners() {
   return (
-    <section aria-labelledby="belajar-heading" className="mx-auto max-w-[1440px] px-4 pb-10 md:px-6 lg:px-10">
-      <SectionHeading id="belajar-heading" title="Belajar sebelum ikut" href="/belajar" linkLabel="Semua panduan" />
-
-      <div className="mt-4 grid grid-cols-1 gap-3 md:mt-5 md:grid-cols-3 md:gap-5">
-        <div className="card-surface p-5 md:row-span-2">
-          <ShieldCheck className="h-6 w-6 text-gold" aria-hidden />
-          <h3 className="font-heading mt-3 text-lg font-bold text-offwhite">Aman dulu, baru cuan</h3>
-          <ul className="mt-3 space-y-2 text-sm text-offwhite/80">
-            <li>Jangan pernah bagikan seed phrase atau private key.</li>
-            <li>Ikuti peluang hanya lewat link resmi penyelenggara.</li>
-            <li>Gunakan wallet terpisah untuk airdrop dan testnet.</li>
-          </ul>
+    <section className="mx-auto grid max-w-[1440px] grid-cols-1 gap-4 px-4 py-4 md:grid-cols-2 md:px-6">
+      <Link
+        href="/misi"
+        className="group flex items-center gap-4 rounded-2xl border border-border-subtle bg-surface p-4 transition-colors hover:border-teal/60"
+      >
+        <div className="relative h-14 w-14 shrink-0">
+          <Image src="/assets/cua/grants.png" alt="" fill sizes="56px" className="object-contain" />
         </div>
+        <div className="flex-1">
+          <h3 className="font-heading font-semibold text-offwhite">Misi berbayar</h3>
+          <p className="text-sm text-muted-foreground">
+            Selesaikan tugas sederhana dan dapatkan reward.
+          </p>
+        </div>
+        <ArrowRight className="h-5 w-5 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-1 group-hover:text-teal" aria-hidden />
+      </Link>
 
-        {articles.slice(0, 4).map((a) => (
-          <Link key={a.id} href={`/belajar/${a.slug}`} className="card-surface card-interactive press group flex items-start gap-3 p-4">
-            <BookOpen className="mt-0.5 h-5 w-5 shrink-0 text-gold" aria-hidden />
-            <span className="min-w-0">
-              <span className="block font-semibold text-offwhite group-hover:text-gold">{a.title}</span>
-              <span className="mt-0.5 line-clamp-2 block text-sm text-muted-foreground">{a.summary}</span>
-            </span>
-          </Link>
-        ))}
-      </div>
+      <Link
+        href="/belajar"
+        className="group flex items-center gap-4 rounded-2xl border border-border-subtle bg-surface p-4 transition-colors hover:border-teal/60"
+      >
+        <div className="relative h-14 w-14 shrink-0">
+          <Image src="/assets/cua/welcome.png" alt="" fill sizes="56px" className="object-contain" />
+        </div>
+        <div className="flex-1">
+          <h3 className="font-heading font-semibold text-offwhite">Panduan Web3</h3>
+          <p className="text-sm text-muted-foreground">
+            Belajar Web3 dari dasar hingga praktik.
+          </p>
+        </div>
+        <ArrowRight className="h-5 w-5 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-1 group-hover:text-teal" aria-hidden />
+      </Link>
     </section>
   );
 }
