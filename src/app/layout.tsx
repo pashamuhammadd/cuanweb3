@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Bricolage_Grotesque, Geist } from "next/font/google";
+import { Bricolage_Grotesque, Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
@@ -13,6 +13,11 @@ const bricolage = Bricolage_Grotesque({
 
 const geist = Geist({
   variable: "--font-geist",
+  subsets: ["latin"],
+});
+
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
   subsets: ["latin"],
 });
 
@@ -39,7 +44,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="id" className={`${bricolage.variable} ${geist.variable} h-full`}>
+    <html lang="id" className={`${bricolage.variable} ${geist.variable} ${geistMono.variable} h-full`}>
       <body className="flex min-h-full flex-col bg-background text-foreground antialiased">
         <a
           href="#konten"
