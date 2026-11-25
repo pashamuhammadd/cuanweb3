@@ -10,7 +10,7 @@ export const maxDuration = 60;
 export const dynamic = "force-dynamic";
 
 const inputClass =
-  "mt-1 w-full min-h-11 rounded-xl border border-border-subtle bg-surface-raised px-3 py-2 text-sm text-offwhite focus:border-teal";
+  "mt-1 w-full min-h-11 rounded-xl border border-border-subtle bg-surface-raised px-3 py-2 text-sm text-offwhite focus:border-champagne/60";
 
 function Badge({ tone, children }: { tone: "ok" | "muted" | "warn" | "danger"; children: React.ReactNode }) {
   return (
@@ -102,11 +102,11 @@ function SourceCard({ source }: { source: IntegrationSourceRow }) {
             <input type="hidden" name="id" value={source.id} />
             <div className="flex flex-wrap gap-4 text-sm text-offwhite">
               <label className="flex items-center gap-2">
-                <input type="checkbox" name="enabled" defaultChecked={source.enabled} className="h-4 w-4 accent-teal" />
+                <input type="checkbox" name="enabled" defaultChecked={source.enabled} className="h-4 w-4 accent-gold" />
                 Aktif
               </label>
               <label className="flex items-center gap-2">
-                <input type="checkbox" name="trusted" defaultChecked={source.trusted} className="h-4 w-4 accent-teal" />
+                <input type="checkbox" name="trusted" defaultChecked={source.trusted} className="h-4 w-4 accent-gold" />
                 Sumber tepercaya
               </label>
             </div>
@@ -138,7 +138,7 @@ function SourceCard({ source }: { source: IntegrationSourceRow }) {
               <div className="mt-1 flex flex-wrap gap-2">
                 {OPPORTUNITY_CATEGORIES.map((c) => (
                   <label key={c} className="flex items-center gap-1.5 rounded-full border border-border-subtle px-2.5 py-1 text-xs text-offwhite">
-                    <input type="checkbox" name="categories" value={c} defaultChecked={source.categories.includes(c)} className="accent-teal" />
+                    <input type="checkbox" name="categories" value={c} defaultChecked={source.categories.includes(c)} className="accent-gold" />
                     {CATEGORY_LABELS[c]}
                   </label>
                 ))}
@@ -213,7 +213,7 @@ export default async function SourcesPage() {
               <input id="new-eco" name="ecosystems" className={inputClass} placeholder="solana, ethereum" />
             </div>
             <label className="flex items-center gap-2 self-end pb-2 text-sm text-offwhite">
-              <input type="checkbox" name="keywordFilter" defaultChecked className="h-4 w-4 accent-teal" />
+              <input type="checkbox" name="keywordFilter" defaultChecked className="h-4 w-4 accent-gold" />
               Feed berita: ambil hanya item berkata kunci peluang
             </label>
           </div>

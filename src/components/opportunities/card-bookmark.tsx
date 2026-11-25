@@ -34,10 +34,10 @@ export function CardBookmark({ id, title }: { id: string; title: string }) {
       }}
       onAnimationEnd={() => setPop(false)}
       className={cn(
-        "press relative z-10 inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border transition-colors disabled:opacity-60",
+        "press relative z-10 inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border backdrop-blur transition-colors disabled:opacity-60",
         saved
-          ? "border-gold/50 bg-gold/15 text-gold"
-          : "border-border-faint text-offwhite/70 hover:border-teal hover:text-teal",
+          ? "border-gold/50 bg-charcoal/80 text-gold"
+          : "border-white/10 bg-charcoal/70 text-offwhite/80 hover:border-gold/40 hover:text-gold",
       )}
     >
       {saved ? (

@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 const SOURCE_COPY: Record<string, { label: string; tone: string }> = {
   live: { label: "Live", tone: "bg-emerald-500/15 text-emerald-300" },
   stale: { label: "Data tertunda", tone: "bg-amber-500/15 text-amber-300" },
-  demo: { label: "Market · Demo", tone: "bg-teal/15 text-teal" },
+  demo: { label: "Market · Demo", tone: "bg-champagne/10 text-champagne" },
 };
 
 export default async function MarketPage() {

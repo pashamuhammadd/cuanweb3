@@ -39,7 +39,7 @@ export function ActionForm({
           className={cn(
             "press inline-flex h-10 items-center rounded-xl px-4 text-sm font-semibold transition-colors disabled:opacity-60",
             variant === "primary" && "bg-gold text-charcoal hover:bg-gold/90",
-            variant === "secondary" && "border border-border-strong text-offwhite hover:border-teal hover:text-teal",
+            variant === "secondary" && "border border-border-strong text-offwhite hover:border-champagne/50 hover:text-champagne",
             variant === "danger" && "border border-rose-400/50 text-rose-300 hover:bg-rose-400/10",
           )}
         >

@@ -1,5 +1,10 @@
 # Design system dan motion
 
+> **Arah visual aktif: versi C — Charcoal & Gold** (25 Nov 2026). Spesifikasi lengkap:
+> `cuanweb3-redesign-c/docs/DESIGN.md`, aset: `cuanweb3-redesign-c/docs/ASSETS.md`, referensi:
+> `cuanweb3-redesign-c/references/desktop-mobile.png`. Palet teal/petrol dan visual kartun di bawah
+> ini sudah DIGANTIKAN; bagian motion & aksesibilitas tetap berlaku.
+
 Gunakan mockup references/ui-desktop-mobile.png sebagai acuan komposisi. Harga, deadline dan listing di mockup hanya ilustrasi. Palet: charcoal #0C1117, petrol teal #102B2B, gold #F4BD35, white #F5F5F5, teal accent #258C83. Surface sedikit lebih terang dari background, border teal/muted, teks sekunder tetap terbaca. Heading tebal geometris (mis. Bricolage Grotesque), body Geist atau Inter, angka market tabular. Gunakan font yang dapat dimuat secara lokal.
 
 Desktop layout: header logo/nav/masuk/Plus, ticker market, hero CUA di rooftop, enam kategori (Airdrop, Giveaway, Bounty & Kontes, Web3 Jobs, Hackathon, Grants), filter dan feed peluang, panel Plus, misi berbayar, panduan, footer. Grid responsif; gunakan container max-width sekitar 1440px. Mobile: header ringkas, ticker scroll, hero ringkas, grid 3x2 kategori, card list, bottom navigation Beranda/Peluang/Market/Akun; safe-area inset. Jangan ada horizontal overflow selain ticker yang memang bisa di-scroll. Tambahkan kontrol pencarian dan filter kategori, skill, free/no modal, deadline.

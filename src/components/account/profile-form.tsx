@@ -19,7 +19,7 @@ export function ProfileForm({ profile }: { profile: ProfileRow }) {
           id="username"
           name="username"
           defaultValue={profile.username}
-          className="mt-1.5 h-11 w-full rounded-xl border border-border-subtle bg-surface-raised px-3 text-sm text-offwhite focus:border-teal"
+          className="mt-1.5 h-11 w-full rounded-xl border border-border-subtle bg-surface-raised px-3 text-sm text-offwhite focus:border-champagne/60"
         />
       </div>
 
@@ -32,7 +32,7 @@ export function ProfileForm({ profile }: { profile: ProfileRow }) {
           name="skillTags"
           defaultValue={profile.skill_tags?.join(", ") ?? ""}
           placeholder="desain, developer, menulis"
-          className="mt-1.5 h-11 w-full rounded-xl border border-border-subtle bg-surface-raised px-3 text-sm text-offwhite placeholder:text-muted-foreground focus:border-teal"
+          className="mt-1.5 h-11 w-full rounded-xl border border-border-subtle bg-surface-raised px-3 text-sm text-offwhite placeholder:text-muted-foreground focus:border-champagne/60"
         />
       </div>
 
@@ -41,7 +41,7 @@ export function ProfileForm({ profile }: { profile: ProfileRow }) {
           type="checkbox"
           name="notificationOptIn"
           defaultChecked={profile.notification_opt_in}
-          className="h-4 w-4 rounded border-border-subtle bg-surface-raised accent-teal"
+          className="h-4 w-4 rounded border-border-subtle bg-surface-raised accent-gold"
         />
         Kirim notifikasi deadline & campaign ke email saya
       </label>

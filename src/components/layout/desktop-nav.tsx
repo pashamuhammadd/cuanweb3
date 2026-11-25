@@ -12,7 +12,7 @@ export function DesktopNav() {
 
   return (
     <nav aria-label="Navigasi utama" className="hidden lg:block">
-      <ul className="flex items-center gap-1">
+      <ul className="flex items-center gap-2">
         {PRIMARY_NAV.map((item) => {
           const active = isNavActive(item.href, pathname);
           return (
@@ -21,18 +21,19 @@ export function DesktopNav() {
                 href={item.href}
                 aria-current={active ? "page" : undefined}
                 className={cn(
-                  "relative isolate inline-flex h-10 items-center rounded-lg px-3 text-sm font-medium transition-colors",
-                  active ? "text-gold" : "text-offwhite/70 hover:bg-surface hover:text-offwhite",
+                  "relative inline-flex h-16 items-center px-3 text-[15px] font-medium transition-colors",
+                  active ? "text-gold" : "text-offwhite/75 hover:text-offwhite",
                 )}
               >
+                {item.label}
                 {active && (
                   <motion.span
                     layoutId="desktop-nav-active"
                     transition={reduce ? { duration: 0 } : { type: "spring", stiffness: 500, damping: 40 }}
-                    className="absolute inset-0 -z-10 rounded-lg bg-surface-raised ring-1 ring-border-subtle"
+                    className="absolute inset-x-3 bottom-3 h-0.5 rounded-full bg-gold"
+                    aria-hidden
                   />
                 )}
-                {item.label}
               </Link>
             </li>
           );

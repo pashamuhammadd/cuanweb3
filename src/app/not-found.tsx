@@ -16,7 +16,7 @@ export default function NotFound() {
       </p>
       <Link
         href="/"
-        className="press glow-gold mt-6 inline-flex h-12 items-center gap-2 rounded-xl bg-gold px-5 text-sm font-semibold text-charcoal"
+        className="press mt-6 inline-flex h-12 items-center gap-2 rounded-xl bg-gold px-5 text-sm font-semibold text-charcoal"
       >
         Kembali ke Beranda
       </Link>

@@ -8,14 +8,14 @@ export async function CategoryPageContent({ category }: { category: Category }) 
   const { items, isDemoData, hasError } = await listOpportunitiesByCategory(category.includes ?? category.slug);
 
   return (
-    <div className="mx-auto max-w-[1440px] px-4 py-5 md:px-6 md:py-8">
+    <div className="mx-auto max-w-[1440px] px-4 py-5 md:px-6 md:py-8 lg:px-10">
       <header className="flex items-center gap-4 md:gap-5">
-        <CategoryIcon category={category.slug} size="xl" priority />
+        <span className="inline-flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-elevated md:h-28 md:w-28"><CategoryIcon category={category.slug} size="xl" priority /></span>
         <div className="min-w-0">
           <h1 className="font-heading text-2xl font-bold text-offwhite md:text-3xl">{category.label}</h1>
           <p className="mt-1 text-sm text-muted-foreground md:text-base">{category.description}</p>
           <p className="mt-1.5 text-xs text-muted-foreground">
-            <span className="font-mono text-offwhite tabular-nums-fixed">{items.length}</span> peluang aktif
+            <span className="font-mono text-champagne tabular-nums-fixed">{items.length}</span> peluang aktif
           </p>
         </div>
       </header>

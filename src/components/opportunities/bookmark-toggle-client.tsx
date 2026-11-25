@@ -32,7 +32,7 @@ export function BookmarkToggleClient({
         "inline-flex items-center gap-2 rounded-full border px-5 py-2.5 text-sm font-medium transition-colors disabled:opacity-60",
         bookmarked
           ? "border-gold bg-gold/15 text-gold"
-          : "border-border-strong text-offwhite hover:border-teal hover:text-teal",
+          : "border-border-strong text-offwhite hover:border-champagne/50 hover:text-champagne",
       )}
     >
       {bookmarked ? (

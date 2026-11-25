@@ -1,27 +1,32 @@
 @import "tailwindcss";
 
+/*
+ * Versi C — Charcoal & Gold (cuanweb3-redesign-c/docs/DESIGN.md).
+ * Charcoal netral + gold/champagne. Tidak ada aksen teal/hijau dekoratif;
+ * hijau/merah hanya untuk makna data (naik/turun, terverifikasi, risiko).
+ */
 :root {
   --color-charcoal: #0c1117;
-  --color-petrol: #102b2b;
   --color-gold: #f4bd35;
+  --color-champagne: #e9bc65;
   --color-offwhite: #f5f5f5;
-  --color-teal: #258c83;
 
   --background: var(--color-charcoal);
   --foreground: var(--color-offwhite);
-  /* Tingkat surface: page < section < card < raised (dialog/popover). */
-  --section: #0f161d;
-  --surface: #121a22;
-  --surface-raised: #16212b;
-  --surface-overlay: #1a2731;
-  --border-subtle: rgba(37, 140, 131, 0.22);
-  --border-strong: rgba(37, 140, 131, 0.45);
-  --border-faint: rgba(245, 245, 245, 0.07);
-  /* 0.7 di atas #121a22 ≈ kontras 9:1 (WCAG AA aman untuk teks kecil). */
-  --muted-foreground: rgba(245, 245, 245, 0.7);
+  /* Tingkat surface: page < section < card < raised < overlay. */
+  --section: #11141a;
+  --surface: #171a21;
+  --surface-raised: #1d2129;
+  --elevated: #242832;
+  --surface-overlay: #242832;
+  --border-faint: rgba(255, 255, 255, 0.06);
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.14);
+  /* #A3A7B0 di atas #171A21 ≈ 7.3:1 (AA untuk teks kecil). */
+  --muted-foreground: #a3a7b0;
 
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
-  --header-h: 7.25rem;
+  --header-h: 6.75rem;
 }
 
 @theme inline {
@@ -30,13 +35,13 @@
   --color-section: var(--section);
   --color-surface: var(--surface);
   --color-surface-raised: var(--surface-raised);
+  --color-elevated: var(--elevated);
   --color-surface-overlay: var(--surface-overlay);
   --color-border-faint: var(--border-faint);
   --color-charcoal: var(--color-charcoal);
-  --color-petrol: var(--color-petrol);
   --color-gold: var(--color-gold);
+  --color-champagne: var(--color-champagne);
   --color-offwhite: var(--color-offwhite);
-  --color-teal: var(--color-teal);
   --color-border-subtle: var(--border-subtle);
   --color-border-strong: var(--border-strong);
   --color-muted-foreground: var(--muted-foreground);
@@ -45,60 +50,21 @@
   --font-sans: var(--font-geist);
   --font-mono: var(--font-geist-mono);
 
-  --animate-fade-up: fade-up 0.5s ease-out both;
-  --animate-bob: bob 4s ease-in-out infinite;
-  --animate-ticker: ticker 40s linear infinite;
-  --animate-float-slow: float-slow 7s ease-in-out infinite;
-  --animate-float-alt: float-alt 9s ease-in-out infinite;
-  --animate-drift: drift 18s ease-in-out infinite;
-  --animate-pan: pan 28s ease-in-out infinite alternate;
-  --animate-pulse-dot: pulse-dot 2.4s ease-in-out infinite;
-  --animate-dash: dash 6s linear infinite;
+  --animate-fade-up: fade-up 0.24s var(--ease-out) both;
   --animate-shimmer: shimmer 1.6s linear infinite;
-  --animate-pop: pop 0.24s var(--ease-out);
+  --animate-pop: pop 0.22s var(--ease-out);
+  --animate-hero-glow: hero-glow 16s ease-in-out infinite alternate;
+  --animate-hero-glow-alt: hero-glow-alt 13s ease-in-out infinite alternate;
 
   @keyframes fade-up {
     from {
       opacity: 0;
-      transform: translateY(12px);
+      transform: translateY(8px);
     }
     to {
       opacity: 1;
       transform: translateY(0);
     }
-  }
-  @keyframes bob {
-    0%,
-    100% {
-      transform: translateY(0px);
-    }
-    50% {
-      transform: translateY(-4px);
-    }
-  }
-  /* Loop mulus: titik awal = titik akhir. */
-  @keyframes float-slow {
-    0%, 100% { transform: translate3d(0, 0, 0); }
-    50% { transform: translate3d(0, -10px, 0); }
-  }
-  @keyframes float-alt {
-    0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
-    50% { transform: translate3d(6px, 8px, 0) rotate(1.5deg); }
-  }
-  @keyframes drift {
-    0%, 100% { transform: translate3d(0, 0, 0) scale(1); opacity: 0.55; }
-    50% { transform: translate3d(-24px, 16px, 0) scale(1.08); opacity: 0.8; }
-  }
-  @keyframes pan {
-    from { transform: scale(1.04) translate3d(0, 0, 0); }
-    to { transform: scale(1.04) translate3d(-1.5%, -1%, 0); }
-  }
-  @keyframes pulse-dot {
-    0%, 100% { opacity: 0.35; transform: scale(1); }
-    50% { opacity: 1; transform: scale(1.35); }
-  }
-  @keyframes dash {
-    to { stroke-dashoffset: -48; }
   }
   @keyframes shimmer {
     from { background-position: 200% 0; }
@@ -106,16 +72,17 @@
   }
   @keyframes pop {
     0% { transform: scale(1); }
-    40% { transform: scale(1.25); }
+    40% { transform: scale(1.2); }
     100% { transform: scale(1); }
   }
-  @keyframes ticker {
-    from {
-      transform: translateX(0);
-    }
-    to {
-      transform: translateX(-50%);
-    }
+  /* Glow hero: bolak-balik (alternate) sehingga loop mulus tanpa lompatan. */
+  @keyframes hero-glow {
+    from { transform: translate3d(0, 0, 0) scale(1); opacity: 0.75; }
+    to { transform: translate3d(-6%, 4%, 0) scale(1.12); opacity: 1; }
+  }
+  @keyframes hero-glow-alt {
+    from { transform: translate3d(0, 0, 0) scale(1.05); opacity: 0.55; }
+    to { transform: translate3d(5%, -6%, 0) scale(0.95); opacity: 0.85; }
   }
 }
 
@@ -138,8 +105,7 @@ body {
   font-feature-settings: "tnum" 1;
 }
 
-/* Fokus keyboard: outline emas kontras di latar gelap untuk semua elemen
-   interaktif. Utility focus-visible:* per komponen tetap bisa menimpanya. */
+/* Fokus keyboard: outline emas untuk semua elemen interaktif. */
 @layer base {
   :focus-visible {
     outline: 2px solid var(--color-gold);
@@ -147,28 +113,9 @@ body {
   }
 }
 
-/* Reduced motion: disable non-essential animation but keep functionality */
-@media (prefers-reduced-motion: reduce) {
-  .reveal {
-    opacity: 1;
-    transform: none;
-  }
-  .card-interactive:hover {
-    transform: none;
-  }
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.001ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.001ms !important;
-    scroll-behavior: auto !important;
-  }
-}
-
-/* Surface kartu interaktif: border tipis, hover lift ≤4px. */
+/* Kartu: gradasi graphite lembut, border sangat tipis, tanpa glow per kartu. */
 .card-surface {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.018), rgba(255, 255, 255, 0)) var(--surface);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.025), rgba(255, 255, 255, 0) 60%) var(--surface);
   border: 1px solid var(--border-faint);
   border-radius: 14px;
 }
@@ -176,13 +123,12 @@ body {
   transition:
     transform 200ms var(--ease-out),
     border-color 200ms var(--ease-out),
-    box-shadow 200ms var(--ease-out);
+    background-color 200ms var(--ease-out);
 }
 @media (hover: hover) {
   .card-interactive:hover {
     transform: translateY(-3px);
-    border-color: var(--border-strong);
-    box-shadow: 0 12px 32px -18px rgba(37, 140, 131, 0.55);
+    border-color: rgba(233, 188, 101, 0.28);
   }
 }
 .press {
@@ -192,31 +138,28 @@ body {
   transform: scale(0.97);
 }
 
-/* Tile kategori: warna diatur lewat --cat-from / --cat-to / --cat-fg. */
-.cat-tile {
-  background:
-    radial-gradient(120% 120% at 30% 15%, var(--cat-from), transparent 65%),
-    linear-gradient(160deg, var(--cat-to), rgba(12, 17, 23, 0.9));
-  color: var(--cat-fg);
-}
-
-.glow-gold {
-  box-shadow: 0 0 0 1px rgba(244, 189, 53, 0.35), 0 10px 30px -12px rgba(244, 189, 53, 0.55);
-}
-
 .skeleton {
-  background: linear-gradient(90deg, var(--surface-raised) 0%, var(--surface-overlay) 50%, var(--surface-raised) 100%);
+  background: linear-gradient(90deg, var(--surface-raised) 0%, var(--elevated) 50%, var(--surface-raised) 100%);
   background-size: 200% 100%;
   animation: var(--animate-shimmer);
+}
+
+/* Hero desktop: gradasi gold/champagne di kanan, bergerak sangat pelan. */
+.hero-glow {
+  position: absolute;
+  pointer-events: none;
+  border-radius: 9999px;
+  filter: blur(40px);
+  will-change: transform, opacity;
 }
 
 /* Entrance sekali saat masuk viewport (lihat components/ui/reveal.tsx). */
 .reveal {
   opacity: 0;
-  transform: translate3d(0, 12px, 0);
+  transform: translate3d(0, 8px, 0);
   transition:
-    opacity 360ms var(--ease-out),
-    transform 360ms var(--ease-out);
+    opacity 220ms var(--ease-out),
+    transform 220ms var(--ease-out);
   transition-delay: var(--reveal-delay, 0ms);
 }
 .reveal[data-shown="true"] {
@@ -233,6 +176,26 @@ body {
 
 .pb-safe {
   padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* Reduced motion: matikan loop, parallax, stagger; fungsi tetap berjalan. */
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .card-interactive:hover {
+    transform: none;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 ::selection {

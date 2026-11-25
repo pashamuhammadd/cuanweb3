@@ -16,7 +16,7 @@ export default async function PeluangPage() {
   const { items, isDemoData, hasError } = await listOpportunities();
 
   return (
-    <div className="mx-auto max-w-[1440px] px-4 py-5 md:px-6 md:py-8">
+    <div className="mx-auto max-w-[1440px] px-4 py-5 md:px-6 md:py-8 lg:px-10">
       <h1 className="font-heading text-2xl font-bold text-offwhite md:text-3xl">Semua peluang</h1>
       <p className="mt-1 text-sm text-muted-foreground">
         <span className="font-mono text-offwhite tabular-nums-fixed">{items.length}</span> peluang aktif dari seluruh kategori.

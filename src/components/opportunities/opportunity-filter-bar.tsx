@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState, useSyncExternalStore } from "react";
 import { ArrowDownWideNarrow, RotateCcw, Search, SlidersHorizontal, X } from "lucide-react";
 import type { Opportunity, OpportunityCategory } from "@/types/opportunity";
 import { OpportunityCard } from "@/components/opportunities/opportunity-card";
@@ -15,8 +15,32 @@ function withinDays(deadlineAt: string, days: number, now: number): boolean {
   return diffDays >= 0 && diffDays <= days;
 }
 
+const noopSubscribe = () => () => {};
+
+/**
+ * Parameter URL dari form hero (?q=&kategori=&deadline=dekat). Dibaca di
+ * klien via useSyncExternalStore (server snapshot kosong), sehingga halaman
+ * tetap statis/ISR dan hidrasi tidak mismatch.
+ */
+function useUrlFilters() {
+  const qs = useSyncExternalStore(
+    noopSubscribe,
+    () => window.location.search,
+    () => "",
+  );
+  return useMemo(() => {
+    const p = new URLSearchParams(qs);
+    const kategori = p.get("kategori");
+    return {
+      q: p.get("q")?.slice(0, 100) ?? "",
+      category: (kategori && kategori in CATEGORY_LABELS ? kategori : "semua") as OpportunityCategory | "semua",
+      deadlineSoon: p.get("deadline") === "dekat",
+    };
+  }, [qs]);
+}
+
 const fieldClass =
-  "h-11 w-full rounded-xl border border-border-faint bg-surface px-3 text-sm text-offwhite transition-colors hover:border-border-subtle focus:border-teal";
+  "h-11 w-full rounded-xl border border-border-faint bg-surface px-3 text-sm text-offwhite transition-colors hover:border-border-subtle focus:border-champagne/60";
 
 export function OpportunityFilterBar({
   items,
@@ -25,11 +49,16 @@ export function OpportunityFilterBar({
   items: Opportunity[];
   showCategoryFilter?: boolean;
 }) {
-  const [search, setSearch] = useState("");
-  const [category, setCategory] = useState<OpportunityCategory | "semua">("semua");
+  const url = useUrlFilters();
+  // null = belum diubah pengguna, pakai nilai dari URL.
+  const [searchOverride, setSearch] = useState<string | null>(null);
+  const [categoryOverride, setCategory] = useState<OpportunityCategory | "semua" | null>(null);
+  const [deadlineOverride, setDeadlineSoon] = useState<boolean | null>(null);
+  const search = searchOverride ?? url.q;
+  const category = categoryOverride ?? url.category;
+  const deadlineSoon = deadlineOverride ?? url.deadlineSoon;
   const [skill, setSkill] = useState<string>("semua");
   const [freeOnly, setFreeOnly] = useState(false);
-  const [deadlineSoon, setDeadlineSoon] = useState(false);
   const [sort, setSort] = useState<Sort>("terbaru");
   const [limit, setLimit] = useState(PAGE);
   const [now] = useState(() => Date.now());
@@ -37,8 +66,9 @@ export function OpportunityFilterBar({
 
   const categories = useMemo(() => {
     const present = new Set(items.map((i) => i.category));
+    if (category !== "semua") present.add(category);
     return (Object.keys(CATEGORY_LABELS) as OpportunityCategory[]).filter((c) => present.has(c));
-  }, [items]);
+  }, [items, category]);
 
   const skills = useMemo(() => {
     const set = new Set<string>();
@@ -70,7 +100,7 @@ export function OpportunityFilterBar({
     return result;
   }, [items, search, category, skill, freeOnly, deadlineSoon, sort, now]);
 
-  const activeCount = [category !== "semua", skill !== "semua", freeOnly, deadlineSoon, sort !== "terbaru"].filter(Boolean).length;
+  const activeCount = [showCategoryFilter && category !== "semua", skill !== "semua", freeOnly, deadlineSoon, sort !== "terbaru"].filter(Boolean).length;
   const reset = () => {
     setSearch("");
     setCategory("semua");
@@ -140,7 +170,7 @@ export function OpportunityFilterBar({
         <ToggleChip active={freeOnly} onClick={() => setFreeOnly((v) => !v)}>
           Tanpa modal
         </ToggleChip>
-        <ToggleChip active={deadlineSoon} onClick={() => setDeadlineSoon((v) => !v)}>
+        <ToggleChip active={deadlineSoon} onClick={() => setDeadlineSoon(!deadlineSoon)}>
           Deadline dekat
         </ToggleChip>
       </div>
@@ -246,7 +276,7 @@ export function OpportunityFilterBar({
           <button
             type="button"
             onClick={reset}
-            className="inline-flex min-h-10 items-center gap-1 rounded-lg px-1 text-sm font-medium text-teal hover:underline"
+            className="inline-flex min-h-10 items-center gap-1 rounded-lg px-1 text-sm font-medium text-champagne hover:underline"
           >
             <RotateCcw className="h-3.5 w-3.5" aria-hidden />
             Atur ulang
@@ -254,7 +284,7 @@ export function OpportunityFilterBar({
         )}
       </div>
 
-      <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2 md:gap-4 lg:grid-cols-3">
+      <div className="mt-3 grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-5 lg:grid-cols-3">
         {filtered.length === 0 ? (
           <div className="col-span-full rounded-2xl border border-dashed border-border-subtle p-8 text-center">
             <p className="font-semibold text-offwhite">Belum ada peluang yang cocok.</p>
@@ -263,7 +293,7 @@ export function OpportunityFilterBar({
               <button
                 type="button"
                 onClick={reset}
-                className="press mt-4 inline-flex h-11 items-center rounded-xl border border-border-strong px-4 text-sm font-semibold text-offwhite hover:border-teal hover:text-teal"
+                className="press mt-4 inline-flex h-11 items-center rounded-xl border border-border-strong px-4 text-sm font-semibold text-offwhite hover:border-champagne/50 hover:text-champagne"
               >
                 Atur ulang filter
               </button>
@@ -295,7 +325,7 @@ function ToggleChip({ active, onClick, children }: { active: boolean; onClick: (
       onClick={onClick}
       className={cn(
         "press h-11 flex-1 shrink-0 rounded-xl border px-3.5 text-sm font-medium whitespace-nowrap transition-colors md:flex-none",
-        active ? "border-gold/60 bg-gold/15 text-gold" : "border-border-faint bg-surface text-offwhite/80 hover:border-teal hover:text-teal",
+        active ? "border-gold/60 bg-gold/15 text-gold" : "border-border-faint bg-surface text-offwhite/80 hover:border-champagne/50 hover:text-champagne",
       )}
     >
       {children}

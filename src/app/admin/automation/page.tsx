@@ -78,7 +78,7 @@ export default async function AutomationOverviewPage() {
               type="checkbox"
               name="automationEnabled"
               defaultChecked={settings.automationEnabled}
-              className="h-4 w-4 accent-teal"
+              className="h-4 w-4 accent-gold"
             />
             Sinkronisasi terjadwal aktif
           </label>

@@ -34,11 +34,11 @@ export default async function AkunLayout({ children }: LayoutProps<"/akun">) {
   return (
     <div className="mx-auto max-w-5xl px-4 py-5 md:px-6 md:py-8">
       <div className="card-surface flex items-center gap-4 p-4 md:p-5">
-        <span className="inline-flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-petrol ring-1 ring-border-subtle">
+        <span className="inline-flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-elevated ring-1 ring-border-subtle">
           {user.profile?.avatar_url ? (
             <Image src={user.profile.avatar_url} alt="" width={56} height={56} className="h-full w-full object-cover" />
           ) : (
-            <User className="h-6 w-6 text-teal" aria-hidden />
+            <User className="h-6 w-6 text-champagne" aria-hidden />
           )}
         </span>
         <div className="min-w-0 flex-1">

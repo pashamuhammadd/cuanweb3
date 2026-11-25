@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import Image from "next/image";
 import { ArrowUpRight, BookOpen } from "lucide-react";
 import { listPublishedArticles } from "@/lib/data/articles";
 import { formatDate } from "@/lib/format";
@@ -19,7 +18,7 @@ export default async function BelajarPage() {
   return (
     <div className="mx-auto max-w-[1200px] px-4 py-5 md:px-6 md:py-8">
       <PageHeader
-        visual={<Image src="/assets/cua/welcome.png" alt="" width={64} height={64} className="h-14 w-14 object-contain md:h-16 md:w-16" />}
+        visual={<span className="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-elevated text-gold md:h-16 md:w-16"><BookOpen className="h-7 w-7" aria-hidden /></span>}
         title="Belajar Web3"
         description="Panduan praktis sebelum mengikuti peluang Web3."
       />
@@ -39,7 +38,7 @@ export default async function BelajarPage() {
       {featured && (
         <Link
           href={`/belajar/${featured.slug}`}
-          className="card-interactive press group mt-6 block overflow-hidden rounded-2xl border border-border-subtle bg-[radial-gradient(100%_120%_at_100%_0%,rgba(37,140,131,0.25),transparent_60%),linear-gradient(160deg,#102b2b,#121a22)] p-5 md:p-7"
+          className="card-interactive press group mt-6 block overflow-hidden rounded-2xl border border-gold/20 bg-[radial-gradient(80%_140%_at_100%_0%,rgba(244,189,53,0.16),transparent_60%),linear-gradient(180deg,#1b1f27,#171a21)] p-5 md:p-7"
         >
           <p className="inline-flex items-center gap-1.5 rounded-md bg-gold/15 px-2 py-0.5 text-xs font-semibold text-gold">
             <BookOpen className="h-3.5 w-3.5" aria-hidden />

@@ -73,7 +73,7 @@ export default async function ReviewQueuePage({ searchParams }: { searchParams: 
             ))}
           </select>
         </div>
-        <button type="submit" className="min-h-10 rounded-full border border-border-strong px-4 text-sm font-medium text-offwhite hover:border-teal hover:text-teal">
+        <button type="submit" className="min-h-10 rounded-full border border-border-strong px-4 text-sm font-medium text-offwhite hover:border-champagne/50 hover:text-champagne">
           Terapkan
         </button>
         <p className="ml-auto text-sm text-muted-foreground" aria-live="polite">
@@ -96,7 +96,7 @@ export default async function ReviewQueuePage({ searchParams }: { searchParams: 
           return (
             <li key={o.id} className="card-surface p-4 md:p-5">
               <div className="flex flex-wrap items-center gap-2 text-xs">
-                <span className="rounded-full bg-teal/15 px-2 py-0.5 font-medium text-teal">{CATEGORY_LABELS[o.category]}</span>
+                <span className="rounded-full bg-champagne/10 px-2 py-0.5 font-medium text-champagne">{CATEGORY_LABELS[o.category]}</span>
                 {o.review_state === "changed" && (
                   <span className="rounded-full bg-amber-500/15 px-2 py-0.5 font-medium text-amber-300">
                     Sumber berubah {o.source_changed_at ? formatDate(o.source_changed_at) : ""}
@@ -164,7 +164,7 @@ export default async function ReviewQueuePage({ searchParams }: { searchParams: 
 
               <div className="mt-4 flex flex-wrap items-start gap-3">
                 {o.external_url && (
-                  <a href={o.external_url} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-10 items-center text-sm font-medium text-teal hover:underline">
+                  <a href={o.external_url} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-10 items-center text-sm font-medium text-champagne hover:underline">
                     Cek sumber resmi ↗<span className="sr-only"> (tab baru)</span>
                   </a>
                 )}

@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { BellRing, BookOpen, CalendarCheck, Info, ListChecks, Radar, Sparkles, Zap } from "lucide-react";
 
@@ -21,7 +20,7 @@ const PLANNED = [
 export default function PlusPage() {
   return (
     <div className="mx-auto max-w-[1100px] px-4 py-5 md:px-6 md:py-10">
-      <section className="relative overflow-hidden rounded-3xl border border-gold/25 bg-[radial-gradient(100%_120%_at_100%_0%,rgba(244,189,53,0.18),transparent_55%),linear-gradient(160deg,#102b2b,#0f161d)] p-6 md:p-10">
+      <section className="relative overflow-hidden rounded-3xl border border-gold/25 bg-[radial-gradient(80%_140%_at_100%_0%,rgba(244,189,53,0.16),transparent_60%),linear-gradient(180deg,#1b1f27,#171a21)] p-6 md:p-10">
         <p className="inline-flex items-center gap-1.5 rounded-md bg-gold/15 px-2 py-0.5 text-xs font-semibold text-gold">
           <Sparkles className="h-3.5 w-3.5" aria-hidden />
           Segera hadir
@@ -31,17 +30,9 @@ export default function PlusPage() {
           Fitur premium untuk berburu peluang lebih rapi. Rencana harga Rp10.000 per 30 hari, masih dalam tahap persiapan.
         </p>
         <p role="note" className="mt-5 flex max-w-lg items-start gap-2 rounded-xl border border-border-subtle bg-charcoal/50 p-3 text-sm text-offwhite/80">
-          <Info className="mt-0.5 h-4 w-4 shrink-0 text-teal" aria-hidden />
+          <Info className="mt-0.5 h-4 w-4 shrink-0 text-champagne" aria-hidden />
           Pembayaran belum dibuka. Tidak ada transaksi yang diproses dari halaman ini.
         </p>
-        <Image
-          src="/assets/cua/plus.png"
-          alt=""
-          width={220}
-          height={220}
-          priority
-          className="pointer-events-none absolute -right-4 -bottom-4 hidden h-52 w-52 object-contain sm:block md:h-60 md:w-60"
-        />
       </section>
 
       <h2 className="font-heading mt-8 text-lg font-bold text-offwhite md:text-xl">Yang sedang disiapkan</h2>
@@ -62,7 +53,7 @@ export default function PlusPage() {
       </p>
       <Link
         href="/peluang"
-        className="press mt-4 inline-flex h-11 items-center rounded-xl border border-border-strong px-4 text-sm font-semibold text-offwhite hover:border-teal hover:text-teal"
+        className="press mt-4 inline-flex h-11 items-center rounded-xl border border-border-strong px-4 text-sm font-semibold text-offwhite hover:border-champagne/50 hover:text-champagne"
       >
         Jelajahi peluang gratis
       </Link>

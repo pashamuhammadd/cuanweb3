@@ -29,7 +29,7 @@ export default async function ArticleDetailPage({ params }: { params: Promise<Pa
       <nav aria-label="Breadcrumb">
         <ol className="flex items-center gap-1 text-sm text-muted-foreground">
           <li>
-            <Link href="/belajar" className="inline-flex min-h-10 items-center hover:text-teal">
+            <Link href="/belajar" className="inline-flex min-h-10 items-center hover:text-champagne">
               Belajar
             </Link>
           </li>
@@ -56,8 +56,8 @@ export default async function ArticleDetailPage({ params }: { params: Promise<Pa
         {item.content}
       </div>
 
-      <aside className="mt-10 flex items-start gap-3 rounded-2xl border border-border-subtle bg-petrol/40 p-4 text-sm text-offwhite/85">
-        <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-teal" aria-hidden />
+      <aside className="mt-10 flex items-start gap-3 rounded-2xl border border-border-subtle bg-elevated/60 p-4 text-sm text-offwhite/85">
+        <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-champagne" aria-hidden />
         <p>CuanWeb3 tidak pernah meminta seed phrase atau private key. Selalu cek ulang informasi di situs resmi.</p>
       </aside>
     </article>

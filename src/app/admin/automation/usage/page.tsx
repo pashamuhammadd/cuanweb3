@@ -18,7 +18,7 @@ function Meter({ used, limit, label }: { used: number; limit: number | null; lab
         aria-valuemax={limit}
         aria-valuenow={used}
       >
-        <div className={pct >= 90 ? "h-full bg-rose-400" : pct >= 70 ? "h-full bg-amber-400" : "h-full bg-teal"} style={{ width: `${pct}%` }} />
+        <div className={pct >= 90 ? "h-full bg-rose-400" : pct >= 70 ? "h-full bg-amber-400" : "h-full bg-champagne"} style={{ width: `${pct}%` }} />
       </div>
     </div>
   );

@@ -22,7 +22,6 @@ import { getOpportunityBySlug, listOpportunitiesByCategory, EXPIRED_INDEX_DAYS }
 import { getCategory } from "@/lib/nav";
 import { REWARD_CERTAINTY_LABELS, ecosystemLabel } from "@/lib/categories";
 import { detailValueLabel, getCategorySpec } from "@/lib/category-specs";
-import { CATEGORY_THEME } from "@/lib/category-theme";
 import { RISK_FLAG_LABELS } from "@/lib/engine/risk";
 import { safeParseUrl } from "@/lib/engine/url";
 import { formatDate, formatRelativeDeadline, isFutureDate, tidyDashes } from "@/lib/format";
@@ -165,7 +164,7 @@ export default async function OpportunityDetailPage({ params }: { params: Promis
             href={externalHref}
             target="_blank"
             rel={followLink ? "noopener" : "noopener noreferrer nofollow"}
-            className="press glow-gold inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-gold px-5 text-sm font-semibold text-charcoal transition-[filter] hover:brightness-105"
+            className="press inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-gold px-5 text-sm font-semibold text-charcoal transition-[filter] hover:brightness-105"
           >
             {ended ? "Lihat halaman resmi" : spec.labels.cta}
             <ExternalLink className="h-4 w-4" aria-hidden />
@@ -197,7 +196,7 @@ export default async function OpportunityDetailPage({ params }: { params: Promis
       <nav aria-label="Breadcrumb">
         <ol className="flex min-w-0 items-center gap-1 text-sm text-muted-foreground">
           <li className="shrink-0">
-            <Link href="/" className="inline-flex min-h-10 items-center hover:text-teal">
+            <Link href="/" className="inline-flex min-h-10 items-center hover:text-champagne">
               Beranda
             </Link>
           </li>
@@ -205,7 +204,7 @@ export default async function OpportunityDetailPage({ params }: { params: Promis
             <ChevronRight className="h-3.5 w-3.5" />
           </li>
           <li className="shrink-0">
-            <Link href={category.href} className="inline-flex min-h-10 items-center whitespace-nowrap hover:text-teal">
+            <Link href={category.href} className="inline-flex min-h-10 items-center whitespace-nowrap hover:text-champagne">
               {category.label}
             </Link>
           </li>
@@ -235,9 +234,9 @@ export default async function OpportunityDetailPage({ params }: { params: Promis
         <div className="min-w-0">
           <header>
             <div className="flex items-center gap-3">
-              <CategoryIcon category={item.category} size="lg" priority />
+              <span className="inline-flex h-14 w-14 items-center justify-center rounded-xl bg-elevated"><CategoryIcon category={item.category} size="md" priority /></span>
               <div className="flex flex-wrap items-center gap-1.5">
-                <span className="text-sm font-semibold" style={{ color: CATEGORY_THEME[item.category].fg }}>
+                <span className="text-sm font-semibold text-champagne">
                   {category.label}
                 </span>
                 {item.isDemo && (
@@ -296,7 +295,7 @@ export default async function OpportunityDetailPage({ params }: { params: Promis
               <ul className="mt-2 space-y-1.5 text-sm text-offwhite/85">
                 {item.requirements.map((req) => (
                   <li key={req} className="flex gap-2">
-                    <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-teal" aria-hidden />
+                    <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-champagne" aria-hidden />
                     {req}
                   </li>
                 ))}
@@ -321,7 +320,7 @@ export default async function OpportunityDetailPage({ params }: { params: Promis
                   href={sourceHref}
                   target="_blank"
                   rel={followLink ? "noopener" : "noopener noreferrer nofollow"}
-                  className="text-teal underline-offset-4 hover:underline"
+                  className="text-champagne underline-offset-4 hover:underline"
                 >
                   {item.sourceName ?? new URL(sourceHref).hostname}
                 </a>
@@ -356,7 +355,7 @@ export default async function OpportunityDetailPage({ params }: { params: Promis
               Lihat semua
             </Link>
           </div>
-          <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 md:gap-4 lg:grid-cols-3">
+          <div className="mt-4 grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-5 lg:grid-cols-3">
             {related.map((o) => (
               <OpportunityCard key={o.id} opportunity={o} />
             ))}

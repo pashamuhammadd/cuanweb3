@@ -17,13 +17,13 @@ export function CategoryChips({ current, className }: { current?: OpportunityCat
                 href={c.href}
                 aria-current={active ? "page" : undefined}
                 className={cn(
-                  "press inline-flex h-10 items-center gap-2 rounded-xl border pr-3 pl-1 text-sm font-medium whitespace-nowrap transition-colors",
+                  "press inline-flex h-11 items-center gap-1.5 rounded-lg border pr-3.5 pl-2.5 text-sm font-medium whitespace-nowrap transition-colors",
                   active
                     ? "border-gold/50 bg-gold/10 text-gold"
-                    : "border-border-faint bg-surface text-offwhite/80 hover:border-teal hover:text-offwhite",
+                    : "border-border-faint bg-surface text-offwhite/80 hover:border-gold/40 hover:text-offwhite",
                 )}
               >
-                <CategoryIcon category={c.slug} size="sm" className="h-8 w-8" />
+                <CategoryIcon category={c.slug} size="xs" />
                 {c.label}
               </Link>
             </li>

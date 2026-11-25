@@ -46,7 +46,7 @@ export default async function LoginPage({
             { icon: ShieldCheck, title: "Tanpa password, tanpa wallet", desc: "Masuk lewat link email. Kami tidak pernah meminta seed phrase." },
           ].map(({ icon: Icon, title, desc }) => (
             <li key={title} className="flex items-start gap-3">
-              <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-teal/15 text-teal">
+              <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-champagne/10 text-champagne">
                 <Icon className="h-5 w-5" aria-hidden />
               </span>
               <span>
@@ -60,7 +60,7 @@ export default async function LoginPage({
 
       <div className="card-surface order-1 p-5 md:order-2 md:p-7">
         <div className="flex items-center gap-3">
-          <Image src="/assets/cua/welcome.png" alt="" width={56} height={56} className="h-14 w-14 object-contain" />
+          <Image src="/assets/cua/avatar.png" alt="" width={48} height={48} className="h-12 w-12 object-contain" />
           <div>
             <h1 className="font-heading text-2xl font-bold text-offwhite">Masuk ke CuanWeb3</h1>
             <p className="text-sm text-muted-foreground">Akun baru dibuat otomatis.</p>

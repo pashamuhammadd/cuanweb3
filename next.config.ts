@@ -13,6 +13,10 @@ const nextConfig: NextConfig = {
   images: {
     minimumCacheTTL: 60,
   },
+  // Alias dari spesifikasi desain; route kanonik tetap /jobs (sudah terindeks).
+  async redirects() {
+    return [{ source: "/web3-jobs", destination: "/jobs", permanent: true }];
+  },
 };
 
 export default nextConfig;

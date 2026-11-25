@@ -23,7 +23,7 @@ export default async function AdminDashboardPage() {
         </Link>
         <Link
           href="/admin/articles/new"
-          className="press inline-flex h-11 items-center rounded-xl border border-border-strong px-5 text-sm font-semibold text-offwhite hover:border-teal hover:text-teal"
+          className="press inline-flex h-11 items-center rounded-xl border border-border-strong px-5 text-sm font-semibold text-offwhite hover:border-champagne/50 hover:text-champagne"
         >
           + Tulis artikel
         </Link>

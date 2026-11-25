@@ -8,7 +8,7 @@ const STATUS_STYLE: Record<string, string> = {
   success: "bg-emerald-500/15 text-emerald-300",
   partial: "bg-amber-500/15 text-amber-300",
   failed: "bg-rose-500/15 text-rose-300",
-  running: "bg-teal/15 text-teal",
+  running: "bg-champagne/10 text-champagne",
   skipped: "bg-surface-raised text-muted-foreground",
 };
 

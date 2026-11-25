@@ -1,19 +1,21 @@
 import Image from "next/image";
 import type { OpportunityCategory } from "@/lib/supabase/database.types";
-import { categoryIllustration, categoryStyle } from "@/lib/category-theme";
+import { categoryIllustration } from "@/lib/category-theme";
 import { getCategory } from "@/lib/nav";
 import { cn } from "@/lib/cn";
 
+/** Ukuran tampil ikon (px). File WebP sudah punya padding internal. */
 const SIZES = {
-  sm: { box: "h-9 w-9 rounded-lg", img: 28, icon: "h-4.5 w-4.5" },
-  md: { box: "h-12 w-12 rounded-xl md:h-14 md:w-14", img: 48, icon: "h-6 w-6" },
-  lg: { box: "h-14 w-14 rounded-2xl md:h-20 md:w-20", img: 80, icon: "h-7 w-7 md:h-9 md:w-9" },
-  xl: { box: "h-20 w-20 rounded-2xl md:h-28 md:w-28", img: 112, icon: "h-9 w-9 md:h-12 md:w-12" },
+  xs: { px: 20, box: "h-5 w-5", icon: "h-4 w-4" },
+  sm: { px: 28, box: "h-7 w-7", icon: "h-5 w-5" },
+  md: { px: 40, box: "h-9 w-9 md:h-10 md:w-10", icon: "h-6 w-6" },
+  lg: { px: 56, box: "h-12 w-12 md:h-14 md:w-14", icon: "h-8 w-8" },
+  xl: { px: 96, box: "h-12 w-12 md:h-24 md:w-24", icon: "h-8 w-8 md:h-14 md:w-14" },
 } as const;
 
 /**
- * Tile ikon kategori: ilustrasi WebP bila tersedia, fallback ikon Lucide.
- * Selalu dekoratif (alt="") karena label teks kategori ditampilkan di sebelahnya.
+ * Ikon garis gold kategori (tanpa maskot). Fallback ikon Lucide bila file
+ * belum tersedia. Selalu dekoratif: label teks kategori ada di sebelahnya.
  */
 export function CategoryIcon({
   category,
@@ -31,23 +33,19 @@ export function CategoryIcon({
   const Icon = getCategory(category).icon;
 
   return (
-    <span
-      aria-hidden
-      style={categoryStyle(category)}
-      className={cn("cat-tile relative inline-flex shrink-0 items-center justify-center overflow-hidden ring-1 ring-white/5", s.box, className)}
-    >
+    <span aria-hidden className={cn("relative inline-flex shrink-0 items-center justify-center text-gold", s.box, className)}>
       {src ? (
         <Image
           src={src}
           alt=""
-          width={s.img}
-          height={s.img}
-          sizes={`${s.img}px`}
+          width={s.px}
+          height={s.px}
+          sizes={`${s.px * 2}px`}
           priority={priority}
-          className="h-[86%] w-[86%] object-contain"
+          className="h-full w-full scale-[1.3] object-contain"
         />
       ) : (
-        <Icon className={s.icon} strokeWidth={1.75} />
+        <Icon className={s.icon} strokeWidth={1.6} />
       )}
     </span>
   );

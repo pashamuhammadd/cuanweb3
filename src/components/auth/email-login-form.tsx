@@ -58,7 +58,7 @@ export function EmailLoginForm({ redirectTo }: { redirectTo?: string }) {
     return (
       <div
         role="status"
-        className="rounded-xl border border-teal/40 bg-teal/10 p-4 text-left text-sm text-offwhite"
+        className="rounded-xl border border-champagne/30 bg-champagne/10 p-4 text-left text-sm text-offwhite"
       >
         <p className="font-semibold">Cek inbox email kamu</p>
         <p className="mt-1 text-muted-foreground">
@@ -101,7 +101,7 @@ export function EmailLoginForm({ redirectTo }: { redirectTo?: string }) {
       <button
         type="submit"
         disabled={isSending}
-        className="press glow-gold mt-3 inline-flex h-12 w-full items-center justify-center rounded-xl bg-gold px-5 text-sm font-semibold text-charcoal transition-[filter] hover:brightness-105 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-offwhite disabled:opacity-60"
+        className="press mt-3 inline-flex h-12 w-full items-center justify-center rounded-xl bg-gold px-5 text-sm font-semibold text-charcoal transition-[filter] hover:brightness-105 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-offwhite disabled:opacity-60"
       >
         {isSending ? "Mengirim…" : "Kirim link masuk"}
       </button>

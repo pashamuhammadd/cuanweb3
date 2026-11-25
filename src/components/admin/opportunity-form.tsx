@@ -25,7 +25,7 @@ export function OpportunityForm({ opportunity }: { opportunity?: OpportunityRow 
       {opportunity && opportunity.import_method !== "manual" && (
         <section
           aria-label="Info import otomatis"
-          className="rounded-xl border border-teal/30 bg-teal/5 p-4 text-sm text-offwhite/90"
+          className="rounded-xl border border-champagne/30 bg-champagne/10 p-4 text-sm text-offwhite/90"
         >
           <p>
             <strong>Hasil import otomatis</strong> dari {opportunity.source_name ?? opportunity.source_provider} ·
@@ -58,7 +58,7 @@ export function OpportunityForm({ opportunity }: { opportunity?: OpportunityRow 
             name="category"
             value={category}
             onChange={(e) => setCategory(e.target.value as OpportunityCategory)}
-            className="mt-1.5 w-full min-h-11 rounded-xl border border-border-subtle bg-surface-raised px-3 py-2 text-sm text-offwhite focus:border-teal"
+            className="mt-1.5 w-full min-h-11 rounded-xl border border-border-subtle bg-surface-raised px-3 py-2 text-sm text-offwhite focus:border-champagne/60"
           >
             {OPPORTUNITY_CATEGORIES.map((c) => (
               <option key={c} value={c}>
@@ -73,7 +73,7 @@ export function OpportunityForm({ opportunity }: { opportunity?: OpportunityRow 
             id="state"
             name="state"
             defaultValue={opportunity?.state ?? "draft"}
-            className="mt-1.5 w-full min-h-11 rounded-xl border border-border-subtle bg-surface-raised px-3 py-2 text-sm text-offwhite focus:border-teal"
+            className="mt-1.5 w-full min-h-11 rounded-xl border border-border-subtle bg-surface-raised px-3 py-2 text-sm text-offwhite focus:border-champagne/60"
           >
             <option value="draft">Draft</option>
             <option value="published">Published</option>
@@ -105,7 +105,7 @@ export function OpportunityForm({ opportunity }: { opportunity?: OpportunityRow 
             id="rewardCertainty"
             name="rewardCertainty"
             defaultValue={opportunity?.reward_certainty ?? "unknown"}
-            className="mt-1.5 w-full min-h-11 rounded-xl border border-border-subtle bg-surface-raised px-3 py-2 text-sm text-offwhite focus:border-teal"
+            className="mt-1.5 w-full min-h-11 rounded-xl border border-border-subtle bg-surface-raised px-3 py-2 text-sm text-offwhite focus:border-champagne/60"
           >
             {Object.entries(REWARD_CERTAINTY_LABELS).map(([value, label]) => (
               <option key={value} value={value}>
@@ -168,7 +168,7 @@ export function OpportunityForm({ opportunity }: { opportunity?: OpportunityRow 
                   id={`detail_${field.key}`}
                   name={`detail_${field.key}`}
                   defaultValue={opportunity?.details?.[field.key] ?? ""}
-                  className="mt-1.5 w-full min-h-11 rounded-xl border border-border-subtle bg-surface-raised px-3 py-2 text-sm text-offwhite focus:border-teal"
+                  className="mt-1.5 w-full min-h-11 rounded-xl border border-border-subtle bg-surface-raised px-3 py-2 text-sm text-offwhite focus:border-champagne/60"
                 >
                   <option value="">Belum diketahui</option>
                   {field.options.map((o) => (
@@ -201,7 +201,7 @@ export function OpportunityForm({ opportunity }: { opportunity?: OpportunityRow 
           type="checkbox"
           name="isFree"
           defaultChecked={opportunity?.is_free ?? true}
-          className="h-4 w-4 rounded border-border-subtle bg-surface-raised accent-teal"
+          className="h-4 w-4 rounded border-border-subtle bg-surface-raised accent-gold"
         />
         Tanpa modal (gratis)
       </label>
@@ -210,7 +210,7 @@ export function OpportunityForm({ opportunity }: { opportunity?: OpportunityRow 
         <input
           type="checkbox"
           name="markVerified"
-          className="h-4 w-4 rounded border-border-subtle bg-surface-raised accent-teal"
+          className="h-4 w-4 rounded border-border-subtle bg-surface-raised accent-gold"
         />
         Saya sudah memeriksa sumber resmi, tandai terverifikasi hari ini
       </label>
@@ -220,7 +220,7 @@ export function OpportunityForm({ opportunity }: { opportunity?: OpportunityRow 
           type="checkbox"
           name="adExcluded"
           defaultChecked={opportunity?.ad_excluded ?? false}
-          className="h-4 w-4 rounded border-border-subtle bg-surface-raised accent-teal"
+          className="h-4 w-4 rounded border-border-subtle bg-surface-raised accent-gold"
         />
         Jangan tampilkan iklan di halaman ini (eksklusi AdSense)
       </label>
@@ -266,7 +266,7 @@ function Field({
         defaultValue={defaultValue}
         required={required}
         placeholder={placeholder}
-        className="mt-1.5 w-full min-h-11 rounded-xl border border-border-subtle bg-surface-raised px-3 py-2 text-sm text-offwhite placeholder:text-muted-foreground focus:border-teal"
+        className="mt-1.5 w-full min-h-11 rounded-xl border border-border-subtle bg-surface-raised px-3 py-2 text-sm text-offwhite placeholder:text-muted-foreground focus:border-champagne/60"
       />
     </div>
   );
@@ -296,7 +296,7 @@ function TextArea({
         rows={rows}
         defaultValue={defaultValue}
         required={required}
-        className="mt-1.5 w-full min-h-11 rounded-xl border border-border-subtle bg-surface-raised px-3 py-2 text-sm text-offwhite focus:border-teal"
+        className="mt-1.5 w-full min-h-11 rounded-xl border border-border-subtle bg-surface-raised px-3 py-2 text-sm text-offwhite focus:border-champagne/60"
       />
     </div>
   );

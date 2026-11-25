@@ -413,3 +413,24 @@ Detail desain, sumber, kuota, dan aturan: `docs/OPPORTUNITY-ENGINE.md`.
 - Belum: ikon kategori WebP (menunggu aset; daftarkan di `CATEGORY_ILLUSTRATIONS_READY`),
   uji perangkat fisik/Safari iOS, screen reader nyata, cek visual admin dengan login.
 - Catatan: route Jobs tetap `/jobs` (bukan `/web3-jobs`) agar URL/SEO yang sudah terindeks tidak berubah.
+
+## 2026-11-25 — Redesign versi C (Charcoal & Gold)
+
+- Sumber: `cuanweb3-redesign-c/` (PROMPT, RULES, DESIGN, ASSETS, referensi). Menggantikan arah teal/kartun.
+- Token baru di `globals.css`: background #0C1117, surface #171A21, elevated #242832, gold #F4BD35,
+  champagne #E9BC65, muted #A3A7B0, border putih 6–14% opasitas. Token teal/petrol dihapus; semua kelas
+  teal diganti champagne/gold (hijau/merah hanya untuk makna data). Dicek: 0 elemen berwarna teal.
+- Aset: 10 ikon garis gold → `public/assets/icons/categories/`, 3 thumbnail editorial (dekoratif,
+  fallback per kategori) → `public/assets/thumbnails/`, favicon/icon-192/apple-touch dari kit.
+- P1: header satu baris (logo, nav, Masuk outline gold; tombol Plus header dihapus, Plus tetap di footer/akun),
+  ticker statis + "Lihat Market"; hero desktop tipografi + form cari (GET /peluang ?q, kategori, deadline)
+  + glow gold CSS 13–16 dtk; grid kategori (Airdrop, Giveaway, Bounty, Kontes, Web3 Jobs, Hackathon) →
+  "Lihat semua" ke /kategori; kartu vertikal 16:9 (desktop) / horizontal thumbnail 88px (mobile);
+  `/peluang` membaca parameter hero tanpa membuat halaman dinamis (useSyncExternalStore).
+- Maskot kartun dihapus dari UI utama (belajar, login, plus, komunitas, misi); tetap di logo, favicon, 404.
+- `/web3-jobs` → redirect permanen ke `/jobs` (route kanonik tidak diubah).
+- P2/P3: palet & komponen diseragamkan (market, belajar, komunitas, login, akun, plus, admin).
+- Verifikasi: lint, typecheck, 49/49 test, build; 15 halaman × 360/390/768/1024/1440 tanpa overflow;
+  parameter hero → hasil filter benar; tanpa error konsol/hidrasi.
+- Belum: tampilan admin dengan login, perangkat fisik/Safari iOS, screen reader. Folder kit
+  `cuanweb3-redesign-c/` belum di-commit (milik pemilik).

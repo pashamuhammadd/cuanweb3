@@ -19,13 +19,13 @@ export default function KontakPage() {
       <div className="mt-6 space-y-3">
         <a
           href="mailto:halo@cuanweb3.com"
-          className="flex items-center gap-3 rounded-xl border border-border-subtle bg-surface p-4 text-sm text-offwhite transition-colors hover:border-teal"
+          className="flex items-center gap-3 rounded-xl border border-border-subtle bg-surface p-4 text-sm text-offwhite transition-colors hover:border-champagne/50"
         >
-          <Mail className="h-5 w-5 text-teal" aria-hidden />
+          <Mail className="h-5 w-5 text-champagne" aria-hidden />
           halo@cuanweb3.com
         </a>
         <div className="flex items-center gap-3 rounded-xl border border-border-subtle bg-surface p-4 text-sm text-offwhite">
-          <Facebook className="h-5 w-5 text-teal" aria-hidden />
+          <Facebook className="h-5 w-5 text-champagne" aria-hidden />
           Komunitas Cuan Web3 (Facebook Group)
         </div>
       </div>
